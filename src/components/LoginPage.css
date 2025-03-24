@@ -1,0 +1,445 @@
+/* Cores da paleta */
+:root {
+  --primary: #d14d72;
+  --secondary: #ffabab;
+  --tertiary: #fcc8d1;
+  --quaternary: #fef2f4;
+  --text-primary: #333333;
+  --text-secondary: rgba(209, 77, 114, 0.7);
+  --border-color: #e2e8f0;
+}
+
+/* Reset e estilos base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Garantir que o layout não ultrapasse os limites da tela */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Remove a barra de rolagem horizontal */
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+  color: var(--text-primary);
+}
+
+/* Container principal */
+.login-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Sidebar com imagem e elementos decorativos */
+.login-sidebar {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--quaternary);
+}
+
+@media (min-width: 1024px) {
+  .login-sidebar {
+    display: flex;
+    width: 50%;
+  }
+}
+
+.login-sidebar-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255, 171, 171, 0.3), rgba(209, 77, 114, 0.3));
+}
+
+.login-sidebar-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.login-sidebar-inner {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.login-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.login-description {
+  font-size: 1.125rem;
+  color: var(--primary);
+  margin-bottom: 2rem;
+}
+
+/* Grid de cards de pets */
+.pet-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.pet-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: scale(1);
+  transition: transform 0.3s ease;
+}
+
+.pet-card:hover {
+  transform: scale(1.05);
+}
+
+.pet-icon-container {
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--tertiary);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.pet-icon {
+  font-size: 1.875rem;
+}
+
+.pet-card-title {
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.pet-card-description {
+  font-size: 0.875rem;
+  color: rgba(209, 77, 114, 0.7);
+}
+
+/* Padrão de patinhas */
+.paw-pattern {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.1;
+}
+
+.paw-print {
+  position: absolute;
+  font-size: 1.5rem;
+}
+
+/* Container do formulário */
+.form-container {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .form-container {
+    width: 50%;
+  }
+}
+
+.form-content {
+  width: 100%;
+  max-width: 28rem;
+}
+
+/* Cabeçalho do formulário */
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.logo {
+  width: 5rem;
+  height: 5rem;
+  background-color: var(--tertiary);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon {
+  font-size: 2.25rem;
+}
+
+.form-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.form-subtitle {
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* Wrapper dos formulários com animação */
+/* Wrapper dos formulários com animação */
+.form-wrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.form-slide {
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+  transform: translateX(-100%);
+  display: none;
+  pointer-events: none;
+}
+
+.form-slide-active {
+  position: relative;
+  opacity: 1;
+  transform: translateX(0);
+  display: block;
+  pointer-events: auto;
+}
+
+.form-slide-inactive {
+  position: absolute;
+  display: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.form-slide-left {
+  transform: translateX(-100%);
+}
+
+.form-slide-right {
+  transform: translateX(100%);
+}
+
+/* Estilos do formulário */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.form-group.half {
+  width: 50%;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(209, 77, 114, 0.2);
+}
+
+/* Container de input de senha com botão de toggle */
+.password-input-container {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+/* Checkbox e lembrar-me */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--primary);
+}
+
+.checkbox-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Link esqueceu a senha */
+.forgot-password {
+  font-size: 0.875rem;
+  color: var(--primary);
+  text-decoration: none;
+  margin-left: auto;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Botão de submit */
+.submit-button {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary);
+  color: white;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-button:hover {
+  background-color: rgba(209, 77, 114, 0.9);
+}
+
+/* Divisor "ou continue com" */
+.divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.divider-text {
+  position: relative;
+  padding: 0 1rem;
+  background-color: white;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Botão social (Google) */
+.social-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.social-button:hover {
+  background-color: #f9fafb;
+}
+
+/* Container de termos */
+.terms-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.terms-label {
+  font-size: 0.875rem;
+}
+
+.terms-link {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.terms-link:hover {
+  text-decoration: underline;
+}
+
+/* Rodapé do formulário */
+.form-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.toggle-text {
+  color: var(--text-secondary);
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.toggle-button:hover {
+  text-decoration: underline;
+}
