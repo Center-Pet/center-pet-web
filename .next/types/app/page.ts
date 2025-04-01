@@ -1,4 +1,4 @@
-// File: C:\Users\User\Downloads\center-pet-login\app\page.tsx
+// File: C:\Users\dti\CenterPet.Web\app\page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
