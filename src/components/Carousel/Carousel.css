@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css?family=Alexandria");
+
+body{
+    font-family: 'Alexandria';
+}
+
+.carousel{
+    position: relative;
+    overflow: hidden;
+}
+
+.titulo_carrosel{
+    color: #D14D72;
+    margin-left: 90px
+}
+.containerCards {
+    padding: 0px 90px;
+    gap: 10px;
+}
+.slick-arrow:before{
+    height: 10px;
+    width: 10px;
+    color: rgba(172, 19, 95) !important;
+    z-index: 1;
+}
