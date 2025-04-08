@@ -25,7 +25,7 @@ const Navbar = () =>{
             <header>
                 <div className="brown_square"></div>
                 <nav id='navbar'>
-                <img id="logo" src="@/assets/CenterPet.png" alt="Center Pet Logo" />                    <ul>
+                <img id="logo" src="/assets/CenterPet.png" alt="Center Pet Logo" />                    <ul>
                         <li>
                             <a href="#">Catálogo</a>
                         </li>

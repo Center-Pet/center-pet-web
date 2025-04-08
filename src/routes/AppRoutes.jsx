@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Catalog from './../pages/Catalog/Catalog';
 
+
 const AppRoutes = () => {
     return (
         <Routes>
@@ -10,5 +11,7 @@ const AppRoutes = () => {
         </Routes>
     );
 };
+
+
 
 export default AppRoutes;
