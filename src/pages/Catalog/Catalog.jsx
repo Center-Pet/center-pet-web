@@ -5,7 +5,6 @@ import './Catalog.css'
 const Catalog = () =>{
     return(
         <div>
-            <Navbar/>
             <Carousel nome="Novos Pets"/>
             <Carousel nome="Pets Especias"/>
             <Carousel nome="Pets mais Pacientes"/>
