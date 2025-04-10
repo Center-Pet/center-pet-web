@@ -1,68 +1,109 @@
 @import url("https://fonts.googleapis.com/css?family=Alexandria");
 
-#navbar{
-    z-index: 2;
+#navbar {
+    z-index: 3; /* Garante que o navbar fique acima do pink_square */
     background-color: transparent;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 200px;
-    margin-bottom: 45px;
+    justify-content: space-between; /* Espaça os itens: ul no centro e CustomComponent à direita */
+    align-items: center; /* Alinha verticalmente os itens */
+    padding: 0px 100px; /* Ajusta o espaçamento interno */
     font-family: 'Alexandria';
     font-size: 16px;
+    position: relative; /* Mantém a posição relativa para o layout */
+    height: 140px; /* Define uma altura fixa para o navbar */
 }
-#logo{
+
+#logo {
+    position: fixed; /* Fixa o logo na tela */
+    top: 10px;
+    left: 110px;
     width: 100px;
     height: 100px;
+    z-index: 3; /* Garante que o logo fique acima do pink_square */
 }
-.brown_square{
+
+.pink_square {
+    position: fixed; /* Fixa o pink_square na tela */
     background-color: #D14D72;
+    transform: rotate(10deg);
     width: 623px;
     height: 623px;
-    position: absolute;
-    transform: rotate(10deg);
-    top: -520px;
-    left: -210px;
+    top: -540px;
+    left: -330px;
     border-radius: 60px;
-    z-index: -1;
+    z-index: 1; /* Garante que o pink_square fique abaixo do logo */
 }
 
-ul{
+ul {
     display: flex;
-    list-style-position: inside;
+    justify-content: center; /* Centraliza os botões horizontalmente */
+    align-items: center;
     list-style: none;
-    gap: 40px;
+    gap: 40px; /* Espaçamento entre os botões */
+    padding: 0;
+    margin: 0 auto; /* Centraliza a ul horizontalmente */
+    z-index: 3;
+    flex:1;
+    }
+
+li {
+    z-index: 3;
 }
 
-a:link{
+a:link {
     text-decoration-line: none;
 }
 
 .profile-picture {
     width: 50px;
-    height: 100%;
+    height: 50px;
     border: #D14D72 5px solid;
     border-radius: 50%; /* Torna a imagem circular */
     object-fit: cover;
     cursor: pointer;
-    margin-left: 20px;
+    margin-top: 10px; /* Espaçamento superior */
+}
+
+.custom-component {
+    margin-left: auto; /* Empurra o CustomComponent para a direita */
+    z-index: 3;
+    display: flex;
+    align-items: center; /* Alinha verticalmente o CustomComponent */
+    justify-content: center; /* Centraliza o conteúdo do CustomComponent */
 }
 
 @media (max-width: 780px) {
     #navbar {
         flex-direction: column;
-        align-items: center;
+        align-items: right; /* Alinha os itens à direita */
         padding: 10px;
+        height: auto; /* Permite que a altura se ajuste ao conteúdo */
     }
 
     ul {
-        flex-direction: column;
+        flex-direction: column; /* Empilha os botões em telas menores */
         align-items: center;
-        gap: 20px;
+        gap: 10px;
         margin-top: 20px;
+    }
+
+    .custom-component {
+        margin-left: 0; /* Remove o espaçamento à esquerda em telas menores */
+        margin-top: 10px;
     }
 
     #logo {
         margin-bottom: 20px;
+        width: 80px; /* Ajusta a largura do logo em telas menores */
+        height: 80px; /* Ajusta a altura do logo em telas menores */
+        top: 20px; /* Ajusta a posição superior do logo em telas menores */
+        left: 20px; /* Ajusta a posição esquerda do logo em telas menores */
+    }
+
+    .pink_square {
+        width: 400px; /* Ajusta a largura do pink_square em telas menores */
+        height: 400px; /* Ajusta a altura do pink_square em telas menores */
+        top: -300px; /* Ajusta a posição superior do pink_square em telas menores */
+        left: -250px; /* Ajusta a posição esquerda do pink_square em telas menores */
     }
 }

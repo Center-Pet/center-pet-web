@@ -24,7 +24,7 @@ const Dropdown = () => {
 
     return (
         <div id="dropdown" className={hasSelection ? 'selected' : ''}>
-            <button id="dropdown_button" onClick={toggleDropdown}>Dropdown</button>
+            <button id="dropdown_button" onClick={toggleDropdown}>Filtros</button>
             <div id="filtros_dropdown" className={isOpen ? 'show' : ''}>
                 {options.map((option, index) => (
                     <div className="filtro" key={index}>
