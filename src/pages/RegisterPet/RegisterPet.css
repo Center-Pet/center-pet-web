@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css?family=Alexandria");
+
+/* Reset básico */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Alexandria', sans-serif;
+    background-color: #FEF2F4;
+    color: #333;
+  }
+  
+  /* Página de perfil */
+  .profile-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* padding: 20px; */
+  }
+  
+  /* Título */
+  .profile-title {
+    color: #D14D72;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Formulário */
+  .register-pet-form {
+    background-color: #FFABAB;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .register-pet-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #D14D72;
+  }
+  
+  .register-pet-form input,
+  .register-pet-form textarea,
+  .register-pet-form button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #FCC8D1;
+    border-radius: 20px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+  
+  .register-pet-form input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+  }
+  
+  /* Área de texto */
+  .register-pet-form textarea {
+    resize: none;
+    min-height: 100px;
+  }
+  
+  /* Botão */
+  .register-pet-form button {
+    background-color: #D14D72;
+    color: #FEF2F4;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .register-pet-form button:hover {
+    background-color: #e87394;
+  }
+  
+  /* Responsivo */
+  @media (max-width: 768px) {
+    .register-pet-form {
+      padding: 20px;
+    }
+  
+    .profile-title {
+      font-size: 1.6rem;
+    }
+  
+    .register-pet-form input,
+    .register-pet-form textarea,
+    .register-pet-form button {
+      font-size: 0.95rem;
+    }
+  }
+  

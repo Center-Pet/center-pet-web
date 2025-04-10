@@ -3,7 +3,7 @@ import "./AdopterProfileCard.css"
 
 const AdopterProfileCard = () => {
   return (
-    <div className="profile-container">
+    // <div className="profile-container">
       <div className="profile-card">
         {/* Profile Header */}
         <div className="profile-header">
@@ -56,7 +56,7 @@ const AdopterProfileCard = () => {
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   )
 }
 
