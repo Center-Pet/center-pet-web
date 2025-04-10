@@ -1,7 +1,5 @@
 "use client";
-import Navbar from "../../components/Navbar/Navbar";
 import PetShowcase from "../../components/PetShowcase/PetShowcase";
-import Footer from "../../components/Footer/Footer";
 import { useState } from "react";
 import "./PetInfo.css";
 

@@ -1,5 +1,3 @@
-import Navbar from "../../components/Navbar/Navbar"
-import Footer from "../../components/Footer/Footer"
 import AdopterProfileCard from "../../components/AdopterProfileCard/AdopterProfileCard" //temporário, depois tem q fazer outro card para a ONG
 import Carousel from "../../components/Carousel/Carousel"
 import Slider from "react-slick";

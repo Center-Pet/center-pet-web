@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Alexandria&display=swap');
+
+.botao-personalizado {
+  color: #FEF2F4; /* Cor do texto */
+  font-family: 'Alexandria', sans-serif;
+  border-radius: 25px;
+  padding: 12px 30px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.botao-personalizado:hover {
+  filter: brightness(0.9); /* Escurece a cor no hover */
+  transform: scale(1.05); /* Aumenta levemente o botão no hover */
+}

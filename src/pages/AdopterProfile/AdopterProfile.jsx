@@ -1,6 +1,4 @@
 import AdopterProfileCard from "../../components/AdopterProfileCard/AdopterProfileCard"
-import Navbar from "../../components/Navbar/Navbar"
-import Footer from "../../components/Footer/Footer"
 import Carousel from "../../components/Carousel/Carousel"
 import Slider from "react-slick";
 import "./AdopterProfile.css"

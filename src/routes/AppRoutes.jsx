@@ -7,6 +7,7 @@ import RegisterPet from "../pages/RegisterPet/RegisterPet";
 import Login from "../pages/Login/Login";
 import PageNotFound from "../pages/PageNotFound/PageNotFound";
 import Home from "../pages/Home/Home";
+import TestDraft from "../pages/TestDraft/TestDraft";
 
 const AppRoutes = () => {
     return (
@@ -20,6 +21,7 @@ const AppRoutes = () => {
             <Route path="/register-pet" element={<RegisterPet />} />
             <Route path="*" element={<PageNotFound />} />
             <Route path="/Home" element={<Home />} />
+            <Route path="/test-draft" element={<TestDraft />} />
         </Routes>
     );
 };

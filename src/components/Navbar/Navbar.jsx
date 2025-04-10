@@ -1,6 +1,6 @@
+import ButtonType from '../ButtonType/ButtonType'
 import './Navbar.css'
 import {useEffect} from 'react'
-
 
 const Navbar = () =>{
     useEffect(()=>{
@@ -27,16 +27,16 @@ const Navbar = () =>{
                 <nav id='navbar'>
                 <img id="logo" src="/assets/CenterPet.png" alt="Center Pet Logo" />                    <ul>
                         <li>
-                            <a href="#">Catálogo</a>
+                            <ButtonType color={"#D14D72"}>Catálogo</ButtonType> {/*add onClick */}
                         </li>
                         <li>
-                            <a href="#">ONGs</a>
-                            </li>
+                            <ButtonType color={"#D14D72"}>Pets</ButtonType> {/*add onClick */}
+                        </li>
                         <li>
-                            <a href="#">Sobre nós</a>
+                            <ButtonType color={"#D14D72"}>ONG</ButtonType> {/*add onClick */}
                         </li>
                     </ul>
-                    <div id="dropdown">
+                    {/* <div id="dropdown">
                         <button id="dropdown_button">Dropdown</button>
                         <div id="filtros_dropdown">
                             <div className="filtro">
@@ -48,7 +48,7 @@ const Navbar = () =>{
                                 <p>Pets Especiais</p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </nav>
             </header>
         </>

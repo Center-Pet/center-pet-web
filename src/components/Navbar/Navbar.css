@@ -8,13 +8,15 @@
     align-items: center;
     padding: 0px 100px;
     margin-bottom: 45px;
+    font-family: 'Alexandria';
+    font-size: 16px;
 }
 #logo{
     width: 100px;
     height: 100px;
 }
 .brown_square{
-    background-color: #B5828C;
+    background-color: #D14D72;
     width: 623px;
     height: 623px;
     position: absolute;
@@ -24,6 +26,7 @@
     border-radius: 60px;
     z-index: -1;
 }
+
 ul{
     display: flex;
     list-style-position: inside;
@@ -33,13 +36,9 @@ ul{
 
 a:link{
     text-decoration-line: none;
-    color: rgb(0,0,0);
-}
-a:visited{
-    color: rgb(0,0,0);
 }
 
-#dropdown_button{
+/* #dropdown_button{
     background-color: #FCC8D1;
     width: 100px;
     height: 50px;
@@ -104,4 +103,4 @@ a:visited{
 }
 .checkbox_filtro:checked:before{
     opacity: 1;
-}
+} */
