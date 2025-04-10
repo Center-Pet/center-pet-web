@@ -1,81 +1,79 @@
 .footer {
     background-color: #c69a9e;
     color: white;
-    padding: 20px;
+    padding: 16px 0 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
     width: 100%;
-}
-
-.footer-container {
+    box-sizing: border-box;
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.footer-nav ul {
+    flex-wrap: wrap;
+  }
+  
+  .footer-logo {
     display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer-nav li {
-    margin-right: 24px;
-}
-
-.footer-nav a {
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .footer-logo img {
+    height: 50px;
+    width: auto;
+  }
+  
+  .footer-brand {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .footer-nav {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .footer-nav a {
     color: white;
     text-decoration: none;
-}
-
-.footer-nav a:hover {
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-nav a:hover {
+    color: #fff7f8;
     text-decoration: underline;
-}
-
-.footer-logo img {
-    height: 130px;
-    width: auto;
-    object-fit: contain;
-}
-
-.footer-copyright {
-    margin-top: 20px;
-    font-size: 14px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    padding: 12px 16px 0;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+  
+  /* Responsivo */
+  @media (max-width: 768px) {
     .footer-container {
-        flex-direction: column;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
     }
-
+  
+    .footer-logo {
+      justify-content: center;
+    }
+  
     .footer-nav {
-        margin-bottom: 20px;
+      justify-content: center;
     }
-
-    .footer-nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .footer-nav li {
-        margin: 0 12px 10px;
-    }
-
-    .footer-copyright {
-        text-align: center;
-    }
-}
-
-html,
-body,
-#root {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
+  }
+  

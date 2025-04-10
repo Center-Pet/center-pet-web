@@ -1,18 +1,26 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
-import Footer from "./components/Footer/Footer"; 
-import Navbar from "./components/Navbar/Navbar"; 
-import AdopterProfileCard from "./components/AdopterProfileCard/AdopterProfileCard";
+import Footer from "./components/Footer/Footer";
+import Navbar from "./components/Navbar/Navbar";
+
+function AppContent() {
+  const location = useLocation();
+  const hideNavbarRoutes = ["/login", "/cadastro"];
+  const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+
+  return (
+    <div className="app-wrapper">
+      {!shouldHideNavbar && <Navbar />}
+      <AppRoutes />
+      {!shouldHideNavbar && <Footer />}
+    </div>
+  );
+}
 
 function App() {
   return (
     <Router>
-      <div className="app-wrapper">
-        <Navbar />
-        <AppRoutes />
-
-        <Footer />
-      </div>
+      <AppContent />
     </Router>
   );
 }
