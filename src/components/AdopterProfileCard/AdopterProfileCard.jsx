@@ -18,10 +18,6 @@ const AdopterProfileCard = () => {
           <div className="profile-name">
             <h2>Olá, Murilo Celegatto</h2>
           </div>
-          <button className="edit-button">
-            <Pencil size={16} />
-            <span>Editar</span>
-          </button>
         </div>
 
         {/* Profile Details */}

@@ -1,4 +1,5 @@
 import React from "react";
+import TitleType from "../TitleType/TitleType";
 import "./Footer.css";
 
 function Footer() {
@@ -7,7 +8,7 @@ function Footer() {
       <div className="footer-container">
         <div className="footer-logo">
           <img src="/assets/CP.png" alt="Center Pet Logo" />
-          <span className="footer-brand">Center Pet</span>
+          <TitleType color="">Center Pet</TitleType>
         </div>
 
         <nav className="footer-nav">

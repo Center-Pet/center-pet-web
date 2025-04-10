@@ -23,7 +23,7 @@ function PrevArrow(props) {
     );
   }
 
-const Carousel = ({nome}) =>{
+const Carousel = () =>{
     const settings = {
         dots: false,
         infinite: false,
@@ -51,7 +51,6 @@ const Carousel = ({nome}) =>{
 
     return(
         <div className="carousel">
-            <h2 className="titulo_carrosel">{nome}</h2>
             <div className='containerCards'>
                 <NextArrow />
                 <Slider {...settings}>

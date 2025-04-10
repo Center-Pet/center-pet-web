@@ -2,17 +2,8 @@ body{
     background-color: #FEF2F4;
 }
 
-#barra_pesquisa{
-    border: 2px solid rosybrown;
-    border-radius: 10px;
-    transform: 3s ease;
-    justify-self: center;
-    width: 70vh;
-}
-#barra_pesquisa:focus{
-    outline-color: red;
-}
-#filtro_pesquisa{
+.catalog-header{
     display: flex;
-    justify-content: center;
+    justify-content: left;
+    margin-left: 100px;
 }

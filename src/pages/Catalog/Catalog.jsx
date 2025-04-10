@@ -1,12 +1,22 @@
 import Carousel from "../../components/Carousel/Carousel";
+import TitleType from "../../components/TitleType/TitleType";
 import './Catalog.css'
 
 const Catalog = () =>{
     return(
-        <div>
-            <Carousel nome="Novos Pets"/>
-            <Carousel nome="Pets Especiais"/>
-            <Carousel nome="Pets mais Pacientes"/>
+        <div className="conjunt-catalog">
+            <div className="catalog-header">
+                <TitleType>Pets mais Pacientes</TitleType>
+            </div>
+            <Carousel/>
+            <div className="catalog-header">
+                <TitleType>Novos Pets</TitleType>
+            </div>
+            <Carousel/>
+            <div className="catalog-header">
+                <TitleType>Pets Especiais</TitleType>
+            </div>
+            <Carousel/>
         </div>
     )
 }

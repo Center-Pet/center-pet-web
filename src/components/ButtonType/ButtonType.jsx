@@ -1,7 +1,7 @@
 import React from 'react';
 import './ButtonType.css';
 
-const BotaoPersonalizado = ({ children, onClick, bgColor, color, width, margin}) => {
+const BotaoPersonalizado = ({ children, onClick, bgColor='#D14D72', color='#FEF2F4', width, margin}) => {
   return (
     <button
       className="botao-personalizado"

@@ -9,12 +9,8 @@ body{
     overflow: hidden;
 }
 
-.titulo_carrosel{
-    color: #D14D72;
-    margin-left: 90px
-}
 .containerCards {
-    padding: 0px 90px;
+    padding: 10px 90px;
     gap: 10px;
 }
 .slick-arrow:before{

@@ -32,7 +32,7 @@ const Navbar = () => {
         } else if (location.pathname === '/ong-profile') {
             return <img src="/assets/profile.png" alt="ONG Profile" className="profile-picture" />; // Exibe a foto de perfil na página da ONG
         } else if (location.pathname === '/adopter-profile') {
-            return <img src="/assets/adopter-profile.png" alt="Adopter Profile" className="profile-picture" />; // Exibe a foto de perfil do adotante
+            return <img src='/assets/omni-man-profile.jpg' className="profile-picture" />; // Exibe a foto de perfil do adotante
         } else if (location.pathname === '/home') {
             return <SearchBar /> // Exibe a barra de pesquisa na home
         }
