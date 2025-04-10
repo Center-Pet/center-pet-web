@@ -16,11 +16,12 @@ const AppRoutes = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/pet" element={<PetInfo />} />
+            <Route path="/pet/:id" element={<PetInfo />} /> {/* Rota dinâmica para o pet */}
             <Route path="/adopter-profile" element={<AdopterProfile />} /> 
             <Route path="/ong-profile" element={<ONGProfile />} />
             <Route path="/register-pet" element={<RegisterPet />} />
             <Route path="*" element={<PageNotFound />} />
-            <Route path="/Home" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/test-draft" element={<TestDraft />} />
         </Routes>
     );

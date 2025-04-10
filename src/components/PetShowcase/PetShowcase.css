@@ -77,7 +77,8 @@
   }
 
   .pet-see-more-button{
-  display: flex;
+    display: flex;
+    font-family: 'Alexandria', sans-serif;
     align-items: center;
     gap: 4px;
     border: 1px solid #d25b82;

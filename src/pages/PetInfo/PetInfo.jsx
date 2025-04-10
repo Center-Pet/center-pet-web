@@ -166,7 +166,7 @@ export default function PetInfo() {
         </div>
 
         <div className="carousel-section">
-          <PetShowcase title="De Uma Olhada Em Outros Pets" pets={petData} />
+          <PetShowcase title="De uma olhada em outros pets" pets={petData} />
         </div>
       </div>
     </>

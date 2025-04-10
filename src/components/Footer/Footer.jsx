@@ -5,18 +5,15 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-container">
-        {/* Logo + Marca */}
         <div className="footer-logo">
           <img src="/assets/CP.png" alt="Center Pet Logo" />
           <span className="footer-brand">Center Pet</span>
         </div>
 
-        {/* Navegação */}
         <nav className="footer-nav">
           <a href="/">Início</a>
-          <a href="/categorias">Categorias</a>
-          <a href="/sobre">Sobre</a>
-          <a href="/contato">Contato</a>
+          <a href="/home">Sobre</a>
+          <a href="/catalog">Catálogo</a>
         </nav>
       </div>
 

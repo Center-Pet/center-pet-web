@@ -1,8 +1,9 @@
+import React from "react";
 import "./PetDisplay.css";
 
-const PetDisplay = ({ image, type, gender, age }) => {
+const PetDisplay = ({ image, type, gender, age, onClick }) => {
   return (
-    <div className="pet-display-card">
+    <div className="pet-display-card" onClick={onClick} role="button" tabIndex={0}>
       <div className="pet-display-image-container">
         <img
           src={image || "/placeholder.svg"}

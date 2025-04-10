@@ -1,12 +1,14 @@
 "use client";
 
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 import PetDisplay from "../PetDisplay/PetDisplay";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import "./PetShowcase.css";
 
 const PetShowcase = ({ title, pets }) => {
   const carouselRef = useRef(null);
+  const navigate = useNavigate(); // Inicializar o hook useNavigate
 
   const scrollRight = () => {
     const container = carouselRef.current;
@@ -22,6 +24,10 @@ const PetShowcase = ({ title, pets }) => {
 
     const scrollAmount = container.offsetWidth; // Rola a largura visível do carrossel
     container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+  };
+
+  const handleCardClick = (petId) => {
+    navigate(`/pet/${petId}`); // Redireciona para a página do pet com o ID
   };
 
   const handleSeeMore = () => {
@@ -61,9 +67,10 @@ const PetShowcase = ({ title, pets }) => {
           <PetDisplay
             key={index}
             image={pet.image}
-            type={pet.type} 
+            type={pet.type}
             gender={pet.gender}
             age={pet.age}
+            onClick={() => handleCardClick(pet.id)} // Passa o evento de clique
           />
         ))}
       </div>

@@ -1,58 +1,63 @@
-import ButtonType from '../ButtonType/ButtonType'
-import './Navbar.css'
-import {useEffect} from 'react'
+import ButtonType from '../ButtonType/ButtonType';
+import Dropdown from '../Dropdown/Dropdown';
+import './Navbar.css';
+import { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom'; // Importar useLocation
 
-const Navbar = () =>{
-    useEffect(()=>{
-        const dropdown_button = document.querySelector('#dropdown_button')
+const Navbar = () => {
+    const navigate = useNavigate(); // Inicializar o hook useNavigate
+    const location = useLocation(); // Obter a rota atual
 
-        if(dropdown_button){
-            dropdown_button.addEventListener("click", showDropdown)
+    useEffect(() => {
+        const dropdown_button = document.querySelector('#dropdown_button');
+
+        if (dropdown_button) {
+            dropdown_button.addEventListener("click", showDropdown);
         }
-        return ()=>{
-            if(dropdown_button){
-                dropdown_button.removeEventListener('click', showDropdown)
+        return () => {
+            if (dropdown_button) {
+                dropdown_button.removeEventListener('click', showDropdown);
             }
-        }
-    })
-    
-    const showDropdown = () =>{
-        document.getElementById("filtros_dropdown").classList.toggle("show");
-    }
+        };
+    });
 
-    return(
+    const showDropdown = () => {
+        document.getElementById("filtros_dropdown").classList.toggle("show");
+    };
+
+    const CustomComponent = () => {
+        if (location.pathname === '/catalog') {
+            return <Dropdown />; // Exibe o Dropdown na página Catalog
+        } else if (location.pathname === '/ong-profile') {
+            return <img src="/assets/profile.png" alt="ONG Profile" className="profile-picture" />; // Exibe a foto de perfil na página da ONG
+        } else if (location.pathname === '/adopter-profile') {
+            return <img src="/assets/adopter-profile.png" alt="Adopter Profile" className="profile-picture" />; // Exibe a foto de perfil do adotante
+        }
+        return null; // Não exibe nada em outras páginas
+    };
+
+    return (
         <>
             <header>
                 <div className="brown_square"></div>
                 <nav id='navbar'>
-                <img id="logo" src="/assets/CenterPet.png" alt="Center Pet Logo" />                    <ul>
+                    <img id="logo" src="/assets/CenterPet.png" alt="Center Pet Logo" />
+                    <ul>
                         <li>
-                            <ButtonType color={"#D14D72"}>Catálogo</ButtonType> {/*add onClick */}
+                            <ButtonType color={"#D14D72"} onClick={() => navigate('/catalog')}>Catálogo</ButtonType>
                         </li>
                         <li>
-                            <ButtonType color={"#D14D72"}>Pets</ButtonType> {/*add onClick */}
+                            <ButtonType color={"#D14D72"} onClick={() => navigate('/home')}>Home</ButtonType>
                         </li>
                         <li>
-                            <ButtonType color={"#D14D72"}>ONG</ButtonType> {/*add onClick */}
+                            <ButtonType color={"#D14D72"} onClick={() => navigate('/ong-profile')}>ONG</ButtonType>
                         </li>
                     </ul>
-                    {/* <div id="dropdown">
-                        <button id="dropdown_button">Dropdown</button>
-                        <div id="filtros_dropdown">
-                            <div className="filtro">
-                                <input className="checkbox_filtro" type="checkbox" value=""/>
-                                <p>Raça</p>
-                            </div>
-                            <div className="filtro">
-                                <input className="checkbox_filtro" type="checkbox" value=""/>
-                                <p>Pets Especiais</p>
-                            </div>
-                        </div>
-                    </div> */}
+                    <CustomComponent /> {/* Renderiza o componente apropriado com base na rota */}
                 </nav>
             </header>
         </>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;

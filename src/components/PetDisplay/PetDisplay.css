@@ -5,11 +5,23 @@
     overflow: hidden;
     background-color: #ffd1d8;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer; /* Indica que o card é clicável */
 }
 
 .pet-display-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pet-display-card:focus {
+    outline: 2px solid #d14d72; /* Adiciona um contorno ao focar */
+    outline-offset: 4px;
+}
+
+.pet-display-card:active {
+    transform: translateY(0); /* Remove o efeito de hover ao clicar */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .pet-display-image-container {

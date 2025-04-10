@@ -1,67 +1,108 @@
-#dropdown_button{
-    background-color: #FCC8D1;
-    width: 100px;
-    height: 50px;
-    border: 2px solid #B5828C;
-    border-radius: 7px;
-    font-family: 'Alexandria';
-}
-#dropdown_button:focus{
-    outline-color: #B5828C;
-}
+@import url('https://fonts.googleapis.com/css2?family=Alexandria&display=swap');
 
-#filtros_dropdown{
-    display: none;
-    position: absolute;
-    background-color: #B5828C;
-    overflow: auto;
-    width: 200px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    color: rgb(255,255,255);
-}
-
-#filtros_dropdown.show{
+#dropdown {
+    position: relative;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    transition: background-color 0.3s ease; /* Transição suave para a mudança de cor */
 }
 
-.filtro{
+#dropdown.selected {
+    background-color: #FCC8D1; /* Cor de fundo quando pelo menos uma opção é selecionada */
+    border-radius: 30px; /* Mantém o estilo arredondado */
+    padding: 7px; /* Adiciona espaçamento ao redor */
+}
+
+#dropdown_button {
+    background-color: #D14D72;
+    color: #FEF2F4;
+    font-family: 'Alexandria', sans-serif;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#dropdown_button:hover {
+    filter: brightness(0.9);
+    transform: scale(1.05);
+}
+
+#dropdown_button:focus {
+    outline: 2px solid #D14D72;
+    outline-offset: 4px;
+}
+
+#filtros_dropdown {
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #D14D72;
+    overflow: hidden;
+    width: 250px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    color: #FEF2F4;
+    border-radius: 12px;
+    padding: 0;
+    max-height: 0; /* Inicialmente invisível */
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+#filtros_dropdown.show {
+    max-height: 600px; /* Altura suficiente para exibir os filtros */
+    padding: 10px; /* Adiciona espaçamento ao abrir */
+}
+
+.filtro {
     display: flex;
     align-items: center;
     height: 30px;
-    font-size: 10px;
+    font-size: 14px;
+    font-family: 'Alexandria', sans-serif;
+    color: #FEF2F4;
+    margin-bottom: 8px;
 }
 
-.checkbox_filtro{
+.checkbox_filtro {
     appearance: none;
     background-color: #fff;
-    margin-right: 5px;
-    width: 20px;
-    height: 20px;
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 1px solid #ccc;
-    border-radius: 2px;
-    transition: 0.1s ease-in-out;
+    border-radius: 4px;
+    transition: background-color 0.2s ease-in-out;
+    position: relative;
 }
-.checkbox_filtro:before{
+
+.checkbox_filtro:before {
     content: '';
     position: absolute;
-    height: 15px;
-    width: 7px;
+    height: 10px;
+    width: 5px;
     opacity: 0;
-    border-right: 3px solid #fff;
-    border-bottom: 3px solid #fff;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
     transform: rotate(45deg);
-    margin-bottom: 5px;
+    bottom: 3px;
 }
-.checkbox_filtro:checked{
-    background-color: #1579d6;
+
+.checkbox_filtro:checked {
+    background-color: #FFABAB;
     border: none;
+    border-radius: 30px;
 }
-.checkbox_filtro:checked:before{
+
+.checkbox_filtro:checked:before {
     opacity: 1;
 }
