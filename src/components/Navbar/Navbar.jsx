@@ -44,13 +44,13 @@ const Navbar = () => {
                     <img id="logo" src="/assets/CenterPet.png" alt="Center Pet Logo" />
                     <ul>
                         <li>
-                            <ButtonType color={"#D14D72"} onClick={() => navigate('/catalog')}>Catálogo</ButtonType>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')}>Catálogo</ButtonType>
                         </li>
                         <li>
-                            <ButtonType color={"#D14D72"} onClick={() => navigate('/home')}>Home</ButtonType>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')}>Home</ButtonType>
                         </li>
                         <li>
-                            <ButtonType color={"#D14D72"} onClick={() => navigate('/ong-profile')}>ONG</ButtonType>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')}>ONG</ButtonType>
                         </li>
                     </ul>
                     <CustomComponent /> {/* Renderiza o componente apropriado com base na rota */}

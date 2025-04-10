@@ -36,20 +36,6 @@
     background-color: #FEF2F4;
   }
   
-  button {
-    background-color: #D14D72;
-    color: white;
-    border: none;
-    padding: 0.8rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #b23a5b;
-  }
-  
   p {
     text-align: center;
     margin-top: 1rem;

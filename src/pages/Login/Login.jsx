@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { LogIn } from 'lucide-react';
-import './Login.css';
+import React, { useState, useEffect } from "react";
+import { LogIn } from "lucide-react";
+import InputField from "../../components/InputField/InputField";
+import ButtonType from "../../components/ButtonType/ButtonType";
+import "./Login.css";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,7 +20,7 @@ const Login = () => {
       setCurrentImage((prev) => (prev + 1) % images.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  });
 
   const handleFormSwitch = () => {
     setIsSwitching(true);
@@ -37,7 +39,7 @@ const Login = () => {
         {images.map((img, index) => (
           <div
             key={index}
-            className={`slider-image ${currentImage === index ? 'active' : ''}`}
+            className={`slider-image ${currentImage === index ? "active" : ""}`}
           >
             <img src={img} alt={`Slide ${index + 1}`} />
             <div className="overlay" />
@@ -48,57 +50,47 @@ const Login = () => {
       {/* Form Section */}
       <div className="form-section">
         <div className="form-container">
-          <div className={`form-header ${isSwitching ? 'switching' : ''}`}>
-            <LogIn className="logo" />
-            <h2>{isLogin ? 'Bem vindo de volta!' : 'Create Account'}</h2>
+          <div className={`form-header ${isSwitching ? "switching" : ""}`}>
+            <img className="logo" src="../../assets/CenterPet.png" alt="" />
+            <h2>{isLogin ? "Bem vindo de volta!" : "Criar Conta"}</h2>
           </div>
 
-          <form className={`login-form ${isSwitching ? 'switching' : ''}`}>
+          <form className={`login-form ${isSwitching ? "switching" : ""}`}>
             {!isLogin && (
-              <div className={`form-group ${!isSwitching ? 'entering' : 'exiting'}`}>
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  className="form-input"
-                />
-              </div>
+              <InputField
+                type="text"
+                placeholder="Nome completo"
+                required
+              />
             )}
-            <div className="form-group">
-              <input
-                type="email"
-                placeholder="Email"
-                className="form-input"
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="password"
-                placeholder="Senha"
-                className="form-input"
-              />
-            </div>
+            <InputField
+              type="email"
+              placeholder="Email"
+              required
+            />
+            <InputField
+              type="password"
+              placeholder="Senha"
+              required
+            />
 
-            <button type="submit" className="submit-button">
-              {isLogin ? 'Sign In' : 'Sign Up'}
-            </button>
+            <ButtonType bgColor="#D14D72" type="submit" width="107%" >
+              {isLogin ? "Entrar" : "Cadastrar"}
+            </ButtonType>
 
-            <button type="button" className="google-button">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                alt="Google"
-                className="google-icon"
-              />
-              Continue com Google
-            </button>
+            <ButtonType bgColor="#FFABAB" type="button" width="107%">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="google-icon"/>
+                      Continue com Google
+            </ButtonType>
 
             <p className="toggle-form">
-              {isLogin ? "Don't have an account? " : 'Already have an account? '}
+              {isLogin ? "Não tem uma conta? " : "Já tem uma conta? "}
               <button
                 type="button"
                 onClick={handleFormSwitch}
                 className="toggle-button"
               >
-                {isLogin ? 'Cadastre-se' : 'Entrar'}
+                {isLogin ? "Cadastre-se" : "Entrar"}
               </button>
             </p>
           </form>

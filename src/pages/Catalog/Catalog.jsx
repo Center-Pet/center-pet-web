@@ -5,7 +5,7 @@ const Catalog = () =>{
     return(
         <div>
             <Carousel nome="Novos Pets"/>
-            <Carousel nome="Pets Especias"/>
+            <Carousel nome="Pets Especiais"/>
             <Carousel nome="Pets mais Pacientes"/>
         </div>
     )

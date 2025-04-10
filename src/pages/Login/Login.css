@@ -161,31 +161,15 @@
     box-shadow: 0 4px 6px rgba(209, 77, 114, 0.2);
   }
   
-  .google-button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: white;
-    border: 1px solid #FCC8D1;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .google-button:hover {
-    background-color: #f8f8f8;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(209, 77, 114, 0.1);
-  }
-  
-  .google-icon {
-    width: 18px;
-    height: 18px;
-  }
-  
+/* Ajuste para o ícone do Google */
+.google-icon {
+  width: 20px; 
+  margin-right: 0.5rem; 
+  height: 20px;
+  background-color: transparent; /* Remove o fundo branco */
+  border-radius: 50%; /* Deixa o ícone circular, se necessário */
+}
+
   .toggle-form {
     text-align: center;
     color: #666;
@@ -208,3 +192,13 @@
     text-decoration: underline;
     color: #b93d5f;
   }
+
+  .logo{
+    width: 35%;
+    height: auto;
+  }
+
+#form-element{
+  width: 100%;
+  margin: 100px;
+}
