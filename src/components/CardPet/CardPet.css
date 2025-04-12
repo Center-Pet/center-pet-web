@@ -1,32 +1,89 @@
 @import url("https://fonts.googleapis.com/css?family=Alexandria");
 
-.card_pet{
+.card_pet {
     background-color: #FFABAB;
     margin: 10px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     padding: 10px;
+    width: 150px; /* Largura fixa */
     cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    aspect-ratio: 3 / 4; /* Proporção fixa */
 }
 
-.card_img_placeholder{
-    width: 100%;
-    height: 180px;
-    align-self: center;
-    border-radius: 10px;
-    /*border: 2px solid rgb(255, 255, 255);*/
-    margin-bottom: 0px 9px;
-    z-index: 1;
+.card_pet:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.card_img_placeholder>img{
+
+.card_img_placeholder {
+    width: 100%;
+    height: 60%; /* A imagem ocupa 60% do card */
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.card_img_placeholder > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 0;
     border-radius: 10px;
 }
-.card_pet>p{
-    margin: 0px;
-    font-size: 15px;
+
+.card_pet_info {
+    text-align: center;
+    width: 100%;
+}
+
+.card_pet_name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px 0;
+    color: #D14D72;
+}
+
+.card_pet_detail {
+    font-size: 14px;
+    margin: 3px 0;
+    color: #242B33;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .card_pet {
+        width: 130px; /* Ajusta a largura em telas médias */
+        padding: 8px;
+    }
+}
+
+@media (max-width: 768px) {
+    .card_pet {
+        width: 110px; /* Ajusta a largura em tablets */
+    }
+
+    .card_pet_name {
+        font-size: 16px;
+    }
+
+    .card_pet_detail {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card_pet {
+        width: 90px; /* Ajusta a largura em dispositivos móveis */
+    }
+
+    .card_pet_name {
+        font-size: 14px;
+    }
+
+    .card_pet_detail {
+        font-size: 12px;
+    }
 }

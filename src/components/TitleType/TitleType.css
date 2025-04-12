@@ -4,3 +4,21 @@
   font-size: 32px;
   font-family: 'Alexandria', sans-serif;
 }
+
+@media (max-width: 1024px) {
+  .custom-title{
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-title{
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-title{
+    font-size:18px;
+  }
+}

@@ -1,17 +1,18 @@
-import './CardPet.css'
+import './CardPet.css';
 
-const CardPet = () =>{
-    return(
-        <>
-            <div className="card_pet">
-                <div className="card_img_placeholder">
-                    <img src="/assets/teste.jpg" alt="Pet" />                </div>
-                <h3>Nome do pet</h3>
-                <p>Gênero: macho</p>
-                <p>idade: 3 meses</p>
+const CardPet = ({ image, name, gender, age }) => {
+    return (
+        <div className="card_pet">
+            <div className="card_img_placeholder">
+                <img src={image} alt={`Imagem de ${name}`} />
             </div>
-        </>
-    )
-}
+            <div className="card_pet_info">
+                <h3 className="card_pet_name">{name}</h3>
+                <p className="card_pet_detail">Gênero: {gender}</p>
+                <p className="card_pet_detail">Idade: {age}</p>
+            </div>
+        </div>
+    );
+};
 
-export default CardPet
+export default CardPet;

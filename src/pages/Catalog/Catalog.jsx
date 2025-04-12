@@ -8,7 +8,7 @@ const Catalog = () =>{
             <div className="catalog-header">
                 <TitleType>Pets mais Pacientes</TitleType>
             </div>
-            <Carousel/>
+            <Carousel />
             <div className="catalog-header">
                 <TitleType>Novos Pets</TitleType>
             </div>
