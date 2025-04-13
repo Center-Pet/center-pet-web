@@ -1,10 +1,10 @@
 import React from 'react';
 import './ButtonType.css';
 
-const BotaoPersonalizado = ({ children, onClick, bgColor='#D14D72', color='#FEF2F4', width, margin}) => {
+const ButtonType = ({ children, onClick, bgColor='#D14D72', color='#FEF2F4', width, margin}) => {
   return (
     <button
-      className="botao-personalizado"
+      className="Button-type"
       onClick={onClick}
       style={{ backgroundColor: bgColor, color:color,width:width, margin:margin}} // Define a cor dinamicamente
     >
@@ -13,4 +13,4 @@ const BotaoPersonalizado = ({ children, onClick, bgColor='#D14D72', color='#FEF2
   );
 };
 
-export default BotaoPersonalizado;
+export default ButtonType;

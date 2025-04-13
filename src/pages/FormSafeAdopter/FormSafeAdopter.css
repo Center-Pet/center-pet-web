@@ -1,0 +1,126 @@
+body {
+  background-color: #FEF2F4;
+  font-family: 'Alexandria', sans-serif;
+}
+
+.form-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #FEF2F4;
+}
+
+.form-content {
+  flex: 1;
+  width: 100%;
+  max-width: 800px;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-description {
+  font-size: 1rem;
+  color: #242B33;
+  margin-bottom: 2rem;
+  text-align: justify;
+}
+
+.adoption-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.adoption-form fieldset {
+  border: 1px solid #D14D72;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.adoption-form legend {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #D14D72;
+  padding: 0 0.5rem;
+}
+
+.adoption-form input,
+.adoption-form select,
+.adoption-form textarea {
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  border: 1px solid #FCC8D1;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: 'Alexandria', sans-serif;
+  background-color: #FEF2F4;
+}
+
+.adoption-form input:focus,
+.adoption-form select:focus,
+.adoption-form textarea:focus {
+  outline: none;
+  border-color: #D14D72;
+  box-shadow: 0 0 4px rgba(209, 77, 114, 0.5);
+}
+
+.adoption-form label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #D14D72;
+  margin-top: 1rem;
+}
+
+.adoption-form textarea {
+  resize: none;
+  height: 100px;
+}
+
+.adoption-form button {
+  background-color: #D14D72;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.adoption-form button:hover {
+  background-color: #FFABAB;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .form-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .adoption-form fieldset {
+    padding: 1rem;
+  }
+
+  .adoption-form legend {
+    font-size: 1rem;
+  }
+
+  .adoption-form input,
+  .adoption-form select,
+  .adoption-form textarea {
+    font-size: 0.9rem;
+  }
+
+  .adoption-form button {
+    font-size: 0.9rem;
+  }
+}
