@@ -13,9 +13,12 @@
 /* --- HERO PRINCIPAL (imagem + texto) --- */
 .hero-section {
   display: flex;
-  justify-content: center; /* Centraliza o conteúdo horizontalmente */
-  align-items: center; /* Centraliza o conteúdo verticalmente */
-  background: linear-gradient(to right, #ffe2dc, #ffa7a1);
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, rgba(255, 226, 220, 0.8), rgba(255, 167, 161, 0.8)),
+    url('/assets/background-pattern.svg'); /* Adiciona um padrão de fundo */
+  background-size: cover;
+  background-position: center;
   height: 400px;
   padding: 0;
   overflow: hidden;
@@ -60,32 +63,35 @@
 }
 
 .hero-content h1 {
-  font-size: 2.5rem;
+  font-size: 3rem; /* Aumenta o tamanho do título */
   color: #402323;
   margin: 0;
+  font-family: 'Poppins', sans-serif; /* Fonte primária para títulos */
 }
 
 .hero-content p {
-  font-size: 1rem;
+  font-size: 1.2rem; /* Aumenta o tamanho do texto descritivo */
   color: #555;
-  max-width: 400px;
+  max-width: 500px;
+  font-family: 'Roboto', sans-serif; /* Fonte secundária para textos descritivos */
 }
 
 .hero-button {
-  background-color: #fd6b63;
+  background-color: #ff7043;
   color: white;
   border: none;
-  padding: 0.7rem 1.4rem;
+  padding: 1rem 2rem; /* Botão maior */
   border-radius: 2rem;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.2rem; /* Texto maior no botão */
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .hero-button:hover {
-  background-color: #e05550;
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Ajuste das imagens */
@@ -104,9 +110,9 @@
   width: 100%;
   max-width: 360px;
   height: auto;
-  object-fit: cover; /* Ajusta a imagem para cobrir o container */
-  border-radius: 10px; /* Bordas arredondadas para suavizar a imagem */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra suave para destacar a imagem */
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Responsivo do Hero */
@@ -117,16 +123,20 @@
     padding: 2rem 1rem;
   }
 
-  .hero-image {
-    margin-top: 1rem;
-  }
-
   .hero-image img {
     max-width: 300px;
   }
 
-  .hero-content {
-    max-width: 90%;
-    margin: 0 auto;
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .hero-button {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
   }
 }

@@ -8,24 +8,28 @@ import "./Hero.css";
 const Hero = () => {
   const slides = [
     {
-      title: "Você Sabia?",
-      text: "Pets adotados vivem mais e desenvolvem laços afetivos mais fortes.",
+      title: "Transforme Vidas",
+      text: "Adotar um pet é mais do que dar um lar. É oferecer amor, cuidado e uma nova chance para quem só quer fazer parte da sua família.",
       image: "/assets/curiosidade1.png",
+      alt: "Imagem de um pet esperando adoção",
     },
     {
-      title: "Amor que Cura",
-      text: "Ter um pet reduz o estresse, ansiedade e até depressão.",
+      title: "Benefícios para Você",
+      text: "Ter um pet em casa reduz o estresse, combate a solidão e traz mais alegria para o seu dia a dia. Adote e sinta a diferença!",
       image: "/assets/curiosidade2.png",
+      alt: "Imagem de um pet feliz com sua nova família",
     },
     {
-      title: "Salve Duas Vidas",
-      text: "Ao adotar, você salva o animal e abre espaço no abrigo para outro.",
+      title: "Faça a Diferença",
+      text: "Ao adotar, você salva uma vida e ajuda a abrir espaço para que outros animais também tenham uma chance de encontrar um lar.",
       image: "/assets/curiosidade3.png",
+      alt: "Imagem de um pet sendo cuidado",
     },
     {
-      title: "Adote com o Coração",
-      text: "Mais que um pet, um novo membro da família.",
+      title: "Adote com Amor",
+      text: "Mais do que um animal de estimação, um pet é um companheiro fiel que transforma sua casa em um lar cheio de felicidade.",
       image: "/assets/curiosidade4.png",
+      alt: "Imagem de um pet brincando com sua família",
     },
   ];
 
@@ -40,14 +44,14 @@ const Hero = () => {
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className={`hero-slide ${index % 2 === 0 ? 'left' : 'right'}`}>
+            <div className={`hero-slide ${index % 2 === 0 ? "left" : "right"}`}>
               <div className="hero-content">
                 <h1>{slide.title}</h1>
                 <p>{slide.text}</p>
                 <button className="hero-button">Adote Agora!</button>
               </div>
               <div className="hero-image">
-                <img src={slide.image} alt={slide.title} />
+                <img src={slide.image} alt={slide.alt} />
               </div>
             </div>
           </SwiperSlide>

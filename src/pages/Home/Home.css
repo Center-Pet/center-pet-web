@@ -1,136 +1,287 @@
 .home-container {
-    background-color: #f9f9f9;
-    padding-bottom: 3rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  /* TITULOS E SUBTITULOS */
-  .section-title {
-    font-size: 2rem;
-    text-align: center;
-    color: #222;
-    margin-bottom: 0.3rem;
-  }
-  
-  .section-subtitle {
-    font-size: 1rem;
-    text-align: center;
-    color: #666;
-    margin-bottom: 1.8rem;
-    max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  /* PETSHOWCASE (vem logo após o Hero) */
-  .showcase-section {
-    background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 16px;
-    max-width: 1200px;
-    margin: 3rem auto 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-  }
-  
-  /* COMO FUNCIONA */
-  .how-it-works {
-    background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 16px;
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: -1rem; /* reduz espaço entre showcase e esta seção */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-  }
-  
-  /* GRID DOS CARDS DE PASSOS */
+  background-color: #f9f9f9;
+  padding-bottom: 3rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* TITULOS E SUBTITULOS */
+.section-title {
+  font-size: 2rem;
+  text-align: center;
+  color: #222;
+  margin-bottom: 0.3rem;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  text-align: center;
+  color: #666;
+  margin-bottom: 1.8rem;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* PETSHOWCASE (vem logo após o Hero) */
+.showcase-section {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  max-width: 1200px;
+  margin: 3rem auto 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+/* COMO FUNCIONA */
+.how-it-works {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: -1rem;
+  /* reduz espaço entre showcase e esta seção */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+/* GRID DOS CARDS DE PASSOS */
+/* Conexão visual entre os passos */
+.steps-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /* Ajusta o número de colunas automaticamente */
+  gap: 1.5rem;
+  margin-top: 2rem;
+  position: relative;
+  animation: fadeIn 1s ease forwards;
+  padding: 0 1rem;
+  /* Adiciona espaçamento lateral para telas menores */
+}
+
+.steps-container::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ddd;
+  z-index: -1;
+  /* Move a linha para trás dos cards */
+}
+
+/* CARD DO PASSO */
+.step-card {
+  background-color: #ffffff;
+  /* Fundo branco para todos os cards */
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  /* Sombra suave */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #f0f0f0;
+  /* Borda sutil */
+}
+
+.step-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  /* Destaque no hover */
+  border-color: #fcc8d1;
+  /* Cor de destaque no hover */
+}
+
+/* Ícones nos passos */
+.step-card i {
+  font-size: 2.5rem;
+  color: #d14d72;
+  /* Cor principal dos ícones */
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.step-card:hover i {
+  transform: scale(1.1);
+  color: #ffabab;
+  /* Cor mais suave no hover */
+}
+
+/* Imagens dos cards */
+.step-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1rem;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Título do card */
+.step-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+/* Descrição do card */
+.step-card p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
   .steps-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+    grid-template-columns: 1fr;
+    /* Exibe os cards em uma única coluna em telas menores */
+    gap: 1rem;
   }
-  
-  /* CARD DO PASSO */
+
   .step-card {
-    background-color: #ffffff; /* Alterando para fundo branco para dar mais frescor */
-    border-radius: 12px;
-    padding: 1.8rem 1.3rem;
-    text-align: center;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1); /* Aumento da sombra para maior destaque */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 2px solid transparent; /* Borda transparente por padrão */
-    background-image: linear-gradient(to bottom, #f9f9f9, #ffffff); /* Transição suave de cores para um toque de frescor */
+    padding: 1.2rem 0.8rem;
+    /* Reduz o padding para telas menores */
   }
-  
-  .step-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    border-color: #007bff; /* Cor de borda azul vibrante quando hover */
+
+  .step-card i {
+    font-size: 2rem;
+    /* Reduz o tamanho dos ícones */
   }
-  
-  /* Imagens dos cards */
-  .step-card img {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 1rem;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-  }
-  
-  /* Título do card */
+
   .step-card h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    /* Ajusta o tamanho do título */
   }
-  
-  /* Descrição do card */
+
   .step-card p {
-    font-size: 0.95rem;
-    color: #555;
-    line-height: 1.4;
+    font-size: 0.9rem;
+    /* Ajusta o tamanho do texto */
   }
-  
-  /* Cards ativos com destaque */
-  .step-card:nth-child(1) {
-    background-color: #e7f4fe; /* Fundo azul suave */
+}
+
+/* Remove qualquer cor de fundo específica para os cards */
+.step-card:nth-child(1),
+.step-card:nth-child(2),
+.step-card:nth-child(3),
+.step-card:nth-child(4) {
+  background-color: #ffffff !important;
+  /* Garante que o fundo seja branco */
+  border: 1px solid #f0f0f0;
+  /* Mantém a borda sutil */
+}
+
+/* PET SECTION INTRO */
+.pet-section-intro {
+  text-align: center;
+  padding: 2rem 1.5rem 0;
+  max-width: 1200px;
+  margin: 0 auto -2rem;
+  /* Fica colado no showcase */
+}
+
+/* SEÇÃO DE PARCEIROS */
+.partners-section {
+  background-color: #f9f9f9;
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.partners-section .section-title {
+  font-size: 2rem;
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+.partners-section .section-subtitle {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+.partners-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .partners-content {
+    flex-direction: row;
+    justify-content: space-between;
   }
-  
-  .step-card:nth-child(1):hover {
-    border-color: #007bff;
+}
+
+.partners-text {
+  flex: 1;
+  max-width: 600px;
+  text-align: left;
+}
+
+.partners-text h3 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.partners-text p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.partners-image {
+  flex: 1;
+  max-width: 500px;
+  text-align: center;
+}
+
+.partners-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  object-fit: cover;
+  margin: 0 auto;
+}
+
+/* Botão "Quero ser parceiro" */
+.partner-button {
+  display: inline-block;
+  background-color: #d14d72;
+  /* Cor principal do botão */
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.partner-button:hover {
+  background-color: #fcc8d1;
+  /* Cor mais clara no hover */
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Animações ao rolar a página */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .step-card:nth-child(2) {
-    background-color: #fef2e7; /* Fundo laranja suave */
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .step-card:nth-child(2):hover {
-    border-color: #ff7043;
-  }
-  
-  .step-card:nth-child(3) {
-    background-color: #f5ffe7; /* Fundo verde suave */
-  }
-  
-  .step-card:nth-child(3):hover {
-    border-color: #66bb6a;
-  }
-  
-  .step-card:nth-child(4) {
-    background-color: #fef5e7; /* Fundo amarelo suave */
-  }
-  
-  .step-card:nth-child(4):hover {
-    border-color: #ffeb3b;
-  }
-  
-  /* PET SECTION INTRO */
-  .pet-section-intro {
-    text-align: center;
-    padding: 2rem 1.5rem 0;
-    max-width: 1200px;
-    margin: 0 auto -2rem; /* Fica colado no showcase */
-  }
-  
+}
