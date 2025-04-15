@@ -10,8 +10,8 @@
   }
 }
 
-/* --- HERO PRINCIPAL (imagem + texto) --- */
-.hero-section {
+/* --- banner PRINCIPAL (imagem + texto) --- */
+.banner-section {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,12 +26,12 @@
   position: relative;
 }
 
-.hero-swiper {
+.banner-swiper {
   width: 100%;
   height: 100%;
 }
 
-.hero-slide {
+.banner-slide {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,12 +43,12 @@
 }
 
 /* Lógica de alternância de posição (inverte dependendo do slide) */
-.hero-slide.right {
+.banner-slide.right {
   flex-direction: row-reverse; /* Inverte a ordem para este slide */
 }
 
 /* Ajuste da posição das imagens */
-.hero-content {
+.banner-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -62,21 +62,21 @@
   opacity: 0;
 }
 
-.hero-content h1 {
+.banner-content h1 {
   font-size: 3rem; /* Aumenta o tamanho do título */
   color: #402323;
   margin: 0;
   font-family: 'Poppins', sans-serif; /* Fonte primária para títulos */
 }
 
-.hero-content p {
+.banner-content p {
   font-size: 1.2rem; /* Aumenta o tamanho do texto descritivo */
   color: #555;
   max-width: 500px;
   font-family: 'Roboto', sans-serif; /* Fonte secundária para textos descritivos */
 }
 
-.hero-button {
+.banner-button {
   background-color: #ff7043;
   color: white;
   border: none;
@@ -89,13 +89,13 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.hero-button:hover {
+.banner-button:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Ajuste das imagens */
-.hero-image {
+.banner-image {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -106,7 +106,7 @@
   opacity: 0;
 }
 
-.hero-image img {
+.banner-image img {
   width: 100%;
   max-width: 360px;
   height: auto;
@@ -115,27 +115,27 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsivo do Hero */
+/* Responsivo do banner */
 @media (max-width: 992px) {
-  .hero-section {
+  .banner-section {
     flex-direction: column;
     height: auto;
     padding: 2rem 1rem;
   }
 
-  .hero-image img {
+  .banner-image img {
     max-width: 300px;
   }
 
-  .hero-content h1 {
+  .banner-content h1 {
     font-size: 2.5rem;
   }
 
-  .hero-content p {
+  .banner-content p {
     font-size: 1rem;
   }
 
-  .hero-button {
+  .banner-button {
     font-size: 1rem;
     padding: 0.8rem 1.5rem;
   }

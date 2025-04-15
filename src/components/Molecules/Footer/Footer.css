@@ -1,7 +1,7 @@
 .footer {
     background-color: #D14D72;
     color: #FEF2F4;
-    padding: 20px 0;
+    padding-bottom: 20px;
     font-family: 'Alexandria', sans-serif;
     font-size: 14px;
     width: 100%;
@@ -10,7 +10,7 @@
   
   .footer-container {
     max-width: 1200px;
-    padding: 0 20px;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,11 +21,10 @@
   .footer-logo {
     display: flex;
     align-items: center;
-    gap: 10px;
   }
   
   .footer-logo img {
-    height: 70px;
+    height: 80px;
     width: auto;
   }
   
@@ -56,7 +55,6 @@
   
   .footer-bottom {
     text-align: center;
-    padding: 12px 16px 0;
     font-size: 14px;
     opacity: 0.8;
     margin-top: 20px;
@@ -64,7 +62,7 @@
   }
   
   /* Responsivo */
-  @media (max-width: 768px) {
+  @media (max-width: 760px) {
     .footer-container {
       flex-direction: column;
       gap: 12px;

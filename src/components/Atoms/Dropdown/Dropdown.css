@@ -37,36 +37,71 @@
 }
 
 #filtros_dropdown {
-    flex-direction: column;
+    display: flex;
+    flex-wrap: wrap; /* Permite que os itens quebrem em várias linhas */
     position: absolute;
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
     background-color: #D14D72;
-    overflow: hidden;
-    width: 250px;
+    overflow-y: auto;
+    width: 210px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
     color: #FEF2F4;
     border-radius: 12px;
-    padding: 0;
+    padding: 0px;
     max-height: 0; /* Inicialmente invisível */
     transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
 }
 
 #filtros_dropdown.show {
-    max-height: 600px; /* Altura suficiente para exibir os filtros */
-    padding: 10px; /* Adiciona espaçamento ao abrir */
+    max-height: 400px; /* Altura suficiente para exibir os filtros */
+    padding: 15px; /* Adiciona espaçamento ao abrir */
+}
+
+/* Estilo para a barra de rolagem */
+#filtros_dropdown::-webkit-scrollbar {
+    width: 7px; /* Largura da barra de rolagem */
+}
+
+#filtros_dropdown::-webkit-scrollbar-thumb {
+    background-color: #FFABAB; /* Cor da barra de rolagem */
+    border-radius: 4px; /* Arredonda a barra de rolagem */
+}
+
+#filtros_dropdown::-webkit-scrollbar-thumb:hover {
+    background-color: #D14D72; /* Cor ao passar o mouse */
+}
+
+#filtros_dropdown::-webkit-scrollbar-track {
+    background-color: #F5F5F5; /* Cor do fundo da barra de rolagem */
+}
+
+.filtro-categoria {
+    flex: 1 1 calc(50% - 20px); /* Cada categoria ocupa 50% da largura menos o gap */
+    min-width: 200px; /* Define uma largura mínima */
+}
+
+.filtro-categoria-titulo {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #FEF2F4;
+}
+
+.filtro-opcoes {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento entre os filtros */
 }
 
 .filtro {
     display: flex;
     align-items: center;
-    height: 30px;
     font-size: 14px;
     font-family: 'Alexandria', sans-serif;
     color: #FEF2F4;
-    margin-bottom: 8px;
 }
 
 .checkbox_filtro {

@@ -7,7 +7,7 @@ const UserCardHeader = ({ name }) => {
       <div className="profile-header">
         <div className="profile-image-container">
           <div className="profile-image">
-            <img src="/assets/CP.png" alt="Profile" />
+            <img src="/assets/logo/CP.png" alt="Profile" />
           </div>
           <button className="edit-image-button">
             <Pencil size={16} />

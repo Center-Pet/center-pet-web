@@ -3,9 +3,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import "./Hero.css";
+import "./Banner.css";
 
-const Hero = () => {
+const Banner = () => {
   const slides = [
     {
       title: "Transforme Vidas",
@@ -34,23 +34,23 @@ const Hero = () => {
   ];
 
   return (
-    <section className="hero-section">
+    <section className="banner-section">
       <Swiper
         modules={[Autoplay, Pagination]}
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         pagination={{ clickable: true }}
         loop={true}
-        className="hero-swiper"
+        className="banner-swiper"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
-            <div className={`hero-slide ${index % 2 === 0 ? "left" : "right"}`}>
-              <div className="hero-content">
+            <div className={`banner-slide ${index % 2 === 0 ? "left" : "right"}`}>
+              <div className="banner-content">
                 <h1>{slide.title}</h1>
                 <p>{slide.text}</p>
-                <button className="hero-button">Adote Agora!</button>
+                <button className="banner-button">Adote Agora!</button>
               </div>
-              <div className="hero-image">
+              <div className="banner-image">
                 <img src={slide.image} alt={slide.alt} />
               </div>
             </div>
@@ -61,4 +61,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default Banner;

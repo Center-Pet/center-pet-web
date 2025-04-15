@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
-import Footer from "./components/Footer/Footer";
-import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Molecules/Footer/Footer";
+import Navbar from "./components/Molecules/Navbar/Navbar";
 
 function AppContent() {
   const location = useLocation();

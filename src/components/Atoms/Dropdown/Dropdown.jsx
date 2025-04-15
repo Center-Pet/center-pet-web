@@ -5,12 +5,12 @@ const Dropdown = () => {
     const [hasSelection, setHasSelection] = useState(false); // Estado para monitorar seleção
     const [isOpen, setIsOpen] = useState(false); // Estado para controlar abertura do dropdown
 
-    const options = [
-        "Fêmea", "Macho", "Grande Porte", "Médio Porte", "Pequeno Porte",
-        "Cachorro", "Gato", "Filhote", "Adulto", "Idoso",
-        "Vacinado", "Não Vacinado", "Vermifugado", "Não Vermifugado",
-        "Castrado", "Não Castrado", "Condição Especial"
-    ];
+    const categories = {
+        Gênero: ["Fêmea", "Macho"],
+        Porte: ["Grande Porte", "Médio Porte", "Pequeno Porte"],
+        Idade: ["Filhote", "Jovem", "Adulto", "Idoso"],
+        Saúde: ["Vacinado", "Não Vacinado", "Vermifugado", "Não Vermifugado", "Castrado", "Não Castrado", "Condição Especial"]
+    };
 
     const handleCheckboxChange = () => {
         // Verifica se pelo menos um checkbox está selecionado
@@ -26,16 +26,23 @@ const Dropdown = () => {
         <div id="dropdown" className={hasSelection ? 'selected' : ''}>
             <button id="dropdown_button" onClick={toggleDropdown}>Filtros</button>
             <div id="filtros_dropdown" className={isOpen ? 'show' : ''}>
-                {options.map((option, index) => (
-                    <div className="filtro" key={index}>
-                        <input
-                            className="checkbox_filtro"
-                            type="checkbox"
-                            value={option}
-                            id={`checkbox-${index}`}
-                            onChange={handleCheckboxChange} // Chama a função ao alterar o estado do checkbox
-                        />
-                        <label htmlFor={`checkbox-${index}`}>{option}</label>
+                {Object.entries(categories).map(([category, options], index) => (
+                    <div className="filtro-categoria" key={index}>
+                        <h4 className="filtro-categoria-titulo">{category}</h4>
+                        <div className="filtro-opcoes">
+                            {options.map((option, idx) => (
+                                <div className="filtro" key={idx}>
+                                    <input
+                                        className="checkbox_filtro"
+                                        type="checkbox"
+                                        value={option}
+                                        id={`checkbox-${category}-${idx}`}
+                                        onChange={handleCheckboxChange} // Chama a função ao alterar o estado do checkbox
+                                    />
+                                    <label htmlFor={`checkbox-${category}-${idx}`}>{option}</label>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 ))}
             </div>

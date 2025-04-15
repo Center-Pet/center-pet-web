@@ -1,5 +1,5 @@
 import React from "react";
-import Hero from "../../components/Molecules/Banner/Hero";
+import Hero from "../../components/Molecules/Banner/Banner";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import './Home.css';
 
@@ -124,7 +124,7 @@ const Home = () => {
             <a href="/parcerias" className="partner-button">Quero ser parceiro</a>
           </div>
           <div className="partners-image">
-            <img src="/assets/Center-Pet.jpg" alt="Imagem de parceria com ONG" />
+            <img src="/assets/logo/Center-Pet.jpg" alt="Imagem de parceria com ONG" />
           </div>
         </div>
       </section>

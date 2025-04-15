@@ -8,8 +8,14 @@ body{
     margin-left: 100px;
 }
 
+@media (max-width: 780px) {
+    .catalog-header{
+        margin-left: 80px;
+    }    
+}
+
 @media (max-width: 480px) {
     .catalog-header{
-        margin-left: 70px;
+        margin-left: 50px;
     }    
 }

@@ -13,9 +13,6 @@ const AdopterProfile = () => {
           <UserCardHeader name={"Murilo Celegatto"} />
           <UserCardDetails />
         </div>
-        <div className="carousel-container">
-          <Carousel />
-        </div>
       </div>
     </div>
   )

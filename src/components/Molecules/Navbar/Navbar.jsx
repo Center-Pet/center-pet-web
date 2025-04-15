@@ -1,67 +1,71 @@
-import ButtonType from '../ButtonType/ButtonType';
-import Dropdown from '../Dropdown/Dropdown';
-import SearchBar from '../SearchBar/SearchBar';
+import React, { useState } from "react";
+import ButtonType from '/src/components/Atoms/ButtonType/ButtonType.jsx';
+import Dropdown from '/src/components/Atoms/Dropdown/Dropdown.jsx';
 import './Navbar.css';
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; // Importar useLocation
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
-    const navigate = useNavigate(); // Inicializar o hook useNavigate
-    const location = useLocation(); // Obter a rota atual
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    useEffect(() => {
-        const dropdown_button = document.querySelector('#dropdown_button');
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
 
-        if (dropdown_button) {
-            dropdown_button.addEventListener("click", showDropdown);
-        }
-        return () => {
-            if (dropdown_button) {
-                dropdown_button.removeEventListener('click', showDropdown);
-            }
-        };
-    });
-
-    const showDropdown = () => {
-        document.getElementById("filtros_dropdown").classList.toggle("show");
+    const closeMenu = () => {
+        setIsMenuOpen(false);
     };
 
     const CustomComponent = () => {
         if (location.pathname === '/catalog') {
-            return <Dropdown />; // Exibe o Dropdown na página Catalog
+            return <Dropdown />;
         } else if (location.pathname === '/ong-profile') {
-            return <img src="/assets/profile.png" alt="ONG Profile" className="profile-picture" />; // Exibe a foto de perfil na página da ONG
+            return <img src="/assets/profile.png" alt="ONG Profile" className="profile-picture" />;
         } else if (location.pathname === '/adopter-profile') {
-            return <img src='/assets/omni-man-profile.jpg' className="profile-picture" />; // Exibe a foto de perfil do adotante
-        } else if (location.pathname === '/home') {
-            return <SearchBar /> // Exibe a barra de pesquisa na home
+            return <img src='/assets/omni-man-profile.jpg' className="profile-picture" />;
         }
-        return null; // Não exibe nada em outras páginas
+        return null;
     };
 
     return (
-        <>
-            <header>
-                <div className="pink_square"></div>
-                <nav id='navbar'>
-                    <img id="logo" src="/assets/CenterPet.png" alt="Center Pet Logo" />
-                    <ul>
-                        <li>
-                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')}>Catálogo</ButtonType>
-                        </li>
-                        <li>
-                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')}>Home</ButtonType>
-                        </li>
-                        <li>
-                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')}>ONG</ButtonType>
-                        </li>
-                    </ul>
-                    <div className="custom-component">
-                        <CustomComponent /> {/* Renderiza o componente apropriado com base na rota */}
-                    </div>
-                </nav>
-            </header>
-        </>
+        <header>
+            <div className="pink_square"></div>
+            <nav id='navbar'>
+                <img id="logo" src="/assets/logo/CenterPet.png" alt="Center Pet Logo" />
+                <button className="hamburger-menu" onClick={toggleMenu}>
+                    ☰
+                </button>
+                {/* Menu padrão para telas grandes */}
+                <ul className="menu-desktop">
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
+                    </li>
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')} icon={"/assets/icons/home.png"}>Home</ButtonType>
+                    </li>
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')} icon={"/assets/icons/heart.png"}>ONG</ButtonType>
+                    </li>
+                </ul>
+                {/* Menu lateral para dispositivos móveis */}
+                <ul className={`menu ${isMenuOpen ? "open" : ""}`}>
+                    <button className="close-menu" onClick={closeMenu}>✕</button>
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
+                    </li>
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')} icon={"/assets/icons/home.png"}>Home</ButtonType>
+                    </li>
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')} icon={"/assets/icons/heart.png"}>ONG</ButtonType>
+                    </li>
+                </ul>
+                <div className="custom-component">
+                    <CustomComponent />
+                </div>
+            </nav>
+        </header>
     );
 };
 
