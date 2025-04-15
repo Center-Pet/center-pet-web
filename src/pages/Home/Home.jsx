@@ -83,7 +83,7 @@ const Home = () => {
       </section>
 
       {/* COMO FUNCIONA */}
-            <section className="how-it-works">
+      <section className="how-it-works">
         <h2 className="section-title">Como Funciona</h2>
         <div className="steps-container">
           <div className="step-card">
@@ -109,6 +109,33 @@ const Home = () => {
         </div>
       </section>
 
+      {/* CURIOSIDADES */}
+      <section className="curiosities-section">
+        <h2 className="section-title">Curiosidades sobre adoção</h2>
+        <div className="curiosities-cards">
+          <div className="curiosity-card">
+            <i className="fas fa-paw"></i>
+            <h3>Mais de 30 milhões</h3>
+            <p>No Brasil, há mais de 30 milhões de animais abandonados esperando por um lar.</p>
+          </div>
+          <div className="curiosity-card">
+            <i className="fas fa-heartbeat"></i>
+            <h3>Benefícios à saúde</h3>
+            <p>Adotar um pet pode reduzir o estresse, a solidão e até a pressão arterial.</p>
+          </div>
+          <div className="curiosity-card">
+            <i className="fas fa-gavel"></i>
+            <h3>É lei!</h3>
+            <p>O abandono de animais é crime no Brasil, com pena de detenção e multa.</p>
+          </div>
+          <div className="curiosity-card">
+            <i className="fas fa-hands-helping"></i>
+            <h3>ONGs parceiras</h3>
+            <p>ONGs são fundamentais para o resgate, cuidado e adoção responsável dos pets.</p>
+          </div>
+        </div>
+      </section>
+
       {/* PARCERIAS */}
       <section className="partners-section">
         <h2 className="section-title">Parcerias que transformam vidas</h2>
@@ -128,6 +155,34 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* CTA Secundário e Redes Sociais */}
+      <section className="cta-social-section">
+        <div className="cta-buttons">
+          <a href="/voluntario" className="cta-secondary">Quero ser voluntário</a>
+          <a href="/doar" className="cta-secondary donate">Doe para uma ONG</a>
+        </div>
+        <div className="social-links">
+          <span>Siga-nos:</span>
+          <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <i className="fab fa-instagram"></i>
+          </a>
+          <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <i className="fab fa-facebook"></i>
+          </a>
+          <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <i className="fab fa-whatsapp"></i>
+          </a>
+        </div>
+      </section>
+
+      <button
+        className="floating-help"
+        aria-label="Ajuda ou Chat"
+        onClick={() => alert('Em breve você poderá falar com a gente!')}
+      >
+        <i className="fas fa-comments"></i>
+      </button>
 
     </main>
   );

@@ -72,51 +72,36 @@
 
 /* CARD DO PASSO */
 .step-card {
-  background-color: #ffffff;
-  /* Fundo branco para todos os cards */
+  background: #fff !important;
+  /* Garante fundo branco */
+  border: 2px solid #f0f0f0 !important;
+  /* Borda sutil padrão */
   border-radius: 12px;
   padding: 1.5rem 1rem;
   text-align: center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  /* Sombra suave */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #f0f0f0;
-  /* Borda sutil */
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
 }
 
 .step-card:hover {
+  border-color: #d14d72 !important;
+  /* Cor da paleta no hover */
+  box-shadow: 0 8px 24px rgba(209, 77, 114, 0.10);
   transform: translateY(-6px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  /* Destaque no hover */
-  border-color: #fcc8d1;
-  /* Cor de destaque no hover */
 }
 
-/* Ícones nos passos */
 .step-card i {
   font-size: 2.5rem;
   color: #d14d72;
-  /* Cor principal dos ícones */
   margin-bottom: 1rem;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition: color 0.3s, transform 0.3s;
 }
 
 .step-card:hover i {
-  transform: scale(1.1);
   color: #ffabab;
-  /* Cor mais suave no hover */
+  transform: scale(1.1);
 }
 
-/* Imagens dos cards */
-.step-card img {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 1rem;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-}
-
-/* Título do card */
 .step-card h3 {
   font-size: 1.2rem;
   font-weight: 600;
@@ -124,7 +109,6 @@
   margin-bottom: 0.5rem;
 }
 
-/* Descrição do card */
 .step-card p {
   font-size: 0.95rem;
   color: #555;
@@ -135,28 +119,23 @@
 @media (max-width: 768px) {
   .steps-container {
     grid-template-columns: 1fr;
-    /* Exibe os cards em uma única coluna em telas menores */
     gap: 1rem;
   }
 
   .step-card {
     padding: 1.2rem 0.8rem;
-    /* Reduz o padding para telas menores */
   }
 
   .step-card i {
     font-size: 2rem;
-    /* Reduz o tamanho dos ícones */
   }
 
   .step-card h3 {
     font-size: 1.1rem;
-    /* Ajusta o tamanho do título */
   }
 
   .step-card p {
     font-size: 0.9rem;
-    /* Ajusta o tamanho do texto */
   }
 }
 
@@ -284,4 +263,136 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* CTA Secundário e Redes Sociais */
+.cta-social-section {
+  text-align: center;
+  margin: 2.5rem 0 1.5rem 0;
+}
+
+.cta-buttons {
+  margin-bottom: 1rem;
+}
+
+.cta-secondary {
+  display: inline-block;
+  background: #fcc8d1;
+  color: #d14d72;
+  font-weight: bold;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  margin: 0 0.5rem;
+  text-decoration: none;
+  transition: background 0.3s, color 0.3s, transform 0.2s;
+}
+
+.cta-secondary.donate {
+  background: #d14d72;
+  color: #fff;
+}
+
+.cta-secondary:hover {
+  background: #ffabab;
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+.social-links {
+  margin-top: 0.5rem;
+}
+
+.social-links span {
+  margin-right: 0.7rem;
+  color: #555;
+}
+
+.social-links a {
+  color: #d14d72;
+  font-size: 1.5rem;
+  margin: 0 0.3rem;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #ffabab;
+}
+
+/* Botão Flutuante de Ajuda/Chat */
+.floating-help {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 60px;
+  height: 60px;
+  background: #d14d72;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 2rem;
+  box-shadow: 0 4px 16px rgba(209, 77, 114, 0.15);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.floating-help:hover {
+  background: #ffabab;
+  transform: scale(1.08);
+}
+
+/* Curiosidades */
+.curiosities-section {
+  background: #fef2f4;
+  border-radius: 16px;
+  max-width: 1200px;
+  margin: 2.5rem auto 1.5rem auto;
+  padding: 2rem 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  text-align: center;
+}
+
+.curiosities-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.curiosity-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  box-shadow: 0 2px 12px rgba(209, 77, 114, 0.07);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+  border: 1.5px solid #fcc8d1;
+}
+
+.curiosity-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(209, 77, 114, 0.13);
+  border-color: #d14d72;
+}
+
+.curiosity-card i {
+  font-size: 2.2rem;
+  color: #d14d72;
+  margin-bottom: 0.7rem;
+  display: block;
+}
+
+.curiosity-card h3 {
+  font-size: 1.1rem;
+  color: #d14d72;
+  margin-bottom: 0.4rem;
+}
+
+.curiosity-card p {
+  font-size: 0.97rem;
+  color: #555;
+  line-height: 1.5;
 }

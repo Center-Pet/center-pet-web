@@ -10,25 +10,25 @@ const Banner = () => {
     {
       title: "Transforme Vidas",
       text: "Adotar um pet é mais do que dar um lar. É oferecer amor, cuidado e uma nova chance para quem só quer fazer parte da sua família.",
-      image: "/assets/curiosidade1.png",
+      image: "/assets/curiosidade1.jpg",
       alt: "Imagem de um pet esperando adoção",
     },
     {
       title: "Benefícios para Você",
       text: "Ter um pet em casa reduz o estresse, combate a solidão e traz mais alegria para o seu dia a dia. Adote e sinta a diferença!",
-      image: "/assets/curiosidade2.png",
+      image: "/assets/curiosidade2.jpg",
       alt: "Imagem de um pet feliz com sua nova família",
     },
     {
       title: "Faça a Diferença",
       text: "Ao adotar, você salva uma vida e ajuda a abrir espaço para que outros animais também tenham uma chance de encontrar um lar.",
-      image: "/assets/curiosidade3.png",
+      image: "/assets/curiosidade3.jpg",
       alt: "Imagem de um pet sendo cuidado",
     },
     {
       title: "Adote com Amor",
       text: "Mais do que um animal de estimação, um pet é um companheiro fiel que transforma sua casa em um lar cheio de felicidade.",
-      image: "/assets/curiosidade4.png",
+      image: "/assets/curiosidade4.jpg",
       alt: "Imagem de um pet brincando com sua família",
     },
   ];
