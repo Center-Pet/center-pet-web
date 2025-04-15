@@ -1,6 +1,6 @@
 import './Carousel.css'
 
-import CardPet from '../CardPet/CardPet'
+import CardPet from '../../Molecules/CardPet/CardPet'
 
 import React from 'react';
 import Slider from "react-slick";

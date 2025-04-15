@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import InputField from "../../components/InputField/InputField";
-import ButtonType from "../../components/ButtonType/ButtonType";
+import InputField from "../../components/Atoms/InputField/InputField";
+import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import "./Login.css";
 
 const Login = () => {

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom"; // Importar useNavigate
-import PetDisplay from "../PetDisplay/PetDisplay";
+import PetDisplay from "../../Molecules/PetDisplay/PetDisplay";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import "./PetShowcase.css";
 

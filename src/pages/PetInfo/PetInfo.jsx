@@ -1,5 +1,5 @@
 "use client";
-import PetShowcase from "../../components/PetShowcase/PetShowcase";
+import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import { useState } from "react";
 import "./PetInfo.css";
 

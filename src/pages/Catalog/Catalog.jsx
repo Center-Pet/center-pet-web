@@ -1,5 +1,5 @@
-import Carousel from "../../components/Carousel/Carousel";
-import TitleType from "../../components/TitleType/TitleType";
+import Carousel from "../../components/Organisms/Carousel/Carousel";
+import TitleType from "../../components/Atoms/TitleType/TitleType";
 import './Catalog.css'
 
 const Catalog = () =>{

@@ -1,5 +1,5 @@
-import TitleType from "../../components/TitleType/TitleType";
-import ButtonType from "../../components/ButtonType/ButtonType";
+import TitleType from "../../components/Atoms/TitleType/TitleType";
+import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import "./FormSafeAdopter.css";
 import { useState } from "react";
 

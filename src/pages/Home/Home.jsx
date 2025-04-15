@@ -1,6 +1,6 @@
 import React from "react";
-import Hero from "../../components/Hero/Hero";
-import PetShowcase from "../../components/PetShowcase/PetShowcase";
+import Hero from "../../components/Molecules/Banner/Hero";
+import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import './Home.css';
 
 const Home = () => {

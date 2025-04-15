@@ -1,8 +1,8 @@
-import ButtonType from "../../components/ButtonType/ButtonType";
-import TitleType from "../../components/TitleType/TitleType";
-import SearchBar from "../../components/SearchBar/SearchBar";
-import PetShowcase from "../../components/PetShowcase/PetShowcase";
-import Carousel from "../../components/Carousel/Carousel";
+import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
+import TitleType from "../../components/Atoms/TitleType/TitleType";
+import SearchBar from "../../components/Atoms/SearchBar/SearchBar";
+import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
+import Carousel from "../../components/Organisms/Carousel/Carousel";
 import "./TestDraft.css";
 
 const TestDraft = () => {
