@@ -7,25 +7,39 @@ const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
   const [isSwitching, setIsSwitching] = useState(false);
-  const [adoptionOption, setAdoptionOption] = useState(""); // "adopt" or "haveAnimals"
-  const [roleOption, setRoleOption] = useState(""); // "ONG", "Projeto", "Protetor"
+  const [adoptionOption, setAdoptionOption] = useState("");
+  const [roleOption, setRoleOption] = useState("");
   const [cnpj, setCnpj] = useState("");
   const [cpf, setCpf] = useState("");
   const [socialMedia, setSocialMedia] = useState("");
   const [collaborators, setCollaborators] = useState("");
 
   const images = [
-    "https://images.unsplash.com/photo-1544568100-847a948585b9?q=80&w=2574",
-    "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2669",
-    "https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?q=80&w=2670",
+    "https://www.opovo.com.br/_midias/jpg/2023/07/31/818x460/1_cao_e_gato_1_scaled_e1690826292317-22828962.jpg",
+    "https://portaledicase.com/wp-content/uploads/2023/07/Cao-e-gato-scaled-e1690826315479-1024x683.jpg",
+    "https://i.ibb.co/TRX3Nwn/gatinhos.png"  ];
+
+  const texts = [
+    {
+      title: "Bem vindo a Center Pet!",
+      description: "Conheça o seu novo melhor amigo.",
+    },
+    {
+      title: "Ajude animais a encontrarem um lar.",
+      description: "Milhares de animais esperam por um lar amoroso.",
+    },
+    {
+      title: "Cadastre seu abrigo!",
+      description: "Ajude a encontrar lares para seus resgatados.",
+    },
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
-  });
+  }, [images.length]);
 
   const handleFormSwitch = () => {
     setIsSwitching(true);
@@ -86,6 +100,10 @@ const Login = () => {
     <div className="login-container">
       {/* Image Slider Section */}
       <div className="slider-section">
+        <div className="slider-text">
+          <h1>{texts[currentImage].title}</h1>
+          <p>{texts[currentImage].description}</p>
+        </div>
         {images.map((img, index) => (
           <div
             key={index}
@@ -214,28 +232,20 @@ const Login = () => {
                 )}
               </>
             )}
-              <InputField
-                type="text"
-                placeholder="Nome completo"
-                required
-              />
-            <InputField
-              type="email"
-              placeholder="Email"
-              required
-            />
-            <InputField
-              type="password"
-              placeholder="Senha"
-              required
-            />
+            <InputField type="text" placeholder="Nome completo" required />
+            <InputField type="email" placeholder="Email" required />
+            <InputField type="password" placeholder="Senha" required />
 
             <ButtonType bgColor="#D14D72" type="submit" width="107%">
               {isLogin ? "Entrar" : "Cadastrar"}
             </ButtonType>
 
             <ButtonType bgColor="#FFABAB" type="button" width="107%">
-              <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="google-icon" />
+              <img
+                src="https://developers.google.com/identity/images/g-logo.png"
+                alt="Google"
+                className="google-icon"
+              />
               Continue com Google
             </ButtonType>
 

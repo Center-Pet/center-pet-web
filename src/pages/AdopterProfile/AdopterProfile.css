@@ -2,7 +2,6 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fef2f4;
 }
 
 .profile-content {
