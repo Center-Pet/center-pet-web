@@ -27,7 +27,7 @@
   padding: 1.5rem;
   border-radius: 16px;
   max-width: 1200px;
-  margin: 3rem auto 1.5rem;
+  margin: 3rem auto 3rem; 
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
 }
 
@@ -71,10 +71,8 @@
 
 /* CARD DO PASSO */
 .step-card {
-  background: #fff !important;
-  /* Garante fundo branco */
-  border: 2px solid #f0f0f0 !important;
-  /* Borda sutil padrão */
+  background: #FEF2F4 !important;
+  border: 1.5px solid #fcc8d1 !important; 
   border-radius: 12px;
   padding: 1.5rem 1rem;
   text-align: center;
@@ -94,11 +92,6 @@
   color: #d14d72;
   margin-bottom: 1rem;
   transition: color 0.3s, transform 0.3s;
-}
-
-.step-card:hover i {
-  color: #ffabab;
-  transform: scale(1.1);
 }
 
 .step-card h3 {
@@ -143,10 +136,8 @@
 .step-card:nth-child(2),
 .step-card:nth-child(3),
 .step-card:nth-child(4) {
-  background-color: #ffffff !important;
-  /* Garante que o fundo seja branco */
+  background-color: #FEF2F4 !important; 
   border: 1px solid #f0f0f0;
-  /* Mantém a borda sutil */
 }
 
 /* PET SECTION INTRO */
@@ -345,7 +336,7 @@
 
 /* Curiosidades */
 .curiosities-section {
-  background: #fef2f4;
+  background: #fff;
   border-radius: 16px;
   max-width: 1200px;
   margin: 2.5rem auto 1.5rem auto;
@@ -362,7 +353,7 @@
 }
 
 .curiosity-card {
-  background: #fff;
+  background: #FEF2F4;
   border-radius: 12px;
   padding: 1.5rem 1rem;
   box-shadow: 0 2px 12px rgba(209, 77, 114, 0.07);
@@ -394,4 +385,120 @@
   font-size: 0.97rem;
   color: #555;
   line-height: 1.5;
+}
+
+/* --- Depoimentos --- */
+.testimonials-section {
+  background: #fff;
+  padding: 2.5rem 1.5rem;
+  border-radius: 16px;
+  max-width: 1200px;
+  margin: 3rem auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.testimonials-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.testimonial-card {
+  background: #FEF2F4;
+  border: 1.5px solid #fcc8d1;
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  max-width: 320px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.testimonial-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #d14d72;
+  margin-bottom: 1rem;
+}
+
+.testimonial-text {
+  font-size: 1.05rem;
+  color: #555;
+  margin-bottom: 0.8rem;
+  font-style: italic;
+}
+
+.testimonial-author {
+  font-size: 0.95rem;
+  color: #d14d72;
+  font-weight: 600;
+}
+
+/* --- Eventos & Campanhas --- */
+.events-section {
+  background: #fff;
+  padding: 2.5rem 1.5rem;
+  border-radius: 16px;
+  max-width: 1200px;
+  margin: 3rem auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.events-banners {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.event-banner {
+  background: #FEF2F4;
+  border: 1.5px solid #fcc8d1;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 420px;
+  min-width: 260px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.event-banner img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.event-info {
+  padding: 1rem;
+  text-align: left;
+}
+
+.event-info h3 {
+  color: #d14d72;
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-info p {
+  color: #555;
+  font-size: 1rem;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .testimonials-cards,
+  .events-banners {
+    flex-direction: column;
+    align-items: center;
+  }
 }

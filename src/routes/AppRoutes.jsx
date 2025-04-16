@@ -9,6 +9,7 @@ import PageNotFound from "../pages/PageNotFound/PageNotFound";
 import Home from "../pages/Home/Home";
 import TestDraft from "../pages/TestDraft/TestDraft";
 import FormSafeAdopter from '../pages/FormSafeAdopter/FormSafeAdopter';
+import RegisterUser from '../pages/RegisterUser/RegisterUser'
 
 const AppRoutes = () => {
     return (
@@ -25,6 +26,7 @@ const AppRoutes = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/test-draft" element={<TestDraft />} />
             <Route path="/form-safe-adopter" element={<FormSafeAdopter />} />
+            <Route path="/register-user" element={<RegisterUser />} />
         </Routes>
     );
 };

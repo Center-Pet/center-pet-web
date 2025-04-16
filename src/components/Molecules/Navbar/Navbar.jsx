@@ -39,26 +39,34 @@ const Navbar = () => {
                 {/* Menu padrão para telas grandes */}
                 <ul className="menu-desktop">
                     <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
-                    </li>
-                    <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')} icon={"/assets/icons/home.png"}>Home</ButtonType>
                     </li>
                     <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
+                    </li>
+                    
+                    <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')} icon={"/assets/icons/heart.png"}>ONG</ButtonType>
+                    </li>
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/adopter-profile')} icon={"/assets/icons/user.png"}>Meu Perfil</ButtonType>
                     </li>
                 </ul>
                 {/* Menu lateral para dispositivos móveis */}
                 <ul className={`menu ${isMenuOpen ? "open" : ""}`}>
                     <button className="close-menu" onClick={closeMenu}>✕</button>
                     <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
-                    </li>
-                    <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')} icon={"/assets/icons/home.png"}>Home</ButtonType>
                     </li>
                     <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
+                    </li>
+                    
+                    <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')} icon={"/assets/icons/heart.png"}>ONG</ButtonType>
+                    </li>
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/adopter-profile')} icon={"/assets/icons/user.png"}>Meu Perfil</ButtonType>
                     </li>
                 </ul>
                 <div className="custom-component">

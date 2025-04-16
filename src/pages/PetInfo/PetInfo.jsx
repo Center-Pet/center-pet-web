@@ -1,5 +1,6 @@
 "use client";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
+import SocialShare from "../../components/Atoms/SocialShare/SocialShare";
 import { useState } from "react";
 import "./PetInfo.css";
 
@@ -135,6 +136,10 @@ export default function PetInfo() {
                   />
                 ))}
               </div>
+
+      <div className="social-share">
+        <SocialShare />
+      </div>
             </div>
 
             <div className="pet-details">

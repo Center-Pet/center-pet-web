@@ -136,6 +136,58 @@ const Home = () => {
         </div>
       </section>
 
+      {/* EVENTOS E CAMPANHAS */}
+      <section className="events-section">
+        <h2 className="section-title">Eventos & Campanhas</h2>
+        <div className="events-banners">
+          <div className="event-banner">
+            <img src="/assets/feira-adocao.png" alt="Feira de Adoção" />
+            <div className="event-info">
+              <h3>Feira de Adoção - Maio</h3>
+              <p>Participe da nossa feira presencial e encontre seu novo melhor amigo! 25/05, das 10h às 16h, Parque Central.</p>
+            </div>
+          </div>
+          <div className="event-banner">
+            <img src="/assets/castracao.jpeg" alt="Campanha de Castração" />
+            <div className="event-info">
+              <h3>Campanha de Castração Solidária</h3>
+              <p>Vagas limitadas para castração gratuita de cães e gatos. Inscreva-se até 10/06!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* DEPOIMENTOS DE ADOTANTES */}
+      <section className="testimonials-section">
+        <h2 className="section-title">Quem já adotou recomenda!</h2>
+        <p className="section-subtitle">
+          Veja o que dizem pessoas que transformaram vidas adotando um pet.
+        </p>
+        <div className="testimonials-cards">
+          <div className="testimonial-card">
+            <img src="/assets/image1.jpeg" alt="Depoimento 1" className="testimonial-photo" />
+            <p className="testimonial-text">
+              “A adoção mudou minha vida! Ganhei um amigo fiel e muito amor em casa. Recomendo para todos!”
+            </p>
+            <span className="testimonial-author">— Ana Paula, São Paulo/SP</span>
+          </div>
+          <div className="testimonial-card">
+            <img src="/assets/image2.jpg" alt="Depoimento 2" className="testimonial-photo" />
+            <p className="testimonial-text">
+              “O processo foi simples e seguro. Hoje não me imagino sem a Mel. Obrigado, Center Pet!”
+            </p>
+            <span className="testimonial-author">— Carlos Henrique, Belo Horizonte/MG</span>
+          </div>
+          <div className="testimonial-card">
+            <img src="/assets/image3.png" alt="Depoimento 3" className="testimonial-photo" />
+            <p className="testimonial-text">
+              “Adotar é um ato de amor. Fui muito bem orientada e encontrei o pet perfeito para minha família.”
+            </p>
+            <span className="testimonial-author">— Juliana Souza, Curitiba/PR</span>
+          </div>
+        </div>
+      </section>
+
       {/* PARCERIAS */}
       <section className="partners-section">
         <h2 className="section-title">Parcerias que transformam vidas</h2>

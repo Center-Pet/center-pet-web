@@ -140,3 +140,71 @@
     padding: 0.8rem 1.5rem;
   }
 }
+
+@media (max-width: 768px) {
+  .banner-section {
+    flex-direction: column;
+    height: auto;
+    padding: 1.5rem 0.5rem;
+  }
+
+  .banner-slide {
+    flex-direction: column;
+    text-align: center;
+    min-height: 350px;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .banner-content {
+    padding: 0.5rem;
+    gap: 0.8rem;
+    opacity: 1;
+    animation: none;
+  }
+
+  .banner-content h1 {
+    font-size: 2rem;
+  }
+
+  .banner-content p {
+    font-size: 1.1rem;
+  }
+
+  .banner-button {
+    font-size: 1rem;
+    padding: 0.8rem 1.2rem;
+  }
+
+  .banner-image {
+    padding: 0.5rem 0;
+  }
+
+  .banner-image img {
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-section {
+    padding: 1rem 0.2rem;
+  }
+
+  .banner-content h1 {
+    font-size: 1.3rem;
+  }
+
+  .banner-content p {
+    font-size: 0.95rem;
+  }
+
+  .banner-button {
+    font-size: 0.95rem;
+    padding: 0.6rem 1rem;
+  }
+
+  .banner-image {
+    display: none; /* Esconde a imagem em telas muito pequenas */
+  }
+}

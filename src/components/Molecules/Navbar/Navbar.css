@@ -76,8 +76,8 @@ a:link {
 /* Estilo do botão de hambúrguer */
 .hamburger-menu {
     display: none; /* Esconde o botão em telas maiores */
-    background: none;
-    border: none;
+    background: #fff; /* Fundo branco */
+    border: 2px solid #D14D72; /* Borda rosada */
     font-size: 24px;
     cursor: pointer;
     z-index: 4;
@@ -85,6 +85,9 @@ a:link {
     top: 20px;
     right: 20px;
     color: #D14D72;
+    border-radius: 8px; /* Cantos arredondados */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Sombra leve */
+    padding: 6px 12px; /* Espaçamento interno */
 }
 
 /* Menu lateral para dispositivos móveis */
