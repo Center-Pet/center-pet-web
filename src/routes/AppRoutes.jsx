@@ -14,7 +14,7 @@ import RegisterUser from '../pages/RegisterUser/RegisterUser'
 const AppRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/pet" element={<PetInfo />} />
