@@ -1,9 +1,9 @@
-import './Dropdown.css';
+import './Filter.css';
 import { useState } from 'react';
 
-const Dropdown = () => {
+const Filter = () => {
     const [hasSelection, setHasSelection] = useState(false); // Estado para monitorar seleção
-    const [isOpen, setIsOpen] = useState(false); // Estado para controlar abertura do dropdown
+    const [isOpen, setIsOpen] = useState(false); // Estado para controlar abertura do filter
 
     const categories = {
         Gênero: ["Fêmea", "Macho"],
@@ -18,14 +18,14 @@ const Dropdown = () => {
         setHasSelection(anyChecked);
     };
 
-    const toggleDropdown = () => {
+    const toggleFilter = () => {
         setIsOpen(!isOpen); // Alterna o estado de abertura
     };
 
     return (
-        <div id="dropdown" className={hasSelection ? 'selected' : ''}>
-            <button id="dropdown_button" onClick={toggleDropdown}>Filtros</button>
-            <div id="filtros_dropdown" className={isOpen ? 'show' : ''}>
+        <div id="filter" className={hasSelection ? 'selected' : ''}>
+            <button id="filter_button" onClick={toggleFilter}>Filtros</button>
+            <div id="filtros_filter" className={isOpen ? 'show' : ''}>
                 {Object.entries(categories).map(([category, options], index) => (
                     <div className="filtro-categoria" key={index}>
                         <h4 className="filtro-categoria-titulo">{category}</h4>
@@ -50,4 +50,4 @@ const Dropdown = () => {
     );
 };
 
-export default Dropdown;
+export default Filter;

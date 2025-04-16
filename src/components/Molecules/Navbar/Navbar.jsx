@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ButtonType from '/src/components/Atoms/ButtonType/ButtonType.jsx';
-import Dropdown from '/src/components/Atoms/Dropdown/Dropdown.jsx';
+import Filter from '/src/components/Atoms/Filter/Filter.jsx';
 import './Navbar.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ const Navbar = () => {
 
     const CustomComponent = () => {
         if (location.pathname === '/catalog') {
-            return <Dropdown />;
+            return <Filter />;
         } else if (location.pathname === '/ong-profile') {
             return <img src="/assets/profile.png" alt="ONG Profile" className="profile-picture" />;
         } else if (location.pathname === '/adopter-profile') {

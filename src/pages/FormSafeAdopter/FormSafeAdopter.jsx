@@ -44,18 +44,20 @@ const FormSafeAdopter = () => {
     <div className="form-page">
       <div className="form-content">
         <TitleType>Formulário de Adoção</TitleType>
-        <p className="form-description">
-          O Formulário de Adoção é uma etapa essencial no processo de adoção responsável aqui no Center Pet. Ele foi criado com muito cuidado para garantir o bem-estar dos animais e ajudar as ONGs a conhecerem melhor os adotantes. As perguntas abordam aspectos importantes como o ambiente onde o pet viverá, experiências anteriores, rotina da casa e principalmente o compromisso com a segurança e os cuidados a longo prazo.
-          <br />
-          ⚠️ Preencher com atenção e sinceridade é fundamental: quanto mais completas e conscientes forem as respostas, maiores são as chances de aprovação. Esse é o seu momento de mostrar que está pronto(a) para oferecer um lar cheio de amor, responsabilidade e segurança.
-          <br />
-          Ao adotar com responsabilidade, você não só muda a vida de um pet — transforma também a sua! 💙
-        </p>
+        <div>
+          <p className="form-description">
+            O Formulário de Adoção é uma etapa essencial no processo de adoção responsável aqui no Center Pet. Ele foi criado com muito cuidado para garantir o bem-estar dos animais e ajudar as ONGs a conhecerem melhor os adotantes. As perguntas abordam aspectos importantes como o ambiente onde o pet viverá, experiências anteriores, rotina da casa e principalmente o compromisso com a segurança e os cuidados a longo prazo.
+            <br />
+            ⚠️ Preencher com atenção e sinceridade é fundamental: quanto mais completas e conscientes forem as respostas, maiores são as chances de aprovação. Esse é o seu momento de mostrar que está pronto(a) para oferecer um lar cheio de amor, responsabilidade e segurança.
+            <br />
+            Ao adotar com responsabilidade, você não só muda a vida de um pet — transforma também a sua! 💙
+          </p>
+        </div>
         <form className="adoption-form" onSubmit={handleSubmit}>
           <fieldset>
             <legend>📌 Informações Pessoais</legend>
             <input type="text" name="fullName" placeholder="Nome completo" onChange={handleChange} required />
-            <input type="number" name="age" placeholder="Idade" onChange={handleChange} required />
+            <input type="number" name="age" placeholder="Idade" onChange={handleChange} min="0" max="100" required />
             <input type="text" name="cpf" placeholder="CPF" onChange={handleChange} required />
             <input type="tel" name="phone" placeholder="Telefone" onChange={handleChange} required />
             <input type="email" name="email" placeholder="E-mail" onChange={handleChange} required />
@@ -80,13 +82,16 @@ const FormSafeAdopter = () => {
               <option value="Rented">Alugado</option>
             </select>
 
-            <label>Permissão para animais (se alugado):</label>
-            <select name="petsAllowed" onChange={handleChange}>
-              <option value="">Selecione</option>
-              <option value="Yes">Sim</option>
-              <option value="No">Não</option>
-              <option value="Not applicable">Não se aplica</option>
-            </select>
+            {formData.propertyType === "Rented" && (
+              <>
+                <label>Permissão para animais:</label>
+                <select name="petsAllowed" onChange={handleChange} required>
+                  <option value="">Selecione</option>
+                  <option value="Yes">Sim</option>
+                  <option value="No">Não</option>
+                </select>
+              </>
+            )}
 
             <label>Ambiente é seguro (muro/tela)?</label>
             <select name="secureEnvironment" onChange={handleChange} required>
@@ -94,49 +99,88 @@ const FormSafeAdopter = () => {
               <option value="Yes">Sim</option>
               <option value="No">Não</option>
             </select>
+            
+            <label>Quantas pessoas moram com você?</label>
+            <input type="number" name="peopleHouse" placeholder="Moro Sozinho" onChange={handleChange} min="0" max="50" required />
+            {formData.peopleHouse > "0" && (
+              <>
+                <label> Alguém na casa tem alergia a animais?</label>
+                <select name="allergy" onChange={handleChange} required>
+                  <option value="">Selecione</option>
+                  <option value="Yes">Sim</option>
+                  <option value="No">Não</option>
+                </select>
 
-            <textarea name="householdDetails" placeholder="Quantas pessoas moram com você? Idades? Relação?" onChange={handleChange} required />
-            <label>Alguém na casa tem alergia a animais?</label>
-            <select name="allergy" onChange={handleChange} required>
-              <option value="">Selecione</option>
-              <option value="Yes">Sim</option>
-              <option value="No">Não</option>
-            </select>
-            <textarea name="allergyDetails" placeholder="Se sim, como pretende lidar com isso?" onChange={handleChange} />
+            {formData.allergy === "Yes" && (
+              <textarea name="allergyDetails" placeholder="Como pretende lidar com isso?" onChange={handleChange} required/>
+            )}
+
             <label>Todos na casa estão de acordo com a adoção?</label>
             <select name="familyAgreement" onChange={handleChange} required>
               <option value="">Selecione</option>
               <option value="Yes">Sim</option>
               <option value="No">Não</option>
             </select>
+
+            {formData.familyAgreement === "No" && (
+              <textarea name="familyAgreementDetails" placeholder="Como pretende lidar com isso?" onChange={handleChange} required/>
+            )}
+            </>
+          )}
           </fieldset>
 
           <fieldset>
             <legend>🐶 Experiência com Animais</legend>
-            <textarea name="previousPets" placeholder="Já teve animais? Quais?" onChange={handleChange} />
-            <label>O que aconteceu com eles?</label>
-            <select name="petOutcome" onChange={handleChange}>
+            <label>Você já teve ou tem pets?</label>
+            <select name="previousPets" onChange={handleChange} required>
               <option value="">Selecione</option>
-              <option value="Passed away">Faleceu de causas naturais</option>
-              <option value="Ran away">Fugiu</option>
-              <option value="Donated">Foi doado</option>
-              <option value="Other">Outro</option>
+              <option value="hadAndHave">Já tive e tenho</option>
+              <option value="hadAndDontHave">Já tive, mas não tenho nenhum no momento</option>
+              <option value="willBeFirst">Será o meu primeiro</option>
             </select>
-            <textarea name="otherOutcome" placeholder="Explique se respondeu 'Outro'" onChange={handleChange} />
-            <label>Possui outros pets atualmente?</label>
-            <select name="currentPets" onChange={handleChange} required>
-              <option value="">Selecione</option>
-              <option value="Yes">Sim</option>
-              <option value="No">Não</option>
-            </select>
-            <textarea name="currentPetsDetails" placeholder="Se sim, quais e quantos?" onChange={handleChange} />
+            {formData.previousPets === "hadAndHave" &&( 
+              <>
+                <label>O que aconteceu com eles?</label>
+                <select name="petOutcome" onChange={handleChange} required>
+                  <option value="">Selecione</option>
+                  <option value="Passed away">Faleceu de causas naturais</option>
+                  <option value="Ran away">Fugiu</option>
+                  <option value="Donated">Foi doado</option>
+                  <option value="Other">Outro</option>
+                </select>
+                
+                {formData.petOutcome === "Other" && (
+                  <textarea name="otherOutcome" placeholder="Explique" onChange={handleChange} required/>
+                )}
+
+                <textarea name="currentPetsDetails" placeholder="Sobre seus pets atuais, quais e quantos são?" onChange={handleChange} required/>
+              </>
+            )}
+
+            {formData.previousPets === "hadAndDontHave" && (
+              <>
+                <label>O que aconteceu com eles?</label>
+                <select name="petOutcome1" onChange={handleChange} required>
+                  <option value="">Selecione</option>
+                  <option value="Passed away">Faleceu de causas naturais</option>
+                  <option value="Ran away">Fugiu</option>
+                  <option value="Donated">Foi doado</option>
+                  <option value="Other">Outro</option>
+                </select>
+
+                {formData.petOutcome1 === "Other" && (
+                  <textarea name="otherOutcome1" placeholder="Explique" onChange={handleChange} required/>
+                )}
+              </>
+            )}
+
           </fieldset>
 
           <fieldset>
             <legend>🧠 Comportamento e Rotina</legend>
             <textarea name="adoptionReason" placeholder="Por que deseja adotar um pet?" onChange={handleChange} required />
-            <textarea name="behaviorExpectations" placeholder="O que espera do comportamento do animal?" onChange={handleChange} />
-            <textarea name="undesiredBehaviors" placeholder="Como lidará com comportamentos indesejados?" onChange={handleChange} />
+            <textarea name="behaviorExpectations" placeholder="O que espera do comportamento do animal?" onChange={handleChange} required/>
+            <textarea name="undesiredBehaviors" placeholder="Como lidará com comportamentos indesejados?" onChange={handleChange} required/>
             <label>Está disposto a buscar adestramento?</label>
             <select name="trainingWillingness" onChange={handleChange} required>
               <option value="">Selecione</option>
@@ -167,7 +211,18 @@ const FormSafeAdopter = () => {
               <option value="Yes">Sim</option>
               <option value="No">Não</option>
             </select>
-            <label>Está ciente da Lei 9.605/98 (crime de maus-tratos)?</label>
+            <label>
+              Está ciente da "
+              <a 
+                href="https://www.planalto.gov.br/ccivil_03/leis/l9605.htm" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: "#D14D72", textDecoration: "underline" }}
+              > 
+                Lei 9.605/98
+              </a> 
+              " (crime de maus-tratos)?
+            </label>
             <select name="awareOfLaw" onChange={handleChange} required>
               <option value="">Selecione</option>
               <option value="Yes">Sim</option>
@@ -199,9 +254,10 @@ const FormSafeAdopter = () => {
 
           <fieldset>
             <legend>✍️ Declaração final</legend>
-            <label>
-              <input type="checkbox" name="confirmation" onChange={handleChange} required />
-              Declaro que as informações são verdadeiras e estou ciente das responsabilidades legais e morais ao adotar um animal.
+            <label className="confirmation-label">
+              <input className="checkbox-confirmation" type="checkbox" name="confirmation" onChange={handleChange} required />
+              <p>Declaro que as informações são verdadeiras e estou ciente das responsabilidades legais e morais ao adotar um animal. 
+              </p>
             </label>
           </fieldset>
 

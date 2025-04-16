@@ -22,7 +22,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .profile-content {
-    padding: 1.5rem 1rem;
+    padding: 0rem 0rem;
   }
 
   .profile-title {

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Alexandria&display=swap');
 
-#dropdown {
+#filter {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -8,13 +8,13 @@
     transition: background-color 0.3s ease; /* Transição suave para a mudança de cor */
 }
 
-#dropdown.selected {
+#filter.selected {
     background-color: #FCC8D1; /* Cor de fundo quando pelo menos uma opção é selecionada */
     border-radius: 30px; /* Mantém o estilo arredondado */
     padding: 7px; /* Adiciona espaçamento ao redor */
 }
 
-#dropdown_button {
+#filter_button {
     background-color: #D14D72;
     color: #FEF2F4;
     font-family: 'Alexandria', sans-serif;
@@ -26,17 +26,17 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-#dropdown_button:hover {
+#filter_button:hover {
     filter: brightness(0.9);
     transform: scale(1.05);
 }
 
-#dropdown_button:focus {
+#filter_button:focus {
     outline: 2px solid #D14D72;
     outline-offset: 4px;
 }
 
-#filtros_dropdown {
+#filtros_filter {
     display: flex;
     flex-wrap: wrap; /* Permite que os itens quebrem em várias linhas */
     position: absolute;
@@ -55,26 +55,26 @@
     transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
 }
 
-#filtros_dropdown.show {
+#filtros_filter.show {
     max-height: 400px; /* Altura suficiente para exibir os filtros */
     padding: 15px; /* Adiciona espaçamento ao abrir */
 }
 
 /* Estilo para a barra de rolagem */
-#filtros_dropdown::-webkit-scrollbar {
+#filtros_filter::-webkit-scrollbar {
     width: 7px; /* Largura da barra de rolagem */
 }
 
-#filtros_dropdown::-webkit-scrollbar-thumb {
+#filtros_filter::-webkit-scrollbar-thumb {
     background-color: #FFABAB; /* Cor da barra de rolagem */
     border-radius: 4px; /* Arredonda a barra de rolagem */
 }
 
-#filtros_dropdown::-webkit-scrollbar-thumb:hover {
+#filtros_filter::-webkit-scrollbar-thumb:hover {
     background-color: #D14D72; /* Cor ao passar o mouse */
 }
 
-#filtros_dropdown::-webkit-scrollbar-track {
+#filtros_filter::-webkit-scrollbar-track {
     background-color: #F5F5F5; /* Cor do fundo da barra de rolagem */
 }
 
