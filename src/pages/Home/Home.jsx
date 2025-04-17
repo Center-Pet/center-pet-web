@@ -228,14 +228,6 @@ const Home = () => {
         </div>
       </section>
 
-      <button
-        className="floating-help"
-        aria-label="Ajuda ou Chat"
-        onClick={() => alert('Em breve você poderá falar com a gente!')}
-      >
-        <i className="fas fa-comments"></i>
-      </button>
-
     </main>
   );
 };

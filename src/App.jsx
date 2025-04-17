@@ -3,6 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import Footer from "./components/Molecules/Footer/Footer";
 import Navbar from "./components/Molecules/Navbar/Navbar";
 import AnimatedBackground from "./components/Molecules/Background/Background";
+import ChatButton from "./components/Molecules/ChatButton/ChatButton";
 
 function AppContent() {
   const location = useLocation();
@@ -14,6 +15,7 @@ function AppContent() {
       <AnimatedBackground /> {/* 👈 Componente do background aqui */}
       {!shouldHideNavbar && <Navbar />}
       <AppRoutes />
+      <ChatButton /> {/* Floating chat button */}
       {!shouldHideNavbar && <Footer />}
     </div>
   );

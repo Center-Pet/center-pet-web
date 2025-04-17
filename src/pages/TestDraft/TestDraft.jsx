@@ -3,6 +3,9 @@ import TitleType from "../../components/Atoms/TitleType/TitleType";
 import SearchBar from "../../components/Atoms/SearchBar/SearchBar";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import Carousel from "../../components/Organisms/Carousel/Carousel";
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import "./TestDraft.css";
 
 const TestDraft = () => {
@@ -52,6 +55,12 @@ const TestDraft = () => {
           <Carousel />
         </div>
       </div>
+
+      <ButtonGroup variant="contained" aria-label="Basic button group">
+        <Button>One</Button>
+        <Button>Two</Button>
+        <Button>Three</Button>
+      </ButtonGroup>
     </div>
   );
 };

@@ -232,9 +232,10 @@ const Login = () => {
                 )}
               </>
             )}
-            <InputField type="text" placeholder="Nome completo" required />
             <InputField type="email" placeholder="Email" required />
+            <InputField type="text" placeholder="Nome Completo" required/>
             <InputField type="password" placeholder="Senha" required />
+                        <InputField type="password" placeholder="Confirme sua Senha" required/>
 
             <ButtonType bgColor="#D14D72" type="submit" width="107%">
               {isLogin ? "Entrar" : "Cadastrar"}

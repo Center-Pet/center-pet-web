@@ -55,17 +55,7 @@ a:link {
     text-decoration-line: none;
 }
 
-.profile-picture {
-    width: 50px;
-    height: 50px;
-    border: #D14D72 5px solid;
-    border-radius: 50%; /* Torna a imagem circular */
-    object-fit: cover;
-    cursor: pointer;
-    margin-top: 10px; /* Espaçamento superior */
-}
-
-.custom-component {
+.avatar-icon {
     margin-left: auto; /* Empurra o CustomComponent para a direita */
     z-index: 3;
     display: flex;

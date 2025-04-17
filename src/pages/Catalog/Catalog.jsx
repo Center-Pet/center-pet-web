@@ -1,10 +1,12 @@
 import Carousel from "../../components/Organisms/Carousel/Carousel";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
+import Filter from "../../components/Atoms/Filter/Filter";
 import './Catalog.css'
 
 const Catalog = () =>{
     return(
         <div className="conjunt-catalog">
+            <Filter />
             <div className="catalog-header">
                 <TitleType>Pets mais Pacientes</TitleType>
             </div>

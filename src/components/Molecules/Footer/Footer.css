@@ -60,6 +60,15 @@
     margin-top: 20px;
     color: #FEF2F4;
   }
+
+  .footer i {
+    color: #FEF2F4;
+  }
+
+  .footer span {
+    color: #FEF2F4;
+    font-size: 16px;
+  }
   
   /* Responsivo */
   @media (max-width: 760px) {

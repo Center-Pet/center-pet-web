@@ -308,31 +308,7 @@
   color: #ffabab;
 }
 
-/* Botão Flutuante de Ajuda/Chat */
-.floating-help {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  width: 60px;
-  height: 60px;
-  background: #d14d72;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  font-size: 2rem;
-  box-shadow: 0 4px 16px rgba(209, 77, 114, 0.15);
-  cursor: pointer;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s, transform 0.2s;
-}
 
-.floating-help:hover {
-  background: #ffabab;
-  transform: scale(1.08);
-}
 
 /* Curiosidades */
 .curiosities-section {

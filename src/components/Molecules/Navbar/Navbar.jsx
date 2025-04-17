@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import ButtonType from '/src/components/Atoms/ButtonType/ButtonType.jsx';
-import Filter from '/src/components/Atoms/Filter/Filter.jsx';
 import './Navbar.css';
 import { useNavigate, useLocation } from 'react-router-dom';
+import CustomAvatar from '/src/components/Atoms/CustomAvatar/CustomAvatar.jsx';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,17 +15,6 @@ const Navbar = () => {
 
     const closeMenu = () => {
         setIsMenuOpen(false);
-    };
-
-    const CustomComponent = () => {
-        if (location.pathname === '/catalog') {
-            return <Filter />;
-        } else if (location.pathname === '/ong-profile') {
-            return <img src="/assets/profile.png" alt="ONG Profile" className="profile-picture" />;
-        } else if (location.pathname === '/adopter-profile') {
-            return <img src='/assets/omni-man-profile.jpg' className="profile-picture" />;
-        }
-        return null;
     };
 
     return (
@@ -69,8 +58,8 @@ const Navbar = () => {
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/adopter-profile')} icon={"/assets/icons/user.png"}>Meu Perfil</ButtonType>
                     </li>
                 </ul>
-                <div className="custom-component">
-                    <CustomComponent />
+                <div className="avatar-icon">
+                    <CustomAvatar imageSrc="https://i.pinimg.com/736x/76/36/82/76368290b02e36e0ccc1178cfbe17652.jpg"/>
                 </div>
             </nav>
         </header>
