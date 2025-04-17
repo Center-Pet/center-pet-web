@@ -57,7 +57,7 @@ const PetShowcase = ({ title, pets }) => {
             className="pet-see-more-button"
             onClick={handleSeeMore}
           >
-            Veja mais
+            Ver Todos
           </button>
         </div>
       </div>

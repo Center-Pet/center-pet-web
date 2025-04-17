@@ -233,8 +233,9 @@ const Home = () => {
         <i className="fas fa-comments"></i>
       </button>
 
+
     </main>
-  );
+  ); 
 };
 
 export default Home;
