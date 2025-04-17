@@ -165,21 +165,30 @@ const Home = () => {
         </p>
         <div className="testimonials-cards">
           <div className="testimonial-card">
-            <img src="/assets/image1.jpeg" alt="Depoimento 1" className="testimonial-photo" />
+            <div className="testimonial-photos">
+              <img src="/assets/pet1.jpeg" alt="Pet adotado" className="testimonial-pet" />
+              <img src="/assets/person1.jpg" alt="Adotante" className="testimonial-person" />
+            </div>
             <p className="testimonial-text">
               “A adoção mudou minha vida! Ganhei um amigo fiel e muito amor em casa. Recomendo para todos!”
             </p>
-            <span className="testimonial-author">— Ana Paula, São Paulo/SP</span>
+            <span className="testimonial-author">— Marcos Henrique, São Paulo/SP</span>
           </div>
           <div className="testimonial-card">
-            <img src="/assets/image2.jpg" alt="Depoimento 2" className="testimonial-photo" />
+            <div className="testimonial-photos">
+              <img src="/assets/pet2.jpg" alt="Pet adotado" className="testimonial-pet" />
+              <img src="/assets/person2.jpg" alt="Adotante" className="testimonial-person" />
+            </div>
             <p className="testimonial-text">
               “O processo foi simples e seguro. Hoje não me imagino sem a Mel. Obrigado, Center Pet!”
             </p>
             <span className="testimonial-author">— Carlos Henrique, Belo Horizonte/MG</span>
           </div>
           <div className="testimonial-card">
-            <img src="/assets/image3.png" alt="Depoimento 3" className="testimonial-photo" />
+            <div className="testimonial-photos">
+              <img src="/assets/pet3.png" alt="Pet adotado" className="testimonial-pet" />
+              <img src="/assets/person3.jpeg" alt="Adotante" className="testimonial-person" />
+            </div>
             <p className="testimonial-text">
               “Adotar é um ato de amor. Fui muito bem orientada e encontrei o pet perfeito para minha família.”
             </p>
@@ -196,7 +205,7 @@ const Home = () => {
         </p>
         <div className="partners-content">
           <div className="partners-text">
-            <h3>Você representa uma ONG?</h3>
+            <h3>Você representa uma ONG ou algum projeto?</h3>
             <p>
               Faça parte do nosso time de parceiros e tenha seus pets disponíveis para adoção divulgados gratuitamente na nossa plataforma.
             </p>
@@ -212,21 +221,17 @@ const Home = () => {
       <section className="cta-social-section">
         <div className="cta-buttons">
           <a href="/voluntario" className="cta-secondary">Quero ser voluntário</a>
-          <a href="/doar" className="cta-secondary donate">Doe para uma ONG</a>
-        </div>
-        <div className="social-links">
-          <span>Siga-nos:</span>
-          <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <i className="fab fa-facebook"></i>
-          </a>
-          <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-            <i className="fab fa-whatsapp"></i>
-          </a>
+          <a href="/doar" className="cta-secondary donate">Doar para um projeto</a>
         </div>
       </section>
+
+      <button
+        className="floating-help"
+        aria-label="Ajuda ou Chat"
+        onClick={() => alert('Em breve você poderá falar com a gente!')}
+      >
+        <i className="fas fa-comments"></i>
+      </button>
 
     </main>
   );
