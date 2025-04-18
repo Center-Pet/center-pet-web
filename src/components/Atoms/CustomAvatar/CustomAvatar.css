@@ -1,0 +1,17 @@
+.custom-avatar {
+    border: 10px solid #D14D72; /* Cor da borda do avatar */
+    border-radius: 50%; /* Faz o avatar ser redondo */
+}
+
+.icon {
+    width: 50px !important;
+    height: auto !important;
+    object-fit: cover; /* Cobre todo o espaço do avatar */
+}
+
+.custom-avatar:hover {
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    transform: scale(1.05); /* Aumenta o tamanho do avatar ao passar o mouse */
+    transition: transform 0.3s ease; /* Transição suave para o efeito de hover */ 
+    border: 10px solid #FFABAB; /* Cor da borda do avatar ao passar o mouse */  
+}

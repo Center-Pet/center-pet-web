@@ -1,9 +1,10 @@
 import './Filter.css';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const Filter = () => {
     const [hasSelection, setHasSelection] = useState(false); // Estado para monitorar seleção
-    const [isOpen, setIsOpen] = useState(false); // Estado para controlar abertura do filter
+    const [isOpen, setIsOpen] = useState(false); // Estado para controlar abertura do filtro
+    const filterRef = useRef(null); // Referência para o elemento do filtro
 
     const categories = {
         Gênero: ["Fêmea", "Macho"],
@@ -22,9 +23,28 @@ const Filter = () => {
         setIsOpen(!isOpen); // Alterna o estado de abertura
     };
 
+    const handleClickOutside = (event) => {
+        // Verifica se o clique foi fora do filtro
+        if (filterRef.current && !filterRef.current.contains(event.target)) {
+            setIsOpen(false); // Fecha o filtro
+        }
+    };
+
+    useEffect(() => {
+        // Adiciona o evento de clique ao documento
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            // Remove o evento ao desmontar o componente
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     return (
-        <div id="filter" className={hasSelection ? 'selected' : ''}>
-            <button id="filter_button" onClick={toggleFilter}>Filtros</button>
+        <div id="filter" className={hasSelection ? 'selected' : ''} ref={filterRef}>
+            <button id="filter_button" onClick={toggleFilter}>
+                <img src="/assets/icons/filter.png" alt="Filtro" className='filter-icon'/>
+                Filtros
+            </button>
             <div id="filtros_filter" className={isOpen ? 'show' : ''}>
                 {Object.entries(categories).map(([category, options], index) => (
                     <div className="filtro-categoria" key={index}>

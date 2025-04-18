@@ -31,7 +31,7 @@
     top: -540px;
     left: -330px;
     border-radius: 60px;
-    z-index: 1; /* Garante que o pink_square fique abaixo do logo */
+    z-index: 3; /* Garante que o pink_square fique abaixo do logo */
 }
 
 /* Menu padrão para telas maiores */
@@ -173,10 +173,9 @@ a:link {
 /* Menu lateral para telas menores */
 @media (max-width: 780px) {
     #navbar {
-        flex-direction: column;
-        align-items: right; /* Alinha os itens à direita */
         padding: 10px;
         height: auto; /* Permite que a altura se ajuste ao conteúdo */
+        margin: 0px 20px; /* Adiciona margem superior e inferior */
     }
 
     ul {
@@ -220,5 +219,13 @@ a:link {
         cursor: pointer;
         align-self: flex-end; /* Alinha o botão ao topo direito do menu */
         z-index: 5;
+    }
+    
+    .avatar-icon {
+        margin-left: 0; /* Remove o espaçamento à esquerda */
+        z-index: 3;
+        display: flex;
+        align-items: center; /* Alinha verticalmente o CustomComponent */
+        justify-content: flex-start; /* Alinha o conteúdo à esquerda */
     }
 }

@@ -6,7 +6,9 @@ import './Catalog.css'
 const Catalog = () =>{
     return(
         <div className="conjunt-catalog">
-            <Filter />
+            <div className="filter-container">
+                <Filter />
+            </div>
             <div className="catalog-header">
                 <TitleType>Pets mais Pacientes</TitleType>
             </div>

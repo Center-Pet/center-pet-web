@@ -12,6 +12,7 @@
     background-color: #FCC8D1; /* Cor de fundo quando pelo menos uma opção é selecionada */
     border-radius: 30px; /* Mantém o estilo arredondado */
     padding: 7px; /* Adiciona espaçamento ao redor */
+    width: max-content;
 }
 
 #filter_button {
@@ -24,6 +25,9 @@
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #filter_button:hover {
@@ -47,7 +51,7 @@
     overflow-y: auto;
     width: 210px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    z-index: 2;
     color: #FEF2F4;
     border-radius: 12px;
     padding: 0px;
@@ -140,4 +144,11 @@
 
 .checkbox_filtro:checked:before {
     opacity: 1;
+}
+
+.filter-icon {
+    width: 20px;
+    height: auto; /* Mantém a proporção do ícone */
+    margin-right: 10px;
+    filter: brightness(0) invert(1); /* Inverte as cores do ícone para branco */
 }
