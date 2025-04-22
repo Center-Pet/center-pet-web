@@ -42,20 +42,31 @@
     background-color: #f8e5eb;
   }
   
+  /* Ajuste no carrossel */
   .pet-showcase-carousel {
     display: flex;
-    gap: 16px;
+    gap: 16px; /* Espaçamento entre os cards */
     overflow-x: auto;
     scroll-behavior: smooth;
     padding: 10px 0;
-    scrollbar-width: none; /* Firefox */
+    scrollbar-width: none; /* Oculta a barra de rolagem no Firefox */
+    padding-right: 50%; /* Adiciona espaço para o último card ficar parcialmente visível */
   }
   
   .pet-showcase-carousel::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none; /* Oculta a barra de rolagem no Chrome, Safari e Opera */
+  }
+
+  /* Ajuste nos cards */
+  .pet-showcase-carousel > * {
+    flex: 0 0 auto; /* Garante que os itens não se juntem */
+    width: 170px; /* Largura fixa dos cards */
+  }
+
+  .pet-showcase-carousel > *:last-child {
+    margin-right: -50%; /* Faz o último card ficar parcialmente visível */
   }
   
-  /* Para efeito suave ao passar mouse nos cards (opcional) */
   .pet-showcase-carousel > *:hover {
     transform: scale(1.03);
     transition: transform 0.3s ease;
@@ -74,9 +85,14 @@
       padding: 6px 12px;
       font-size: 12px;
     }
+
+    .pet-showcase-buttons {
+      display: none; /* Esconde as setas de navegação */
+    }
   }
 
-  .pet-see-more-button{
+  /* Botão "Ver Todos" para desktop */
+  .pet-see-more-button {
     display: flex;
     font-family: 'Alexandria', sans-serif;
     align-items: center;
@@ -89,10 +105,76 @@
     cursor: pointer;
     transition: all 0.2s ease;
     background-color: transparent;
-     display: flex;
-    gap: 10px;
   }
   
-  .pet-see-more-button:hover {
-    background-color: #b2446c;
+  /* Botão "Ver Todos" para mobile */
+  .pet-see-more-button-mobile {
+    display: none; /* Esconde o botão no desktop */
   }
+
+  /* Hover para ambos os botões */
+  .pet-see-more-button:hover,
+  .pet-see-more-button-mobile:hover {
+    background-color: #f8e5eb; /* Mesmo estilo de hover das setinhas */
+  }
+
+  /* Regras para mobile */
+  @media (max-width: 768px) {
+    .pet-showcase-buttons {
+      display: none; /* Esconde as setas e o botão de desktop no mobile */
+    }
+
+    .pet-see-more-button {
+      display: none; /* Esconde o botão de desktop no mobile */
+    }
+
+    .pet-see-more-button-mobile {
+      display: flex; /* Exibe o botão de mobile */
+      justify-content: center;
+      font-family: 'Alexandria', sans-serif;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #d25b82;
+      color: #d25b82;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: transparent;
+    }
+
+    .pet-see-more-button-mobile:hover {
+      background-color: #f8e5eb; /* Mesmo estilo de hover das setinhas */
+    }
+  }
+
+  /* Exibe o pet-showcase-buttons no desktop */
+  .pet-showcase-buttons {
+    display: flex; /* Garante que o contêiner de botões esteja visível no desktop */
+  }
+
+  /* Adicione estilos consistentes com o Catalog */
+  .catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+  }
+
+  /* Ocultar apenas as setas de navegação no mobile */
+  @media (max-width: 768px) {
+    .pet-showcase-button {
+      display: none; /* Esconde apenas as setas de navegação */
+    }
+
+    .pet-see-more-button {
+      display: flex; /* Garante que o botão "Ver Todos" continue visível */
+    }
+
+    .pet-showcase-buttons {
+      justify-content: flex-end; /* Alinha o botão "Ver Todos" à direita */
+    }
+  }
+
+

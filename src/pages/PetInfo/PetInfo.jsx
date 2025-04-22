@@ -9,16 +9,20 @@ export default function PetInfo() {
 
   const petImages = [
     "/assets/teste.jpg",
-    "/assets/CP.png",
+    "/assets/teste2.jpg",
     "/assets/teste.jpg",
-    "/assets/CP.png",
+    "/assets/teste2.jpg",
     "/assets/teste.jpg",
   ];
 
   const petInfo = {
     nome: "Juninho Maldade Pura",
+    especie: "Cachorro",
+    pelagem: "Curta",
+    local: "São Paulo, SP",
+    bio: "Juninho é um filhote cheio de energia e amor para dar. Ele adora brincar e está esperando por um lar cheio de carinho!",
     genero: "Macho Alpha",
-    idade: "2 meses",
+    idade: "Filhote",
     raca: "Sem Raça Definida",
     porte: "Médio",
     vacinado: "Sim",
@@ -31,64 +35,102 @@ export default function PetInfo() {
 
   const petData = [
     {
+      id: 1,
       image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
     },
     {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
     },
     {
+      id: 1,
       image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
     },
     {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
     },
     {
+      id: 1,
       image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
     },
     {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
     },
     {
+      id: 1,
       image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
     },
     {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
     },
     {
+      id: 1,
       image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
     },
     {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+    {
+      id: 1,
       image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+    {
+      id: 1,
+      image: "/assets/teste.jpg",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
     },
   ];
 
@@ -112,7 +154,10 @@ export default function PetInfo() {
         <div className="pet-profile-card">
           <div className="pet-main-info">
             <div className="pet-image-container">
-              <button className="nav-button prev-button" onClick={handlePrevImage}>
+              <button
+                className="nav-button prev-button"
+                onClick={handlePrevImage}
+              >
                 &#8249;
               </button>
               <img
@@ -120,7 +165,10 @@ export default function PetInfo() {
                 alt={petInfo.nome}
                 className="pet-main-image"
               />
-              <button className="nav-button next-button" onClick={handleNextImage}>
+              <button
+                className="nav-button next-button"
+                onClick={handleNextImage}
+              >
                 &#8250;
               </button>
               <div className="pet-thumbnails">
@@ -137,20 +185,21 @@ export default function PetInfo() {
                 ))}
               </div>
 
-      <div className="social-share">
-        <SocialShare />
-      </div>
+              <div className="social-share">
+                <SocialShare />
+              </div>
             </div>
 
             <div className="pet-details">
               <h2>Conheça {petInfo.nome}</h2>
-
-              <div className="pet-info-grid">
+              <p className="pet-bio">{petInfo.bio}</p>
+              <div className="pet-info-grid two-columns">
                 {Object.entries({
-                  Gênero: petInfo.genero,
+                  Espécie: petInfo.especie,
+                  Pelagem: petInfo.pelagem,
                   Idade: petInfo.idade,
-                  Raça: petInfo.raca,
-                  Porte: petInfo.porte,
+                  Local: petInfo.local,
+                  Gênero: petInfo.genero,
                   Vacinado: petInfo.vacinado,
                   Castrado: petInfo.castrado,
                   Vermifugado: petInfo.vermifugado,
@@ -164,14 +213,13 @@ export default function PetInfo() {
                   </div>
                 ))}
               </div>
-
               <button className="adopt-button">Adotar!</button>
             </div>
           </div>
         </div>
 
         <div className="carousel-section">
-          <PetShowcase title="De uma olhada em outros pets" pets={petData} />
+          <PetShowcase title="Outros Pets" pets={petData} />
         </div>
       </div>
     </>

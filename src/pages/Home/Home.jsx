@@ -4,68 +4,106 @@ import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import './Home.css';
 
 const Home = () => {
-  const petData = [
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-  ];
+   const petData = [
+     {
+       id: 1,
+       image: "/assets/teste.jpg",
+       name: "Rex",
+       gender: "Macho",
+       age: "3 meses",
+     },
+     {
+       id: 2,
+       image: "/assets/teste2.jpg",
+       name: "Luna",
+       gender: "Fêmea",
+       age: "2 anos",
+     },
+     {
+       id: 1,
+       image: "/assets/teste.jpg",
+       name: "Rex",
+       gender: "Macho",
+       age: "3 meses",
+     },
+     {
+       id: 2,
+       image: "/assets/teste2.jpg",
+       name: "Luna",
+       gender: "Fêmea",
+       age: "2 anos",
+     },
+     {
+       id: 1,
+       image: "/assets/teste.jpg",
+       name: "Rex",
+       gender: "Macho",
+       age: "3 meses",
+     },
+     {
+       id: 2,
+       image: "/assets/teste2.jpg",
+       name: "Luna",
+       gender: "Fêmea",
+       age: "2 anos",
+     },
+     {
+       id: 1,
+       image: "/assets/teste.jpg",
+       name: "Rex",
+       gender: "Macho",
+       age: "3 meses",
+     },
+     {
+       id: 2,
+       image: "/assets/teste2.jpg",
+       name: "Luna",
+       gender: "Fêmea",
+       age: "2 anos",
+     },
+     {
+       id: 1,
+       image: "/assets/teste.jpg",
+       name: "Rex",
+       gender: "Macho",
+       age: "3 meses",
+     },
+     {
+       id: 2,
+       image: "/assets/teste2.jpg",
+       name: "Luna",
+       gender: "Fêmea",
+       age: "2 anos",
+     },
+     {
+       id: 1,
+       image: "/assets/teste.jpg",
+       name: "Rex",
+       gender: "Macho",
+       age: "3 meses",
+     },
+     {
+       id: 2,
+       image: "/assets/teste2.jpg",
+       name: "Luna",
+       gender: "Fêmea",
+       age: "2 anos",
+     },
+     {
+       id: 1,
+       image: "/assets/teste.jpg",
+       name: "Rex",
+       gender: "Macho",
+       age: "3 meses",
+     },
+     {
+       id: 2,
+       image: "/assets/teste2.jpg",
+       name: "Luna",
+       gender: "Fêmea",
+       age: "2 anos",
+     },
+   ];
 
   return (
     <main className="home-container">

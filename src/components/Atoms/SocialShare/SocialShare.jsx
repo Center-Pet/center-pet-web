@@ -7,6 +7,7 @@ import {
   faInstagram,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons"
+import "./SocialShare.css";
 
 export default function SocialShare() {
   const shareLinks = [
@@ -37,8 +38,8 @@ export default function SocialShare() {
   }
 
   return (
-    <div className="flex items-center gap-4">
-      <div className="flex items-center gap-2">
+    <div className="social-share-container">
+      <div className="social-share-title">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -56,14 +57,13 @@ export default function SocialShare() {
           <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
           <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
         </svg>
-        <span className="font-medium text-[#1e4e76] text-lg">Share:</span>
+        <span>Compartilhe:</span>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="social-share-buttons">
         {shareLinks.map((link, index) => (
           <button
             key={index}
             onClick={() => handleShare(link.url)}
-            className="hover:opacity-80 transition-opacity"
             aria-label={`Share on ${link.name}`}
           >
             {link.icon}
