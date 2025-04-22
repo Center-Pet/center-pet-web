@@ -195,6 +195,36 @@ const Home = () => {
         </div>
       </section>
 
+      {/* SOBRE NÓS */}
+      <section className="about-section">
+        <div className="about-card about-card-single">
+          <div className="about-row-custom">
+            <div className="about-text about-text-left">
+              <h2 className="section-title">Sobre nós</h2>
+              <p>
+                Aqui na Center Pet, acreditamos que todo animal merece um lar cheio de amor e cuidado. Nossa missão é conectar ONGs e protetores de animais a pessoas dispostas a adotar, tornando o processo mais acessível, transparente e eficiente.
+              </p>
+              <p>
+                Desenvolvemos uma plataforma intuitiva, onde as ONGs podem cadastrar e manter um catálogo atualizado de animais disponíveis para adoção. Cada pet tem seu próprio perfil, com informações como nome, idade, peso, condição de saúde e fotos.
+              </p>
+            </div>
+            <div className="about-img-wrapper about-img-wrapper-right">
+              <img src="/assets/about1.jpg" alt="Sobre a Center Pet" className="about-img" />
+            </div>
+          </div>
+          <div className="about-row-custom about-row-custom-reverse">
+            <div className="about-img-wrapper about-img-wrapper-left">
+              <img src="/assets/about2.jpg" alt="Adoção responsável" className="about-img" />
+            </div>
+            <div className="about-text about-text-right">
+              <p>
+                Se você está em busca de um novo companheiro, pode navegar facilmente pela plataforma, filtrar os animais conforme suas preferências e entrar em contato diretamente com a ONG responsável. Queremos tornar o ato de adotar mais simples e significativo, ajudando a criar laços duradouros entre humanos e seus novos amigos de quatro patas.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* DEPOIMENTOS DE ADOTANTES */}
       <section className="testimonials-section">
         <h2 className="section-title">Quem já adotou recomenda!</h2>

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import ButtonType from '/src/components/Atoms/ButtonType/ButtonType.jsx';
 import './Navbar.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CustomAvatar from '/src/components/Atoms/CustomAvatar/CustomAvatar.jsx';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -45,7 +44,7 @@ const Navbar = () => {
                     </li>
                     
                     <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/form-safe-adopter')} icon={"/assets/icons/form.png"}>Form</ButtonType>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/form-safe-adopter')} icon={"/assets/icons/form.png"}>Formulário</ButtonType>
                     </li>
                 </ul>
                 {/* Menu lateral para dispositivos móveis */}
