@@ -460,15 +460,15 @@
 }
 
 .cta-secondary.donate {
-  background: #d14d72;
+  background: grey;
   color: #fff;
 }
 
-.cta-secondary:hover {
+/* .cta-secondary:hover {
   background: #ffabab;
   color: #fff;
   transform: translateY(-3px) scale(1.04);
-}
+} */
 
 .social-links {
   display: flex;

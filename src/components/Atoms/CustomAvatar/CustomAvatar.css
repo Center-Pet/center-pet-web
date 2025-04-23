@@ -1,10 +1,10 @@
 .custom-avatar {
-    border: 10px solid #D14D72; /* Cor da borda do avatar */
+    border: 7px solid #D14D72; /* Cor da borda do avatar */
     border-radius: 50%; /* Faz o avatar ser redondo */
 }
 
 .icon {
-    width: 50px !important;
+    width: 40px !important;
     height: auto !important;
     object-fit: cover; /* Cobre todo o espaço do avatar */
 }

@@ -61,8 +61,14 @@ const FormSafeAdopter = () => {
             <input type="text" name="cpf" placeholder="CPF" onChange={handleChange} required />
             <input type="tel" name="phone" placeholder="Telefone" onChange={handleChange} required />
             <input type="email" name="email" placeholder="E-mail" onChange={handleChange} required />
-            <input type="text" name="city" placeholder="Cidade/Estado" onChange={handleChange} required />
             <input type="text" name="profession" placeholder="Profissão" onChange={handleChange} required />
+            <input type="text" name="cep" placeholder="CEP" onChange={handleChange} required />
+            <input type="text" name="street" placeholder="Rua" onChange={handleChange} required />
+            <input type="text" name="number" placeholder="Número" onChange={handleChange} required />
+            <input type="text" name="neighborhood" placeholder="Bairro" onChange={handleChange} required />
+            <input type="text" name="complement" placeholder="Complemento (opcional)" onChange={handleChange} />
+            <input type="text" name="city" placeholder="Cidade" onChange={handleChange} />
+            <input type="text" name="state" placeholder="Estado" onChange={handleChange} />
           </fieldset>
 
           <fieldset>

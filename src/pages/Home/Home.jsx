@@ -314,7 +314,7 @@ const Home = () => {
             <p>
               Faça parte do nosso time de parceiros e tenha seus pets disponíveis para adoção divulgados gratuitamente na nossa plataforma.
             </p>
-            <a href="/parcerias" className="partner-button">Quero ser parceiro</a>
+            <a href="/login" className="partner-button">Quero ser parceiro</a>
           </div>
           <div className="partners-image">
             <img src="/assets/logo/Center-Pet.jpg" alt="Imagem de parceria com ONG" />
@@ -325,8 +325,8 @@ const Home = () => {
       {/* CTA Secundário e Redes Sociais */}
       <section className="cta-social-section">
         <div className="cta-buttons">
-          <a href="/voluntario" className="cta-secondary">Quero ser voluntário</a>
-          <a href="/doar" className="cta-secondary donate">Doar para um projeto</a>
+          {/* Sem href por enquanto */}
+          <a className="cta-secondary donate">Doar para um projeto</a>
         </div>
       </section>
 
