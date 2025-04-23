@@ -290,6 +290,147 @@
   }
 }
 
+/* ORGULHO EM APOIAR ONGS */
+.proud-ongs-section {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 1200px;
+  margin: 3rem auto 2rem auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  padding: 2.5rem 1.5rem;
+}
+
+.proud-ongs-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2.2rem;
+}
+
+.proud-ongs-icon img {
+  width: 90px;
+  height: 90px;
+  background: #fef2f4;
+  border-radius: 18px;
+  padding: 1.1rem;
+  box-shadow: 0 2px 12px rgba(209, 77, 114, 0.07);
+}
+
+.proud-ongs-title {
+  font-size: 2rem;
+  color: #222;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  position: relative;
+  text-align: left;
+}
+
+.proud-ongs-underline {
+  width: 70px;
+  height: 5px;
+  background: #d14d72;
+  border-radius: 3px;
+  margin-top: 0.1rem;
+  margin-left: 0;
+}
+
+.proud-ongs-cards {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ong-card {
+  background: #FEF2F4;
+  border: 1.5px solid #fcc8d1;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(209, 77, 114, 0.08);
+  padding: 2rem 1.3rem 1.3rem 1.3rem;
+  max-width: 240px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.ong-card:hover {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 0 12px 32px rgba(209, 77, 114, 0.13);
+  border-color: #d14d72;
+  background: #fff;
+}
+
+.ong-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  border-radius: 12px;
+  margin-bottom: 1.1rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(209, 77, 114, 0.05);
+}
+
+.ong-name {
+  font-size: 1.13rem;
+  color: #d14d72;
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+  text-align: center;
+}
+
+.ong-details-btn {
+  background: #fff;
+  color: #d14d72;
+  border: 1.5px solid #d14d72;
+  border-radius: 7px;
+  padding: 0.5rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: auto;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ong-details-btn:hover {
+  background: #d14d72;
+  color: #fff;
+  border-color: #d14d72;
+}
+
+@media (max-width: 900px) {
+  .proud-ongs-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .proud-ongs-title {
+    text-align: left;
+  }
+}
+
+@media (max-width: 600px) {
+  .proud-ongs-section {
+    padding: 1.2rem 0.5rem;
+  }
+
+  .proud-ongs-cards {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .ong-card {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
 /* CTA Secundário e Redes Sociais */
 .cta-social-section {
   padding: 2.5rem 1rem 1.5rem 1rem;
@@ -641,7 +782,7 @@
   padding: 2.5rem 2rem;
   background: #fff;
   border-radius: 18px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
   min-height: 420px;
   position: relative;
   overflow: hidden;
@@ -652,11 +793,14 @@
   display: flex;
   align-items: center;
   gap: 2.5rem;
+  flex-direction: row;
 }
 
 .about-row-custom-reverse {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
   flex-direction: row-reverse;
-  margin-top: 0;
 }
 
 .about-img-wrapper-right,
@@ -674,14 +818,15 @@
   height: auto;
   border-radius: 14px;
   object-fit: cover;
-  box-shadow: 0 4px 16px rgba(209,77,114,0.10);
+  box-shadow: 0 4px 16px rgba(209, 77, 114, 0.10);
   background: #f8f8f8;
 }
 
 .about-text-left,
 .about-text-right {
   flex: 1;
-  color: #555;
+  color: #111;
+  /* Preto */
   font-size: 1.13rem;
   line-height: 1.8;
   display: flex;
@@ -701,10 +846,10 @@
 .about-text-left p,
 .about-text-right p {
   margin-bottom: 1.1rem;
-  background: rgba(254,242,244,0.6);
+  background: rgba(254, 242, 244, 0.6);
   padding: 0.7rem 1rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(209,77,114,0.04);
+  box-shadow: 0 2px 8px rgba(209, 77, 114, 0.04);
   font-size: 1.08rem;
 }
 
@@ -719,6 +864,7 @@
     gap: 1.2rem;
     padding: 1.5rem 0.7rem;
   }
+
   .about-img-wrapper-right,
   .about-img-wrapper-left {
     min-width: 120px;
@@ -727,12 +873,14 @@
 }
 
 @media (max-width: 800px) {
+
   .about-row-custom,
   .about-row-custom-reverse {
     flex-direction: column !important;
     gap: 1.2rem;
     text-align: center;
   }
+
   .about-img-wrapper-right,
   .about-img-wrapper-left {
     width: 100%;
@@ -741,11 +889,13 @@
     justify-content: center !important;
     align-items: center !important;
   }
+
   .about-img {
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
   }
+
   .about-text-left .section-title {
     text-align: center;
   }
@@ -755,9 +905,11 @@
   .about-card-single {
     padding: 0.7rem 0.2rem;
   }
+
   .about-img {
     max-width: 98vw;
   }
+
   .about-text-left p,
   .about-text-right p {
     padding: 0.6rem 0.5rem;

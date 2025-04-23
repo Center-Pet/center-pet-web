@@ -4,106 +4,106 @@ import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import './Home.css';
 
 const Home = () => {
-   const petData = [
-     {
-       id: 1,
-       image: "/assets/teste.jpg",
-       name: "Rex",
-       gender: "Macho",
-       age: "3 meses",
-     },
-     {
-       id: 2,
-       image: "/assets/teste2.jpg",
-       name: "Luna",
-       gender: "Fêmea",
-       age: "2 anos",
-     },
-     {
-       id: 1,
-       image: "/assets/teste.jpg",
-       name: "Rex",
-       gender: "Macho",
-       age: "3 meses",
-     },
-     {
-       id: 2,
-       image: "/assets/teste2.jpg",
-       name: "Luna",
-       gender: "Fêmea",
-       age: "2 anos",
-     },
-     {
-       id: 1,
-       image: "/assets/teste.jpg",
-       name: "Rex",
-       gender: "Macho",
-       age: "3 meses",
-     },
-     {
-       id: 2,
-       image: "/assets/teste2.jpg",
-       name: "Luna",
-       gender: "Fêmea",
-       age: "2 anos",
-     },
-     {
-       id: 1,
-       image: "/assets/teste.jpg",
-       name: "Rex",
-       gender: "Macho",
-       age: "3 meses",
-     },
-     {
-       id: 2,
-       image: "/assets/teste2.jpg",
-       name: "Luna",
-       gender: "Fêmea",
-       age: "2 anos",
-     },
-     {
-       id: 1,
-       image: "/assets/teste.jpg",
-       name: "Rex",
-       gender: "Macho",
-       age: "3 meses",
-     },
-     {
-       id: 2,
-       image: "/assets/teste2.jpg",
-       name: "Luna",
-       gender: "Fêmea",
-       age: "2 anos",
-     },
-     {
-       id: 1,
-       image: "/assets/teste.jpg",
-       name: "Rex",
-       gender: "Macho",
-       age: "3 meses",
-     },
-     {
-       id: 2,
-       image: "/assets/teste2.jpg",
-       name: "Luna",
-       gender: "Fêmea",
-       age: "2 anos",
-     },
-     {
-       id: 1,
-       image: "/assets/teste.jpg",
-       name: "Rex",
-       gender: "Macho",
-       age: "3 meses",
-     },
-     {
-       id: 2,
-       image: "/assets/teste2.jpg",
-       name: "Luna",
-       gender: "Fêmea",
-       age: "2 anos",
-     },
-   ];
+  const petData = [
+    {
+      id: 1,
+      image: "/assets/teste.jpg",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+    {
+      id: 1,
+      image: "/assets/teste.jpg",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+    {
+      id: 1,
+      image: "/assets/teste.jpg",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+    {
+      id: 1,
+      image: "/assets/teste.jpg",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+    {
+      id: 1,
+      image: "/assets/teste.jpg",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+    {
+      id: 1,
+      image: "/assets/teste.jpg",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+    {
+      id: 1,
+      image: "/assets/teste.jpg",
+      name: "Rex",
+      gender: "Macho",
+      age: "3 meses",
+    },
+    {
+      id: 2,
+      image: "/assets/teste2.jpg",
+      name: "Luna",
+      gender: "Fêmea",
+      age: "2 anos",
+    },
+  ];
 
   return (
     <main className="home-container">
@@ -198,9 +198,13 @@ const Home = () => {
       {/* SOBRE NÓS */}
       <section className="about-section">
         <div className="about-card about-card-single">
+          {/* Primeira linha: texto à esquerda, imagem à direita */}
           <div className="about-row-custom">
             <div className="about-text about-text-left">
-              <h2 className="section-title">Sobre nós</h2>
+              <h2 className="section-title">
+                Sobre nós
+                <span className="section-underline"></span>
+              </h2>
               <p>
                 Aqui na Center Pet, acreditamos que todo animal merece um lar cheio de amor e cuidado. Nossa missão é conectar ONGs e protetores de animais a pessoas dispostas a adotar, tornando o processo mais acessível, transparente e eficiente.
               </p>
@@ -212,6 +216,7 @@ const Home = () => {
               <img src="/assets/about1.jpg" alt="Sobre a Center Pet" className="about-img" />
             </div>
           </div>
+          {/* Segunda linha: imagem à esquerda, texto à direita */}
           <div className="about-row-custom about-row-custom-reverse">
             <div className="about-img-wrapper about-img-wrapper-left">
               <img src="/assets/about2.jpg" alt="Adoção responsável" className="about-img" />
@@ -221,6 +226,38 @@ const Home = () => {
                 Se você está em busca de um novo companheiro, pode navegar facilmente pela plataforma, filtrar os animais conforme suas preferências e entrar em contato diretamente com a ONG responsável. Queremos tornar o ato de adotar mais simples e significativo, ajudando a criar laços duradouros entre humanos e seus novos amigos de quatro patas.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ORGULHO EM APOIAR ONGS */}
+      <section className="proud-ongs-section">
+        <div className="proud-ongs-header">
+          <div className="proud-ongs-icon">
+            <img src="/assets/dog-icon.svg" alt="Ícone cachorro" />
+          </div>
+          <div>
+            <h2 className="proud-ongs-title">
+              Temos orgulho em apoiar essas ONGs incríveis
+            </h2>
+            <div className="proud-ongs-underline"></div>
+          </div>
+        </div>
+        <div className="proud-ongs-cards">
+          <div className="ong-card">
+            <img src="/assets/ong1-logo.png" alt="Toca dos peludos" className="ong-logo" />
+            <h3 className="ong-name">Toca dos peludos</h3>
+            <a href="/ongs/toca-dos-peludos" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
+          </div>
+          <div className="ong-card">
+            <img src="/assets/ong2-logo.png" alt="Amigos de Patas" className="ong-logo" />
+            <h3 className="ong-name">Amigos de Patas</h3>
+            <a href="/ongs/amigos-de-patas" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
+          </div>
+          <div className="ong-card">
+            <img src="/assets/ong3-logo.png" alt="Lar dos Focinhos" className="ong-logo" />
+            <h3 className="ong-name">Lar dos Focinhos</h3>
+            <a href="/ongs/lar-dos-focinhos" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
           </div>
         </div>
       </section>
@@ -303,7 +340,7 @@ const Home = () => {
 
 
     </main>
-  ); 
+  );
 };
 
 export default Home;
