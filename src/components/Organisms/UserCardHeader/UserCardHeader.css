@@ -5,14 +5,7 @@
   }
   
   /* Profile Header */
-  .profile-header {
-    background-color: #ffabab;
-    border-radius: 16px;
-    padding: 1.5rem;
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
+  
   
   .profile-image-container {
     position: relative;

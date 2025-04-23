@@ -1,5 +1,5 @@
 import React from "react";
-import TitleType from "../../Atoms/TitleType/TitleType";
+import ScrollToTop from "../../Atoms/ScrollToTop/ScrollToTop";
 import "./Footer.css";
 
 function Footer() {
@@ -27,6 +27,8 @@ function Footer() {
           <a href="/catalog">Catálogo</a>
         </nav>
       </div>
+
+      <ScrollToTop />
 
       <div className="footer-bottom">
         <p>© {new Date().getFullYear()} Center Pet. Todos os direitos reservados.</p>

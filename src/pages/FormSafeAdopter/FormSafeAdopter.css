@@ -4,7 +4,7 @@ body {
 }
 
 .form-page {
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -122,6 +122,13 @@ body {
 
 .checkbox-confirmation {
   width: auto !important;
+}
+
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
 }
 
 /* Responsividade */

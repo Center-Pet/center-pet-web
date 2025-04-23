@@ -1,6 +1,7 @@
 import React from "react";
 import Hero from "../../components/Molecules/Banner/Banner";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
+import ScrollToTop from "../../components/Atoms/ScrollToTop/ScrollToTop";
 import './Home.css';
 
 const Home = () => {
@@ -337,8 +338,6 @@ const Home = () => {
       >
         <i className="fas fa-comments"></i>
       </button>
-
-
     </main>
   );
 };

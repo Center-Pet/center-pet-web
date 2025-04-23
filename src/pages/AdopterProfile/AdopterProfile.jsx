@@ -1,6 +1,5 @@
 import UserCardDetails from "../../components/Organisms/UserCardDetails/UserCardDetails"
 import UserCardHeader from "../../components/Organisms/UserCardHeader/UserCardHeader"
-import Carousel from "../../components/Organisms/Carousel/Carousel"
 import TitleType from "../../components/Atoms/TitleType/TitleType"
 import "./AdopterProfile.css"
 
