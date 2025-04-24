@@ -58,13 +58,12 @@ const pets = [
 const ONGProfile = () => {
   return (
     <div className="ong-profile-container">
-      <div className="profile-content">
-        <TitleType>Perfil da ONG</TitleType>
-        <div className="profile-header-container">
-          <div className="profile-header">
+      <div className="ong-profile-content">
+        <div className="ong-profile-header-container">
+          <div className="ong-profile-header">
               <img src="/assets/teste.jpg" alt="foto da ong"/>
-            <div className="profile-header-main">
-              <div className="profile-header-top-item">
+            <div className="ong-profile-header-main">
+              <div className="ong-profile-header-top-item">
                 <div className="name-ong">
                   <TitleType color="#D14D72">Nome da ONG</TitleType>
                 </div>
@@ -88,25 +87,25 @@ const ONGProfile = () => {
               </div>
             </div>
           </div>
-            <div className="profile-header-statistics">
-              <div className="profile-header-statistics-item">
+            <div className="ong-profile-header-statistics">
+              <div className="ong-profile-header-statistics-item">
                 <p>Pets adotados:</p>
                 <p>10</p>
               </div>
-              <div className="profile-header-statistics-item">
+              <div className="ong-profile-header-statistics-item">
                 <p>Pets disponíveis:</p>
                 <p>5</p>
               </div>
             </div>
         </div>
-      </div>
-
-      <div className="carousel-container">
-        <div className="carousel-content">
-          <TitleType>Pets desta ONG disponíveis para adoção</TitleType>
-          <PetShowcase pets={pets} />
+        <div className="carousel-container">
+          <div className="carousel-content">
+            <TitleType>Pets desta ONG disponíveis para adoção</TitleType>
+            <PetShowcase pets={pets} />
+          </div>
         </div>
       </div>
+
     </div>
   )
 }

@@ -3,16 +3,24 @@ p, h1, h2, h3, h4, h5, h6, li {
 }
 
 .ong-profile-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ong-profile-content {
+  flex: 1;
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px 0;
 }
 
-.profile-content {
-  padding: 0;
-}
-
-.profile-header {
+.ong-profile-header {
   background-color: #FEF2F4;
   border: #D14D72 solid 8px;
   border-bottom: none;
@@ -22,15 +30,17 @@ p, h1, h2, h3, h4, h5, h6, li {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 40px;
 }
 
-.profile-header-container {
+.ong-profile-header-container {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-.profile-header-top-item {
+.ong-profile-header-top-item {
   display: flex;
   flex-direction: row;
   justify-content: start;
@@ -38,21 +48,14 @@ p, h1, h2, h3, h4, h5, h6, li {
   align-items: center;
 }
 
-.profile-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-}
-
-.profile-header img {
+.ong-profile-header img {
   width: 10vw;
   height: auto;
   border-radius: 100%;
   border: #D14D72  solid 8px;
 }
 
-.profile-header-main {
+.ong-profile-header-main {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -71,7 +74,7 @@ p, h1, h2, h3, h4, h5, h6, li {
   font-weight: 100;
 }
 
-.profile-header-statistics {
+.ong-profile-header-statistics {
   display: flex;
   flex-direction: row;
   gap: 200px;
@@ -87,18 +90,19 @@ p, h1, h2, h3, h4, h5, h6, li {
   border-bottom-left-radius: 16px;
 }
 
-.profile-header-statistics-item {
+.ong-profile-header-statistics-item {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 13px;
 }
 
-.profile-header-statistics-item p {
+.ong-profile-header-statistics-item p {
   margin: 0;
   font-size: 1.5rem;
 }
 
 .carousel-container {
   margin: 40px 0px;
+  width: 70vw;
 }
