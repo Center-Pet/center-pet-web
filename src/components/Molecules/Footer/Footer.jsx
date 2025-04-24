@@ -8,7 +8,7 @@ function Footer() {
       <div className="footer-container">
         <div className="social-links">
           <span>Siga-nos:</span>
-          <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <a href="https://www.instagram.com/centerpet_oficial/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <i className="fab fa-instagram"></i>
           </a>
           <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">

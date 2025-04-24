@@ -214,13 +214,13 @@ const Home = () => {
               </p>
             </div>
             <div className="about-img-wrapper about-img-wrapper-right">
-              <img src="/assets/about1.jpg" alt="Sobre a Center Pet" className="about-img" />
+              <img src="./assets/logo/CP.jpg" alt="Sobre a Center Pet" className="about-img" />
             </div>
           </div>
           {/* Segunda linha: imagem à esquerda, texto à direita */}
           <div className="about-row-custom about-row-custom-reverse">
             <div className="about-img-wrapper about-img-wrapper-left">
-              <img src="/assets/about2.jpg" alt="Adoção responsável" className="about-img" />
+              <img src="https://www.vereadorafernandamoreno.com.br/wp-content/uploads/2020/12/Protetor-de-animais.jpg" alt="Adoção responsável" className="about-img" />
             </div>
             <div className="about-text about-text-right">
               <p>
@@ -234,9 +234,6 @@ const Home = () => {
       {/* ORGULHO EM APOIAR ONGS */}
       <section className="proud-ongs-section">
         <div className="proud-ongs-header">
-          <div className="proud-ongs-icon">
-            <img src="/assets/dog-icon.svg" alt="Ícone cachorro" />
-          </div>
           <div>
             <h2 className="proud-ongs-title">
               Temos orgulho em apoiar essas ONGs incríveis
@@ -246,11 +243,11 @@ const Home = () => {
         </div>
         <div className="proud-ongs-cards">
           <div className="ong-card">
-            <img src="/assets/ong1-logo.png" alt="Toca dos peludos" className="ong-logo" />
-            <h3 className="ong-name">Toca dos peludos</h3>
-            <a href="/ongs/toca-dos-peludos" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
+            <img src="https://pbs.twimg.com/profile_images/1758521731545780224/KjQzo0Sr_400x400.jpg" alt="Resgatiticos" className="ong-logo" />
+            <h3 className="ong-name">Resgatiticos</h3>
+            <a href="https://www.instagram.com/resgatiticos/" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
           </div>
-          <div className="ong-card">
+          {/* <div className="ong-card">
             <img src="/assets/ong2-logo.png" alt="Amigos de Patas" className="ong-logo" />
             <h3 className="ong-name">Amigos de Patas</h3>
             <a href="/ongs/amigos-de-patas" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
@@ -259,7 +256,7 @@ const Home = () => {
             <img src="/assets/ong3-logo.png" alt="Lar dos Focinhos" className="ong-logo" />
             <h3 className="ong-name">Lar dos Focinhos</h3>
             <a href="/ongs/lar-dos-focinhos" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
-          </div>
+          </div> */}
         </div>
       </section>
 
