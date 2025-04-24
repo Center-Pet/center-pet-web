@@ -9,7 +9,7 @@ import PageNotFound from "../pages/PageNotFound/PageNotFound";
 import Home from "../pages/Home/Home";
 import TestDraft from "../pages/TestDraft/TestDraft";
 import FormSafeAdopter from '../pages/FormSafeAdopter/FormSafeAdopter';
-import RegisterUser from '../pages/RegisterUser/RegisterUser'
+import RegisterOng from '../pages/RegisterOng/RegisterOng'
 
 const AppRoutes = () => {
     return (
@@ -26,7 +26,7 @@ const AppRoutes = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/test-draft" element={<TestDraft />} />
             <Route path="/form-safe-adopter" element={<FormSafeAdopter />} />
-            <Route path="/register-user" element={<RegisterUser />} />
+            <Route path="/register-ong" element={<RegisterOng />} />
         </Routes>
     );
 };

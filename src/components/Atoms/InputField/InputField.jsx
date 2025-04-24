@@ -1,7 +1,7 @@
 import React from "react";
 import "./InputField.css";
 
-const InputField = ({ type, placeholder, value, onChange, required }) => {
+const InputField = ({ type, placeholder, value, onChange, required, width, margin, padding }) => {
   return (
     <div className="input-field">
       <input
@@ -11,6 +11,8 @@ const InputField = ({ type, placeholder, value, onChange, required }) => {
         onChange={onChange}
         required={required}
         className="form-input"
+        style={{ width: width, margin: margin, padding:padding }}
+
       />
     </div>
   );

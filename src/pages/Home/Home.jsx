@@ -312,7 +312,7 @@ const Home = () => {
             <p>
               Faça parte do nosso time de parceiros e tenha seus pets disponíveis para adoção divulgados gratuitamente na nossa plataforma.
             </p>
-            <a href="/login" className="partner-button">Quero ser parceiro</a>
+            <a href="/register-ong" className="partner-button">Quero ser parceiro</a>
           </div>
           <div className="partners-image">
             <img src="/assets/logo/Center-Pet.jpg" alt="Imagem de parceria com ONG" />

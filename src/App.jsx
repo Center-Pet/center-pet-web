@@ -7,7 +7,7 @@ import ChatButton from "./components/Molecules/ChatButton/ChatButton";
 
 function AppContent() {
   const location = useLocation();
-  const hideNavbarRoutes = ["/login", "/cadastro"];
+  const hideNavbarRoutes = ["/login", "/cadastro", "/register-ong",];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   return (

@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from "react";
 import InputField from "../../components/Atoms/InputField/InputField";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
+import { useNavigate } from "react-router-dom"; // Importe o useNavigate
+
 import "./Login.css";
 <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 
+
+  // Função para redirecionar para /register-ong
+
+
 const Login = () => {
+  const navigate = useNavigate(); // Inicialize o hook de navegação
+
+  const handleRegisterOng = () => {
+    navigate("/register-ong");
+  };
   const [isLogin, setIsLogin] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
   const [isSwitching, setIsSwitching] = useState(false);
@@ -153,14 +164,14 @@ const Login = () => {
               </>
             )}
 
-            <ButtonType bgColor="#FFABAB" type="button" width="107%">
+            {/* <ButtonType bgColor="#FFABAB" type="button" width="107%">
               <img
                 className="google-icon"
                 src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
                 alt="Google"
               />
               Continue com Google
-            </ButtonType>
+            </ButtonType> */}
 
             <div className="toggle-row">
               <p className="toggle-form">
@@ -172,8 +183,8 @@ const Login = () => {
 
               <p className="toggle-ong">
                 {isLogin ? "Você é um projeto? " : "Já tem uma conta de projeto? "}
-                <button type="button" onClick={handleFormSwitch} className="toggle-button">
-                  {isLogin ? "Cadastre-se" : "Entrar"}
+                <button type="button" onClick={isLogin ? handleRegisterOng : handleFormSwitch} className="toggle-button">
+                {isLogin ? "Cadastre-se" : "Entrar"}
                 </button>
               </p>
             </div>
