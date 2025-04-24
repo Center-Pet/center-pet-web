@@ -2,14 +2,31 @@ import React, { useState, useEffect } from "react";
 import InputField from "../../components/Atoms/InputField/InputField";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import { useNavigate } from "react-router-dom"; // Importe o useNavigate
+import Swal from 'sweetalert2'
 
 import "./Login.css";
 <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 
 
-  // Função para redirecionar para /register-ong
+// Função para verificar cpf
 
+function validarCPF(cpf) {
+  cpf = cpf.replace(/[^\d]+/g, '');
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+  let soma = 0, resto;
+  for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+  resto = (soma * 10) % 11;
+  if ((resto === 10) || (resto === 11)) resto = 0;
+  if (resto !== parseInt(cpf.substring(9, 10))) return false;
+  soma = 0;
+  for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+  resto = (soma * 10) % 11;
+  if ((resto === 10) || (resto === 11)) resto = 0;
+  if (resto !== parseInt(cpf.substring(10, 11))) return false;
+  return true;
+}
 
+// Função para redirecionar para /register-ong
 const Login = () => {
   const navigate = useNavigate(); // Inicialize o hook de navegação
 
@@ -71,16 +88,38 @@ const Login = () => {
     e.preventDefault();
 
     if (!isLogin) {
+      if (!validarCPF(cpf)) {
+        Swal.fire({
+          title: 'CPF inválido!',
+          text: 'Por favor, insira um CPF válido.',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 3000,
+          toast: false,
+          position: 'center',
+          customClass: 'swal2-toast error'
+        });
+        return;
+      }
       if (password !== confirmPassword) {
         setPasswordError("As senhas não coincidem.");
         return;
       }
-
       setPasswordError("");
-      console.log("Cadastro enviado:", { fullName, cpf, email, password });
-      // Aqui você pode chamar a API de cadastro
+      // Alerta de sucesso profissional
+      Swal.fire({
+        title: 'Cadastro realizado!',
+        text: 'Seus dados foram validados com sucesso.',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 3000,
+        toast: false,
+        position: 'center',
+        customClass: 'swal2-toast success'
+      });
+      // Aqui você pode seguir com o cadastro real (API, etc)
     } else {
-      console.log("Login enviado.");
+      // ...login...
     }
   };
 
@@ -131,7 +170,10 @@ const Login = () => {
                   type="text"
                   placeholder="CPF"
                   value={cpf}
-                  onChange={(e) => setCpf(e.target.value)}
+                  onChange={(e) => {
+                    setCpf(e.target.value);
+                    setPasswordError("");
+                  }}
                   required
                 />
                 <InputField
@@ -184,7 +226,7 @@ const Login = () => {
               <p className="toggle-ong">
                 {isLogin ? "Você é um projeto? " : "Já tem uma conta de projeto? "}
                 <button type="button" onClick={isLogin ? handleRegisterOng : handleFormSwitch} className="toggle-button">
-                {isLogin ? "Cadastre-se" : "Entrar"}
+                  {isLogin ? "Cadastre-se" : "Entrar"}
                 </button>
               </p>
             </div>
