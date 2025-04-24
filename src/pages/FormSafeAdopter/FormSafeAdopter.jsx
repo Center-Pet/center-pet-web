@@ -86,16 +86,16 @@ const FormSafeAdopter = () => {
       <label>Você mora em:</label>
       <select name="housingType" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="House">Casa</option>
-        <option value="Apartment">Apartamento</option>
-        <option value="Farm">Sítio/Chácara</option>
+        <option value="Casa">Casa</option>
+        <option value="Apartamento">Apartamento</option>
+        <option value="Sítio/Chácara">Sítio/Chácara</option>
       </select>
 
       <label>O imóvel é:</label>
-      <select name="propertyType" onChange={handleChange} required>
-        <option value="">Selecione</option>
-        <option value="Owned">Próprio</option>
-        <option value="Rented">Alugado</option>
+      <select name="homeOwnership" onChange={handleChange} required>
+        <option value="">Selecione</option> 
+        <option value="Próprio">Próprio</option>
+        <option value="Alugado">Alugado</option>  
       </select>
 
       {formData.propertyType === "Rented" && (
@@ -103,42 +103,42 @@ const FormSafeAdopter = () => {
           <label>Permissão para animais:</label>
           <select name="petsAllowed" onChange={handleChange} required>
             <option value="">Selecione</option>
-            <option value="Yes">Sim</option>
-            <option value="No">Não</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
           </select>
         </>
       )}
 
       <label>Ambiente é seguro (muro/tela)?</label>
-      <select name="secureEnvironment" onChange={handleChange} required>
+      <select name="homeSafety" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
       
       <label>Quantas pessoas moram com você?</label>
-      <input type="number" name="peopleHouse" placeholder="Moro Sozinho" onChange={handleChange} min="0" max="50" required />
-      {formData.peopleHouse > "0" && (
+      <input type="number" name="numberOfHouseholdMembers" placeholder="Moro Sozinho" onChange={handleChange} min="0" max="50" required />
+      {formData.numberOfHouseholdMembers > "0" && (
         <>
           <label> Alguém na casa tem alergia a animais?</label>
           <select name="allergy" onChange={handleChange} required>
             <option value="">Selecione</option>
-            <option value="Yes">Sim</option>
-            <option value="No">Não</option>
+            <option value="true">Sim</option>
+            <option value="false">Não</option>
           </select>
 
-      {formData.allergy === "Yes" && (
+      {formData.allergy === "true" && (
         <textarea name="allergyDetails" placeholder="Como pretende lidar com isso?" onChange={handleChange} required/>
       )}
 
       <label>Todos na casa estão de acordo com a adoção?</label>
       <select name="familyAgreement" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
 
-      {formData.familyAgreement === "No" && (
+      {formData.familyAgreement === "false" && (
         <textarea name="familyAgreementDetails" placeholder="Como pretende lidar com isso?" onChange={handleChange} required/>
       )}
       </>
@@ -149,24 +149,24 @@ const FormSafeAdopter = () => {
     <fieldset key="step-4">
       <legend>🐶 Experiência com Animais</legend>
       <label>Você já teve ou tem pets?</label>
-      <select name="previousPets" onChange={handleChange} required>
+      <select name="hasOrHadPets" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="hadAndHave">Já tive e tenho</option>
-        <option value="hadAndDontHave">Já tive, mas não tenho nenhum no momento</option>
-        <option value="willBeFirst">Será o meu primeiro</option>
+        <option value="Já tive e tenho">Já tive e tenho</option>
+        <option value="Já tive, mas não tenho nenhum no momento">Já tive, mas não tenho nenhum no momento</option>
+        <option value="Será o meu primeiro">Será o meu primeiro</option>
       </select>
-      {formData.previousPets === "hadAndHave" &&( 
+      {formData.hasOrHadPets === "Já tive e tenho" &&( 
         <>
           <label>O que aconteceu com eles?</label>
           <select name="petOutcome" onChange={handleChange} required>
             <option value="">Selecione</option>
-            <option value="Passed away">Faleceu de causas naturais</option>
-            <option value="Ran away">Fugiu</option>
-            <option value="Donated">Foi doado</option>
-            <option value="Other">Outro</option>
+            <option value="Faleceu de causas naturais">Faleceu de causas naturais</option>
+            <option value="Fugiu">Fugiu</option>
+            <option value="Foi doado">Foi doado</option>
+            <option value="Outro">Outro</option>
           </select>
           
-          {formData.petOutcome === "Other" && (
+          {formData.petOutcome === "Outro" && (
             <textarea name="otherOutcome" placeholder="Explique" onChange={handleChange} required/>
           )}
 
@@ -174,18 +174,18 @@ const FormSafeAdopter = () => {
         </>
       )}
 
-      {formData.previousPets === "hadAndDontHave" && (
+      {formData.hasOrHadPets === "Já tive, mas não tenho nenhum no momento" && (
         <>
           <label>O que aconteceu com eles?</label>
           <select name="petOutcome1" onChange={handleChange} required>
             <option value="">Selecione</option>
-            <option value="Passed away">Faleceu de causas naturais</option>
-            <option value="Ran away">Fugiu</option>
-            <option value="Donated">Foi doado</option>
-            <option value="Other">Outro</option>
+            <option value="Faleceu de causas naturais">Faleceu de causas naturais</option>
+            <option value="Fugiu">Fugiu</option>
+            <option value="Foi doado">Foi doado</option>
+            <option value="Outro">Outro</option>
           </select>
 
-          {formData.petOutcome1 === "Other" && (
+          {formData.petOutcome1 === "Outro" && (
             <textarea name="otherOutcome1" placeholder="Explique" onChange={handleChange} required/>
           )}
         </>
@@ -195,16 +195,16 @@ const FormSafeAdopter = () => {
     // Passo 5: Comportamento e Rotina
     <fieldset key="step-5">
       <legend>🧠 Comportamento e Rotina</legend>
-      <textarea name="adoptionReason" placeholder="Por que deseja adotar um pet?" onChange={handleChange} required />
-      <textarea name="behaviorExpectations" placeholder="O que espera do comportamento do animal?" onChange={handleChange} required/>
-      <textarea name="undesiredBehaviors" placeholder="Como lidará com comportamentos indesejados?" onChange={handleChange} required/>
+      <textarea name="reasonToAdopt" placeholder="Por que deseja adotar um pet?" onChange={handleChange} required />
+      <textarea name="expectedPetBehavior" placeholder="O que espera do comportamento do animal?" onChange={handleChange} required/>
+      <textarea name="howHandleUndesiredBehavior" placeholder="Como lidará com comportamentos indesejados?" onChange={handleChange} required/>
       <label>Está disposto a buscar adestramento?</label>
-      <select name="trainingWillingness" onChange={handleChange} required>
+      <select name="willingToTrain" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
-      <textarea name="timeAlone" placeholder="Por quanto tempo o pet ficará sozinho por dia?" onChange={handleChange} required />
+      <textarea name="petAloneHoursPerDay" placeholder="Por quanto tempo o pet ficará sozinho por dia?" onChange={handleChange} required />
       <textarea name="sleepingPlace" placeholder="Onde ele dormirá?" onChange={handleChange} required />
     </fieldset>,
 
@@ -212,22 +212,22 @@ const FormSafeAdopter = () => {
     <fieldset key="step-6">
       <legend>🛡️ Segurança e Cuidados</legend>
       <label>Manterá vacinas e vermífugos em dia?</label>
-      <select name="vaccinesUpToDate" onChange={handleChange} required>
+      <select name="keepVaccinesUpToDate" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
       <label>Levará ao veterinário com regularidade?</label>
       <select name="regularVetVisits" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
       <label>Tem condições financeiras para manter o pet?</label>
       <select name="financialConditions" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
       <label>
         Está ciente da "
@@ -243,20 +243,20 @@ const FormSafeAdopter = () => {
       </label>
       <select name="awareOfLaw" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
       <label>Se compromete a NUNCA abandonar o pet?</label>
-      <select name="commitmentNoAbandonment" onChange={handleChange} required>
+      <select name="commitToNeverAbandon" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
       <label>Devolveria o pet à ONG se não puder cuidar?</label>
-      <select name="returnToONG" onChange={handleChange} required>
+      <select name="returnToOng" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim</option>
-        <option value="No">Não</option>
+        <option value="true">Sim</option>
+        <option value="false">Não</option>
       </select>
     </fieldset>,
 
@@ -266,11 +266,11 @@ const FormSafeAdopter = () => {
       <label>Está ciente das responsabilidades de adotar?</label>
       <select name="awareOfResponsibilities" onChange={handleChange} required>
         <option value="">Selecione</option>
-        <option value="Yes">Sim, estou ciente e preparado(a)</option>
-        <option value="No">Não</option>
+        <option value="true">Sim, estou ciente e preparado(a)</option>
+        <option value="false">Não</option>
       </select>
       <label className="confirmation-label">
-        <input className="checkbox-confirmation" type="checkbox" name="confirmation" onChange={handleChange} required />
+        <input className="checkbox-confirmation" type="checkbox" name="finalDeclarationAgreement" onChange={handleChange} required />
         <p>Declaro que as informações são verdadeiras e estou ciente das responsabilidades legais e morais ao adotar um animal. 
         </p>
       </label>
@@ -307,41 +307,3 @@ const FormSafeAdopter = () => {
 };
 
 export default FormSafeAdopter;
-
-/*
-Backend (Exemplo de API)
-No backend, você precisará de uma rota para
-atualizar o atributo safeAdopter do usuário.
-Aqui está um exemplo em Node.js com Express:
-
-const express = require("express");
-const app = express();
-
-app.use(express.json());
-
-let users = [
-  { id: 1, name: "João", safeAdopter: false },
-  { id: 2, name: "Maria", safeAdopter: false },
-];
-
-app.post("/api/updateSafeAdopter", (req, res) => {
-  const { cpf, safeAdopter } = req.body;
-
-  // Encontre o usuário pelo CPF
-  const user = users.find((user) => user.cpf === cpf);
-
-  if (!user) {
-    return res.status(404).json({ message: "Usuário não encontrado" });
-  }
-
-  // Atualize o atributo safeAdopter
-  user.safeAdopter = safeAdopter;
-
-  return res.status(200).json({ message: "Usuário atualizado com sucesso", user });
-});
-
-app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
-});
-
-*/
