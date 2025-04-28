@@ -178,6 +178,83 @@ label {
     z-index: 9999;
 }
 
+.cep-helper-btn {
+    background: none;
+    border: none;
+    color: #d14d72;
+    font-size: 0.98rem;
+    cursor: pointer;
+    padding: 0.2rem 0.7rem;
+    border-radius: 6px;
+    transition: background 0.2s;
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+.cep-helper-btn:hover {
+    background: #fef2f4;
+}
+
+.endereco-section {
+    margin-bottom: 1.5rem;
+}
+
+.endereco-label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 0.3rem;
+    flex-wrap: wrap;
+}
+
+.cep-info-btn {
+    background: none;
+    border: none;
+    color: #d14d72;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.1rem 0.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: background 0.2s;
+    text-decoration: underline;
+}
+
+.cep-info-btn:hover {
+    background: #fef2f4;
+}
+
+.cep-info-icon {
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+}
+
+.endereco-privacidade {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.97rem;
+    color: #888;
+    background: #fef2f4;
+    border-radius: 6px;
+    padding: 0.15rem 0.7rem;
+    font-weight: 500;
+}
+
+.lock-icon {
+    font-size: 1.1rem;
+    color: #d14d72;
+}
+
+.required {
+    color: #d14d72;
+    font-weight: bold;
+    margin-left: 0.1rem;
+}
+
 @media screen and (min-width: 300px) and (max-width: 400px) {
 
     .form-input,
@@ -209,5 +286,25 @@ label {
     #register-text>p {
         width: 800px;
         font-size: 15px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .endereco-section label,
+    .endereco-section .endereco-label-row,
+    .endereco-section .cep-helper-btn,
+    .endereco-section .cep-info-btn,
+    .endereco-section .endereco-privacidade {
+        font-size: 0.97rem;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+
+    .endereco-section .cep-helper-btn,
+    .endereco-section .cep-info-btn {
+        margin-top: 0.3rem;
     }
 }

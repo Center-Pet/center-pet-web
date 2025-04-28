@@ -117,9 +117,8 @@ const Login = () => {
         position: 'center',
         customClass: 'swal2-toast success'
       });
-      // Aqui você pode seguir com o cadastro real (API, etc)
     } else {
-      // ...login...
+      //
     }
   };
 
