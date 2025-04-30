@@ -37,7 +37,37 @@ const RegisterOng = () => {
     const [city, setCity] = useState(""); // Cidade
     const [stateUf, setStateUf] = useState(""); // UF
     const [isFetchingZip, setIsFetchingZip] = useState(false); // Buscando CEP
+    const [profileImg, setProfileImg] = useState("");
 
+
+    /* Função para definir a URL da imagem de perfil*/
+    const uploadImageToCloudinary = async (file) => {
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", "centerpet_default"); // seu upload preset 
+        data.append("cloud_name", "dx8zzla5s"); // seu cloud name
+  
+        try {
+          const response = await fetch("https://api.cloudinary.com/v1_1/dx8zzla5s/image/upload", {
+            method: "POST",
+            body: data
+          });
+  
+          const result = await response.json();
+          console.log("Resposta do Cloudinary:", result);
+
+          if (!response.ok) {
+            throw new Error(result.error ? result.error.message : "Erro ao fazer upload da imagem");
+          }
+          console.log("URL da imagem gerada:", result.secure_url);
+          return result.secure_url; // retorna a URL da imagem
+        } catch (error) {
+          console.error("Erro ao enviar imagem:", error);
+          throw error;
+        }
+    };
+
+    
     // Função para validar CNPJ
     function validarCNPJ(cnpj) {
         cnpj = cnpj.replace(/[^\d]+/g, '');
@@ -178,6 +208,7 @@ const RegisterOng = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validações existentes...
         if (!password) {
             Swal.fire({
                 title: 'Atenção!',
@@ -189,7 +220,7 @@ const RegisterOng = () => {
                 position: 'center',
                 customClass: 'swal2-toast warning'
             });
-            return
+            return;
         }
         if (passwordConfirm !== password) {
             Swal.fire({
@@ -333,8 +364,9 @@ const RegisterOng = () => {
                 return;
             }
         }
-
-        // LOADING DE PATA ANDANDO (REMOVER DEPOIS DOS TESTES)
+        
+        let profileImageUrl = "";
+        // Mostra o loading antes de iniciar o upload
         Swal.fire({
             title: 'Enviando...',
             html: `<div style="display:flex;flex-direction:column;align-items:center;">
@@ -354,7 +386,6 @@ const RegisterOng = () => {
             </div>`,
             showConfirmButton: false,
             allowOutsideClick: false,
-            timer: 4000, // 4 segundos
             didOpen: () => {
                 // ANIMAÇÃO DE PATA ANDANDO
                 const style = document.createElement('style');
@@ -372,12 +403,68 @@ const RegisterOng = () => {
             }
         });
 
-        await new Promise(resolve => setTimeout(resolve, 4000)); // Espera 4 segundos
-
-        // Aqui você pode colocar sua lógica de envio real e mostrar o resultado
+    try {
+        if (profileImg) {
+            profileImageUrl = await uploadImageToCloudinary(profileImg);
+        }
+        
+        // Preparar dados para envio à API
+        const ongData = {
+            name: fullName,
+            email: email,
+            password: password,
+            phone: phone,
+            description: description || "",
+            address: {
+                zipCode: zipCode,
+                street: street,
+                number: noNumber ? "S/N" : number,
+                district: district,
+                city: city,
+                state: stateUf
+            },
+            socialMedia: {
+                instagram: instagram || "",
+                facebook: facebook || "",
+                website: website || ""
+            },
+            pixKey: pixKey || "",
+            profileImage: profileImageUrl,
+            role: roleOption,
+            document: {
+                type: roleOption === "ONG" ? "CNPJ" : "CPF",
+                number: roleOption === "ONG" ? cnpj : cpf
+            },
+            collaborators: roleOption === "Projeto" ? collaborators : 0
+        };
+        
+        // Chamada à API com a rota correta
+        const response = await fetch("https://centerpet-api.onrender.com/api/ongs/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(ongData)
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+            // Tratamento de erros específicos
+            if (response.status === 400) {
+                if (result.error === "Email already exists") {
+                    throw new Error("Este email já está cadastrado. Por favor, use outro email.");
+                } else if (result.error === "Document already exists") {
+                    throw new Error("Este CNPJ/CPF já está cadastrado no sistema.");
+                }
+            }
+            throw new Error(result.message || result.error || "Erro ao cadastrar organização");
+        }
+        
+        // Mostra mensagem de sucesso
         Swal.fire({
             title: 'Sucesso!',
-            text: 'Formulário enviado!',
+            text: 'Organização cadastrada com sucesso!',
             icon: 'success',
             showConfirmButton: false,
             timer: 3000,
@@ -385,8 +472,24 @@ const RegisterOng = () => {
             position: 'center',
             customClass: 'swal2-toast success'
         });
-        // FIM DO BLOCO DE TESTE DE LOADING DE PATA
-    };
+        
+        // Redirecionar para página de login após sucesso
+        setTimeout(() => {
+            window.location.href = "/login";
+        }, 3000);
+    
+    } catch (error) {
+        console.error("Erro no cadastro:", error);
+        
+        Swal.fire({
+            title: 'Erro',
+            text: error.message || "Ocorreu um erro ao processar seu cadastro. Tente novamente.",
+            icon: 'error',
+            confirmButtonColor: '#D14D72',
+            confirmButtonText: 'OK'
+        });
+    }}
+
 
 
     const showOrgInputs = (value) => {
@@ -410,7 +513,6 @@ const RegisterOng = () => {
         return false
     }
 
-    /* Função para definir a URL da imagem de perfil*/
 
     return (
         <div className='register_ong'>
@@ -449,7 +551,7 @@ const RegisterOng = () => {
                                                   <span style="font-size:1.18rem;color:#d14d72;font-weight:700;">Por que pedimos seu endereço?</span>
                                                 </div>`,
                                         html: `
-                                        <div style="font-size:1.05rem;text-align:left;max-width:350px;margin:auto;line-height:1.5;">
+                                        <div style="font-size:1.05rem;text-align:left;max-width:600px;margin:auto;line-height:1.5;"> <!-- Alterado max-width para 600px -->
                                             <p style="margin:0 0 0.7em 0;">
                                                 <b style="color:#d14d72;">Seu endereço <span style="text-decoration:underline;">não será exibido no site</span>.</b>
                                             </p>
@@ -466,7 +568,9 @@ const RegisterOng = () => {
                                         icon: undefined,
                                         confirmButtonColor: '#d14d72',
                                         confirmButtonText: 'Entendi',
-                                        customClass: 'swal2-toast'
+                                        customClass: {
+                                            popup: 'custom-swal-popup' // Adiciona uma classe customizada para controle adicional
+                                        }
                                     })
                                 }
                             >
@@ -492,6 +596,7 @@ const RegisterOng = () => {
                                 maxLength={9}
                                 required
                             />
+                            {isFetchingZip && <span>🔄 Buscando...</span>}
                             <button
                                 type="button"
                                 className="cep-helper-btn"
@@ -585,7 +690,7 @@ const RegisterOng = () => {
 
                     <div id="image">
                         <h2>Insira sua imagem de perfil</h2>
-                        <ImageInputField />
+                        <ImageInputField onImageChange={setProfileImg} />
                     </div>
 
                     <div id="options">
