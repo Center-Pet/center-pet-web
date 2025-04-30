@@ -132,9 +132,74 @@
 
 /* Responsivo: em telas pequenas, os campos voltam a ficar empilhados */
 @media (max-width: 768px) {
+  /* Esconder o slider em telas menores */
+  .slider-section {
+    display: none;
+  }
+  
+  .form-section {
+    width: 100%; /* Ocupar toda a largura disponível */
+    padding: 1rem 1.5rem; /* Adicionar mais padding horizontal */
+    height: 100vh; /* Ocupar toda a altura */
+    overflow-y: auto; /* Permitir rolagem se necessário */
+  }
+
+  .form-container {
+    max-width: 90%; /* Reduz a largura máxima */
+    margin: 0 auto; /* Centraliza horizontalmente */
+  }
+
+  .logo {
+    width: 10%; /* Ajustar tamanho da logo em telas médias */
+    margin-top: 2.5rem; /* Adicionar espaço abaixo da logo */
+  }
+
+  .form-header h2 {
+    font-size: 1.4rem; /* Aumenta um pouco o título para melhor visibilidade */
+    margin-bottom: 0.5rem;
+  }
+
+  /* Outras regras responsivas existentes... */
+  .form-input {
+    padding: 0.7rem 0.8rem; /* Aumentar levemente o padding para melhor toque */
+    font-size: 0.9rem; /* Ajusta o tamanho da fonte */
+  }
+
+  .submit-button {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+
+  .login-form {
+    gap: 0.8rem; /* Aumentar espaçamento entre campos para facilitar o toque */
+  }
+
+  /* Campos de senha em coluna para telas menores */
   .password-group {
     grid-template-columns: 1fr;
-    /* Volta para uma coluna */
+    gap: 0.8rem;
+  }
+}
+
+/* Media query adicional para telas muito pequenas */
+@media (max-width: 480px) {
+  .form-container {
+    max-width: 100%; /* Usa toda a largura disponível */
+  }
+  
+  .form-header .logo {
+    width: 45%; /* Logo um pouco maior em telas muito pequenas */
+  }
+  
+  .toggle-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .toggle-form, .toggle-ong {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
   }
 }
 
