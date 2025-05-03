@@ -102,11 +102,16 @@ const FormSafeAdopter = () => {
     // Passo 1: Descrição
     <div key="step-1" data-step="0">
       <p className="form-description">
-        O Formulário de Adoção é uma etapa essencial no processo de adoção responsável aqui no Center Pet. Ele foi criado com muito cuidado para garantir o bem-estar dos animais e ajudar as ONGs a conhecerem melhor os adotantes. As perguntas abordam aspectos importantes como o ambiente onde o pet viverá, experiências anteriores, rotina da casa e principalmente o compromisso com a segurança e os cuidados a longo prazo.
+        O Formulário de Adoção é uma etapa essencial no processo de adoção responsável aqui no Center Pet. Ele foi criado com muito cuidado para <strong>garantir o bem-estar dos animais e ajudar as ONGs a conhecerem melhor os adotantes</strong>. As perguntas abordam aspectos importantes como o ambiente onde o pet viverá, experiências anteriores, rotina da casa e principalmente o compromisso com a segurança e os cuidados a longo prazo.
         <br />
-        ⚠️ Preencher com atenção e sinceridade é fundamental: quanto mais completas e conscientes forem as respostas, maiores são as chances de aprovação. Esse é o seu momento de mostrar que está pronto(a) para oferecer um lar cheio de amor, responsabilidade e segurança.
         <br />
-        Ao adotar com responsabilidade, você não só muda a vida de um pet — transforma também a sua! 💙
+        ⚠️ Preencher com atenção e sinceridade é fundamental: <strong>quanto mais completas e conscientes forem as respostas, maiores são as chances de aprovação</strong>. Esse é o seu momento de mostrar que está pronto(a) para oferecer um lar cheio de amor, responsabilidade e segurança.
+        <br />
+        <br />
+        🔒 As informações fornecidas neste formulário são protegidas e <strong>não serão divulgadas publicamente</strong>. Elas serão acessadas <strong>somente pela ONG responsável pelo pet que você deseja adotar</strong>.
+        <br />
+        <br />
+        Ao escolher adotar com responsabilidade, você não apenas transforma a vida de um animal — mas também enriquece a sua com amor, companheirismo e propósito.
       </p>
     </div>,
 
@@ -207,7 +212,11 @@ const FormSafeAdopter = () => {
     )}
 
       <label>Adicione fotos do ambiente:</label>
-      <ImageInputField onImageChange={handleImageChange} />
+        <div className="image-inputs">
+          <ImageInputField onImageChange={handleImageChange} size={200} />
+          <ImageInputField onImageChange={handleImageChange} size={200} />
+          <ImageInputField onImageChange={handleImageChange} size={200} />
+        </div>
     </fieldset>,
 
     // Passo 4: Experiência com Animais

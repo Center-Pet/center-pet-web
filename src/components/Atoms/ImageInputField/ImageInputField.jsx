@@ -1,7 +1,7 @@
 import './ImageInputField.css';
 import { useState } from 'react';
 
-const ImageInputField = ({ onImageChange }) => {
+const ImageInputField = ({ onImageChange, size = 300 }) => {
   const [srcImg, setSrcImg] = useState("");
 
   const loadImage = (e) => {
@@ -20,10 +20,24 @@ const ImageInputField = ({ onImageChange }) => {
   };
 
   return (
-    <div id='profile-image' tabIndex="0">
-      <label className='picture' htmlFor="picture-input">
-        <span className='picture_image'>
-          {!srcImg ? "Escolha uma imagem" : <img src={srcImg} id='profile-img' />}
+    <div
+      id="profile-image"
+      tabIndex="0"
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+      }}
+    >
+      <label
+        className="picture"
+        htmlFor="picture-input"
+        style={{
+          width: `${size}px`,
+          height: `${size}px`,
+        }}
+      >
+        <span className="picture_image">
+          {!srcImg ? "Escolha uma imagem" : <img src={srcImg} id="profile-img" alt="Preview" />}
         </span>
       </label>
       <input type="file" accept="image/*" id="picture-input" onChange={loadImage} />
