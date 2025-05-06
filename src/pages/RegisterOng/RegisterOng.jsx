@@ -6,6 +6,9 @@ import { useState } from 'react'
 import ImageInputField from '../../components/Atoms/ImageInputField/ImageInputField'
 import Swal from 'sweetalert2'
 import './RegisterOng.css'
+import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
+import ReactDOMServer from "react-dom/server";
+
 
 // link para rota: <Route path="/register-user" element={<RegisterUser />} />
 // import para página: import RegisterUser from '../pages/RegisterUser/RegisterUser'
