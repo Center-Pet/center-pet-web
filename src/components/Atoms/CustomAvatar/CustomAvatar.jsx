@@ -1,28 +1,52 @@
-import * as React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Stack, Avatar as MuiAvatar } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // Importa o hook useNavigate
+import { useNavigate } from "react-router-dom";
 import "./CustomAvatar.css";
+import { styled } from "@mui/material";
 
 export default function CustomAvatar({ imageSrc, navigateTo }) {
-  const navigate = useNavigate(); // Inicializa o hook useNavigate
+  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleClick = () => {
+  const handleToggleMenu = () => {
+    setIsMenuOpen((prev) => !prev); // Alterna o estado do menu
+  };
+
+  const handleCloseMenu = () => {
+    setIsMenuOpen(false); // Fecha o menu
+  };
+
+  const handleLogout = () => {
+    console.log("Logout realizado");
+    handleCloseMenu();
+  };
+
+  const handleProfile = () => {
     if (navigateTo) {
-      navigate(navigateTo); // Navega para a página especificada
+      navigate(navigateTo); // Navega para a página de perfil
     }
+    handleCloseMenu();
   };
 
   return (
-    <Stack direction="row" spacing={2} className="custom-avatar">
-      <MuiAvatar
-        className="icon"
-        alt="Avatar"
+    <div className="custom-avatar-container">
+      <img
+        className="custom-avatar-icon"
         src={imageSrc}
-        onClick={handleClick} // Adiciona o evento de clique
-        style={{ cursor: "pointer" }} // Adiciona o estilo de cursor para indicar que é clicável
+        alt="Avatar"
+        onClick={handleToggleMenu}
       />
-    </Stack>
+      {isMenuOpen && (
+        <div className="custom-avatar-menu">
+          <button className="custom-avatar-menu-item" onClick={handleProfile}>
+            <a href="/adopter-profile">Meu Perfil</a>
+          </button>
+          <button className="custom-avatar-menu-item" onClick={handleLogout}>
+            <a href="/login">Logout</a>
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 

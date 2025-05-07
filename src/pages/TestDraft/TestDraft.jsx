@@ -1,84 +1,12 @@
-import TitleType from "../../components/Atoms/TitleType/TitleType";
-import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import * as React from 'react';
 import "./TestDraft.css";
+import PhotoGallery from "../../components/Atoms/PhotoGallery/PhotoGallery.jsx";
 
-const TestDraft = () => {
-  const petData = [
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-    {
-      image: "/assets/teste.jpg",
-      type: "Cachorro",
-      gender: "Gênero: Macho",
-      age: "Idade: 3 meses",
-    },
-  ];
-
-  return (
-    <div className="profile-page">
-      <div className="profile-content">
-        <TitleType>Testando Componentes</TitleType>
-
-        <section className="showcase-section">
-          <PetShowcase pets={petData} />
-        </section>
-        
-      </div>
-    </div>
-  );
-};
+const TestDraft = () => (
+  <div>
+    <h1>Galeria de Fotos</h1>
+    <PhotoGallery maxImages={5} />
+  </div>
+);
 
 export default TestDraft;

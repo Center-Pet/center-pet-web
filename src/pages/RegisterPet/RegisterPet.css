@@ -2,98 +2,210 @@
 
 /* Reset básico */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Alexandria', sans-serif;
-    background-color: #FEF2F4;
-    color: #333;
+  margin: 0;
+  padding: 0;
+  font-family: 'Alexandria', sans-serif;
+  background-color: #FEF2F4;
+  color: #333;
+}
+
+/* Página de registro */
+.profile-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-content {
+  flex: 1;
+  width: 70vh;
+  max-width: 800px;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 40px 0;
+}
+
+.profile-title {
+  color: #D14D72;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Formulário */
+.register-pet-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-pet-form label {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #D14D72;
+  margin-top: 1rem;
+}
+
+.register-pet-form input,
+.register-pet-form select,
+.register-pet-form textarea {
+  padding: 0.8rem;
+  margin-top: 0.5rem;
+  border: 1px solid #FCC8D1;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: 'Alexandria', sans-serif;
+  background-color: #FEF2F4;
+}
+
+.register-pet-form input,
+.register-pet-form textarea {
+  width: 96.5%;
+}
+
+.register-pet-form select {
+  width: 100%;
+}
+
+.register-pet-form input:focus,
+.register-pet-form select:focus,
+.register-pet-form textarea:focus {
+  outline: none;
+  border-color: #D14D72;
+  box-shadow: 0 0 4px rgba(209, 77, 114, 0.5);
+}
+
+.register-pet-form textarea {
+  resize: none;
+  height: 100px;
+}
+
+/* Botão */
+.register-pet-form button {
+  background-color: #D14D72;
+  color: #FFFFFF;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-pet-form button:hover {
+  background-color: #FFABAB;
+}
+
+/* Galeria de fotos */
+.image-inputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Grupo de checkboxes */
+.checkbox-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center; /* Alinha o checkbox e o label */
+  gap: 0.5rem;
+}
+
+.checkbox-item label {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #D14D72;
+}
+
+.checkbox-item input {
+  width: 20px;
+  height: 20px;
+}
+
+/* Estilo do interruptor */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #D14D72 !important;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .profile-content {
+    width: 90%;
   }
-  
-  /* Página de perfil */
-  .profile-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* padding: 20px; */
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    padding: 1.5rem 2rem;
   }
-  
-  /* Título */
-  .profile-title {
-    color: #D14D72;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  /* Formulário */
-  .register-pet-form {
-    background-color: #FFABAB;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
+
   .register-pet-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 6px;
-    color: #D14D72;
+    font-size: 0.9rem;
   }
-  
+
   .register-pet-form input,
-  .register-pet-form textarea,
-  .register-pet-form button {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 16px;
-    border: 1px solid #FCC8D1;
-    border-radius: 20px;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
-  
-  .register-pet-form input[type="checkbox"] {
-    width: auto;
-    margin-right: 10px;
-  }
-  
-  /* Área de texto */
+  .register-pet-form select,
   .register-pet-form textarea {
-    resize: none;
-    min-height: 100px;
+    font-size: 0.9rem;
   }
-  
-  /* Botão */
+
   .register-pet-form button {
-    background-color: #D14D72;
-    color: #FEF2F4;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
   }
-  
-  .register-pet-form button:hover {
-    background-color: #e87394;
-  }
-  
-  /* Responsivo */
-  @media (max-width: 768px) {
-    .register-pet-form {
-      padding: 20px;
-    }
-  
-    .profile-title {
-      font-size: 1.6rem;
-    }
-  
-    .register-pet-form input,
-    .register-pet-form textarea,
-    .register-pet-form button {
-      font-size: 0.95rem;
-    }
-  }
-  
+}

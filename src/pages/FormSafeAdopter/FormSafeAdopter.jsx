@@ -1,6 +1,6 @@
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
-import ImageInputField from "../../components/Atoms/ImageInputField/ImageInputField"; // Importa o componente de upload de imagem
+import PhotoGallery from "../../components/Atoms/PhotoGallery/PhotoGallery.jsx";
 import "./FormSafeAdopter.css";
 import { useState } from "react";
 import InputMask from "react-input-mask";
@@ -49,14 +49,53 @@ const FormSafeAdopter = () => {
     }
   };
 
+  const brazilianStates = [
+    { value: "AC", label: "Acre (AC)" },
+    { value: "AL", label: "Alagoas (AL)" },
+    { value: "AP", label: "Amapá (AP)" },
+    { value: "AM", label: "Amazonas (AM)" },
+    { value: "BA", label: "Bahia (BA)" },
+    { value: "CE", label: "Ceará (CE)" },
+    { value: "DF", label: "Distrito Federal (DF)" },
+    { value: "ES", label: "Espírito Santo (ES)" },
+    { value: "GO", label: "Goiás (GO)" },
+    { value: "MA", label: "Maranhão (MA)" },
+    { value: "MT", label: "Mato Grosso (MT)" },
+    { value: "MS", label: "Mato Grosso do Sul (MS)" },
+    { value: "MG", label: "Minas Gerais (MG)" },
+    { value: "PA", label: "Pará (PA)" },
+    { value: "PB", label: "Paraíba (PB)" },
+    { value: "PR", label: "Paraná (PR)" },
+    { value: "PE", label: "Pernambuco (PE)" },
+    { value: "PI", label: "Piauí (PI)" },
+    { value: "RJ", label: "Rio de Janeiro (RJ)" },
+    { value: "RN", label: "Rio Grande do Norte (RN)" },
+    { value: "RS", label: "Rio Grande do Sul (RS)" },
+    { value: "RO", label: "Rondônia (RO)" },
+    { value: "RR", label: "Roraima (RR)" },
+    { value: "SC", label: "Santa Catarina (SC)" },
+    { value: "SP", label: "São Paulo (SP)" },
+    { value: "SE", label: "Sergipe (SE)" },
+    { value: "TO", label: "Tocantins (TO)" },
+  ];
+
   const validateStep = () => {
     const stepFields = document.querySelectorAll(`[data-step="${currentStep}"]`);
+
+    // Validação dos campos obrigatórios
     for (let field of stepFields) {
       if (field.required && !formData[field.name]) {
         alert(`Por favor, preencha o campo: ${field.placeholder || field.name}`);
         return false;
       }
     }
+
+    // Validação específica para o PhotoGallery no passo 3
+    if (currentStep === 2 && (!formData.environmentImages || formData.environmentImages.length < 2)) {
+      alert("Por favor, adicione pelo menos 2 fotos do ambiente.");
+      return false;
+    }
+
     return true;
   };
 
@@ -119,7 +158,7 @@ const FormSafeAdopter = () => {
     <fieldset key="step-2" data-step="1">
       <legend>📌 Informações Pessoais</legend>
       <label>Data de Nascimento:</label>
-      <input type="date" name="birth" placeholder="Nascimento" onChange={handleChange} required data-step="1" />
+      <input type="date" name="birth" placeholder="Nascimento" value={formData.birth || ""} onChange={handleChange} required data-step="1" />
 
       <InputMask mask="(99) 99999-9999" value={formData.phone || ""} onChange={handleChange}>
         {(inputProps) => (
@@ -127,7 +166,7 @@ const FormSafeAdopter = () => {
         )}
       </InputMask>
 
-      <input type="text" name="profession" placeholder="Profissão" onChange={handleChange} required data-step="1" />
+      <input type="text" name="profession" placeholder="Profissão" value={formData.profession || ""} onChange={handleChange} required data-step="1" />
 
       <InputMask
         mask="99999-999"
@@ -140,18 +179,25 @@ const FormSafeAdopter = () => {
       </InputMask>
 
       <input type="text" name="street" placeholder="Rua" value={formData.street || ""} onChange={handleChange} required data-step="1" />
-      <input type="text" name="number" placeholder="Número" onChange={handleChange} required data-step="1" />
+      <input type="text" name="number" placeholder="Número" value={formData.number || ""} onChange={handleChange} required data-step="1" />
       <input type="text" name="neighborhood" placeholder="Bairro" value={formData.neighborhood || ""} onChange={handleChange} required data-step="1" />
-      <input type="text" name="complement" placeholder="Complemento (opcional)" onChange={handleChange} data-step="1" />
+      <input type="text" name="complement" placeholder="Complemento (opcional)" value={formData.complement || ""} onChange={handleChange} data-step="1" />
       <input type="text" name="city" placeholder="Cidade" value={formData.city || ""} onChange={handleChange} required data-step="1" />
-      <input type="text" name="state" placeholder="Estado" value={formData.state || ""} onChange={handleChange} required data-step="1" />
+      <select name="state" value={formData.state || ""} onChange={handleChange} required data-step="1">
+        <option value="">Selecione o Estado</option>
+        {brazilianStates.map((state) => (
+          <option key={state.value} value={state.value}>
+            {state.label}
+          </option>
+        ))}
+      </select>
     </fieldset>,
 
     // Passo 3: Informações do Ambiente
     <fieldset key="step-3" data-step="2">
       <legend>🏠 Sobre o Ambiente</legend>
       <label>Você mora em:</label>
-      <select name="housingType" onChange={handleChange} required data-step="2">
+      <select name="housingType" value={formData.housingType || ""} onChange={handleChange} required data-step="2">
         <option value="">Selecione</option>
         <option value="Casa">Casa</option>
         <option value="Apartamento">Apartamento</option>
@@ -159,7 +205,7 @@ const FormSafeAdopter = () => {
       </select>
 
       <label>O imóvel é:</label>
-      <select name="homeOwnership" onChange={handleChange} required data-step="2">
+      <select name="homeOwnership" value={formData.homeOwnership || ""} onChange={handleChange} required data-step="2">
         <option value="">Selecione</option> 
         <option value="Own">Próprio</option>
         <option value="Rented">Alugado</option>  
@@ -168,7 +214,7 @@ const FormSafeAdopter = () => {
       {formData.homeOwnership === "Rented" && (
         <>
           <label>Permissão para animais:</label>
-          <select name="petsAllowed" onChange={handleChange} required data-step="2">
+          <select name="petsAllowed" value={formData.petsAllowed || ""} onChange={handleChange} required data-step="2">
             <option value="">Selecione</option>
             <option value="true">Sim</option>
             <option value="false">Não</option>
@@ -177,18 +223,18 @@ const FormSafeAdopter = () => {
       )}
 
       <label>Ambiente é seguro (muro/tela)?</label>
-      <select name="homeSafety" onChange={handleChange} required data-step="2">
+      <select name="homeSafety" value={formData.homeSafety || ""} onChange={handleChange} required data-step="2">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
       </select>
       
       <label>Quantas pessoas moram com você?</label>
-      <input type="number" name="numberOfHouseholdMembers" placeholder="Moro Sozinho" onChange={handleChange} min="0" max="50" required data-step="2" />
+      <input type="number" name="numberOfHouseholdMembers" value={formData.numberOfHouseholdMembers || ""} onChange={handleChange} min="0" max="50" required data-step="2" />
       {formData.numberOfHouseholdMembers > "0" && (
         <>
           <label> Alguém na casa tem alergia a animais?</label>
-          <select name="allergy" onChange={handleChange} required data-step="2">
+          <select name="allergy" value={formData.allergy || ""} onChange={handleChange} required data-step="2">
             <option value="">Selecione</option>
             <option value="true">Sim</option>
             <option value="false">Não</option>
@@ -199,23 +245,30 @@ const FormSafeAdopter = () => {
       )}
 
       <label>Todos na casa estão de acordo com a adoção?</label>
-      <select name="familyAgreement" onChange={handleChange} required data-step="2">
+      <select name="familyAgreement" value={formData.familyAgreement || ""} onChange={handleChange} required data-step="2">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
       </select>
 
       {formData.familyAgreement === "false" && (
-        <textarea name="familyAgreementDetails" placeholder="Como pretende lidar com isso?" onChange={handleChange} required data-step="2"/>
+        <textarea name="familyAgreementDetails" placeholder="Como pretende lidar com isso?" value={formData.familyAgreementDetails || ""} onChange={handleChange} required data-step="2"/>
       )}
       </>
     )}
 
-      <label>Adicione fotos do ambiente:</label>
+      <label>Adicione fotos do ambiente (janelas, portões, ambientes com possibilidade de fuga do pet), mínimo 2:</label>
         <div className="image-inputs">
-          <ImageInputField onImageChange={handleImageChange} size={200} />
-          <ImageInputField onImageChange={handleImageChange} size={200} />
-          <ImageInputField onImageChange={handleImageChange} size={200} />
+          <PhotoGallery
+            maxImages={15}
+            value={formData.familyAgreementDetails || ""} 
+            onImageChange={(images) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                environmentImages: images,
+              }))
+            }
+          />
         </div>
     </fieldset>,
 
@@ -223,7 +276,7 @@ const FormSafeAdopter = () => {
     <fieldset key="step-4" data-step="3">
       <legend>🐶 Experiência com Animais</legend>
       <label>Você já teve ou tem pets?</label>
-      <select name="hasOrHadPets" onChange={handleChange} required data-step="3">
+      <select name="hasOrHadPets" value={formData.hasOrHadPets || ""} onChange={handleChange} required data-step="3">
         <option value="">Selecione</option>
         <option value="Já tive e tenho">Já tive e tenho</option>
         <option value="Já tive, mas não tenho nenhum no momento">Já tive, mas não tenho nenhum no momento</option>
@@ -232,7 +285,7 @@ const FormSafeAdopter = () => {
       {formData.hasOrHadPets === "Já tive e tenho" &&( 
         <>
           <label>O que aconteceu com eles?</label>
-          <select name="petOutcome" onChange={handleChange} required data-step="3">
+          <select name="petOutcome" value={formData.petOutcome || ""}  onChange={handleChange} required data-step="3">
             <option value="">Selecione</option>
             <option value="Faleceu de causas naturais">Faleceu de causas naturais</option>
             <option value="Fugiu">Fugiu</option>
@@ -241,17 +294,17 @@ const FormSafeAdopter = () => {
           </select>
           
           {formData.petOutcome === "Outro" && (
-            <textarea name="otherOutcome" placeholder="Explique" onChange={handleChange} required data-step="3"/>
+            <textarea name="otherOutcome" placeholder="Explique" value={formData.otherOutcome || ""} onChange={handleChange} required data-step="3"/>
           )}
 
-          <textarea name="currentPetsDetails" placeholder="Sobre seus pets atuais, quais e quantos são?" onChange={handleChange} required data-step="3"/>
+          <textarea name="currentPetsDetails" placeholder="Sobre seus pets atuais, quais e quantos são?" value={formData.currentPetsDetails || ""}  onChange={handleChange} required data-step="3"/>
         </>
       )}
 
       {formData.hasOrHadPets === "Já tive, mas não tenho nenhum no momento" && (
         <>
           <label>O que aconteceu com eles?</label>
-          <select name="petOutcome1" onChange={handleChange} required data-step="3">
+          <select name="petOutcome1" value={formData.petOutcome1 || ""} onChange={handleChange} required data-step="3">
             <option value="">Selecione</option>
             <option value="Faleceu de causas naturais">Faleceu de causas naturais</option>
             <option value="Fugiu">Fugiu</option>
@@ -260,7 +313,7 @@ const FormSafeAdopter = () => {
           </select>
 
           {formData.petOutcome1 === "Outro" && (
-            <textarea name="otherOutcome1" placeholder="Explique" onChange={handleChange} required data-step="3"/>
+            <textarea name="otherOutcome1" placeholder="Explique" value={formData.otherOutcome1 || ""} onChange={handleChange} required data-step="3"/>
           )}
         </>
       )}
@@ -269,36 +322,36 @@ const FormSafeAdopter = () => {
     // Passo 5: Comportamento e Rotina
     <fieldset key="step-5" data-step="4">
       <legend>🧠 Comportamento e Rotina</legend>
-      <textarea name="reasonToAdopt" placeholder="Por que deseja adotar um pet?" onChange={handleChange} required data-step="4" />
-      <textarea name="expectedPetBehavior" placeholder="O que espera do comportamento do animal?" onChange={handleChange} required data-step="4"/>
-      <textarea name="howHandleUndesiredBehavior" placeholder="Como lidará com comportamentos indesejados?" onChange={handleChange} required data-step="4"/>
+      <textarea name="reasonToAdopt" placeholder="Por que deseja adotar um pet?" value={formData.reasonToAdopt || ""} onChange={handleChange} required data-step="4" />
+      <textarea name="expectedPetBehavior" placeholder="O que espera do comportamento do animal?" value={formData.expectedPetBehavior || ""} onChange={handleChange} required data-step="4"/>
+      <textarea name="howHandleUndesiredBehavior" placeholder="Como lidará com comportamentos indesejados?" value={formData.howHandleUndesiredBehavior || ""} onChange={handleChange} required data-step="4"/>
       <label>Está disposto a buscar adestramento?</label>
-      <select name="willingToTrain" onChange={handleChange} required data-step="4">
+      <select name="willingToTrain" value={formData.willingToTrain || ""} onChange={handleChange} required data-step="4">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
       </select>
-      <textarea name="petAloneHoursPerDay" placeholder="Por quanto tempo o pet ficará sozinho por dia?" onChange={handleChange} required data-step="4" />
-      <textarea name="sleepingPlace" placeholder="Onde ele dormirá?" onChange={handleChange} required data-step="4" />
+      <textarea name="petAloneHoursPerDay" placeholder="Por quanto tempo o pet ficará sozinho por dia?" value={formData.petAloneHoursPerDay || ""} onChange={handleChange} required data-step="4" />
+      <textarea name="sleepingPlace" placeholder="Onde ele dormirá?" value={formData.sleepingPlace || ""} onChange={handleChange} required data-step="4" />
     </fieldset>,
 
     // Passo 6: Cuidados e Saúde
     <fieldset key="step-6" data-step="5">
       <legend>🛡️ Segurança e Cuidados</legend>
       <label>Manterá vacinas e vermífugos em dia?</label>
-      <select name="keepVaccinesUpToDate" onChange={handleChange} required data-step="5">
+      <select name="keepVaccinesUpToDate" value={formData.keepVaccinesUpToDate || ""} onChange={handleChange} required data-step="5">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
       </select>
       <label>Levará ao veterinário com regularidade?</label>
-      <select name="regularVetVisits" onChange={handleChange} required data-step="5">
+      <select name="regularVetVisits" value={formData.regularVetVisits || ""} onChange={handleChange} required data-step="5">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
       </select>
       <label>Tem condições financeiras para manter o pet?</label>
-      <select name="financialConditions" onChange={handleChange} required data-step="5">
+      <select name="financialConditions" value={formData.financialConditions || ""} onChange={handleChange} required data-step="5">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
@@ -315,19 +368,19 @@ const FormSafeAdopter = () => {
         </a> 
         " (crime de maus-tratos)?
       </label>
-      <select name="awareOfLaw" onChange={handleChange} required data-step="5">
+      <select name="awareOfLaw" value={formData.awareOfLaw || ""} onChange={handleChange} required data-step="5">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
       </select>
       <label>Se compromete a NUNCA abandonar o pet?</label>
-      <select name="commitToNeverAbandon" onChange={handleChange} required data-step="5">
+      <select name="commitToNeverAbandon" value={formData.commitToNeverAbandon || ""} onChange={handleChange} required data-step="5">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
       </select>
       <label>Devolveria o pet à ONG se não puder cuidar?</label>
-      <select name="returnToOng" onChange={handleChange} required data-step="5">
+      <select name="returnToOng" value={formData.returnToOng || ""} onChange={handleChange} required data-step="5">
         <option value="">Selecione</option>
         <option value="true">Sim</option>
         <option value="false">Não</option>
@@ -338,7 +391,7 @@ const FormSafeAdopter = () => {
     <fieldset key="step-7" data-step="6">
       <legend>📚 Conscientização e Declaração Final</legend>
       <label>Está ciente das responsabilidades de adotar?</label>
-      <select name="awareOfResponsibilities" onChange={handleChange} required data-step="6">
+      <select name="awareOfResponsibilities" value={formData.awareOfResponsibilities || ""} onChange={handleChange} required data-step="6">
         <option value="">Selecione</option>
         <option value="true">Sim, estou ciente e preparado(a)</option>
         <option value="false">Não</option>
@@ -360,12 +413,12 @@ const FormSafeAdopter = () => {
 
           <div className="form-navigation">
             {currentStep > 0 && (
-              <ButtonType onClick={handlePrevious} bgColor="#D14D72">
+              <ButtonType type="button" onClick={handlePrevious} bgColor="#D14D72">
                 Voltar
               </ButtonType>
             )}
             {currentStep < steps.length - 1 ? (
-              <ButtonType onClick={handleNext} bgColor="#D14D72">
+              <ButtonType type="button" onClick={handleNext} bgColor="#D14D72">
                 Próximo
               </ButtonType>
             ) : (

@@ -48,18 +48,23 @@ const Filter = () => {
             <div id="filtros_filter" className={isOpen ? 'show' : ''}>
                 {Object.entries(categories).map(([category, options], index) => (
                     <div className="filtro-categoria" key={index}>
-                        <h4 className="filtro-categoria-titulo">{category}</h4>
+                        <h3 className="filtro-categoria-titulo">{category}</h3>
                         <div className="filtro-opcoes">
                             {options.map((option, idx) => (
                                 <div className="filtro" key={idx}>
-                                    <input
-                                        className="checkbox_filtro"
-                                        type="checkbox"
-                                        value={option}
-                                        id={`checkbox-${category}-${idx}`}
-                                        onChange={handleCheckboxChange} // Chama a função ao alterar o estado do checkbox
-                                    />
-                                    <label htmlFor={`checkbox-${category}-${idx}`}>{option}</label>
+                                    <label className="switch">
+                                        <input
+                                            className="switch-input"
+                                            type="checkbox"
+                                            value={option}
+                                            id={`switch-${category}-${idx}`}
+                                            onChange={handleCheckboxChange} // Chama a função ao alterar o estado do switch
+                                        />
+                                        <span className="slider"></span>
+                                    </label>
+                                    <label htmlFor={`switch-${category}-${idx}`} className="switch-label">
+                                        {option}
+                                    </label>
                                 </div>
                             ))}
                         </div>

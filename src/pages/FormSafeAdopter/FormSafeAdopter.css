@@ -4,7 +4,6 @@ body {
 }
 
 .form-page {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,7 +43,6 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
 .adoption-form fieldset {
@@ -137,7 +135,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
 }
 
 /* Responsividade */
