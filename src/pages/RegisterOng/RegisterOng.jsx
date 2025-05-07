@@ -130,41 +130,20 @@ const RegisterOng = () => {
 
         setIsFetchingZip(true);
 
+        // Usando o componente PawAnimation para o loading
+        const pawAnimationHtml = ReactDOMServer.renderToString(
+            <PawAnimation 
+                width={60} 
+                height={60} 
+                text="Aguarde um instante" 
+            />
+        );
+
         Swal.fire({
             title: 'Buscando endereço...',
-            html: `<div style="display:flex;flex-direction:column;align-items:center;">
-                <svg width="60" height="60" viewBox="0 0 60 60" style="margin-bottom:8px;">
-                  <g>
-                    <ellipse cx="30" cy="54" rx="18" ry="5" fill="#f3d6e0"/>
-                    <g id="paw" style="animation: pawwalk 1s infinite cubic-bezier(.4,0,.2,1);">
-                      <ellipse cx="30" cy="38" rx="12" ry="9" fill="#D14D72"/>
-                      <ellipse cx="18" cy="28" rx="4" ry="6" fill="#D14D72"/>
-                      <ellipse cx="42" cy="28" rx="4" ry="6" fill="#D14D72"/>
-                      <ellipse cx="22" cy="18" rx="3" ry="4" fill="#D14D72"/>
-                      <ellipse cx="38" cy="18" rx="3" ry="4" fill="#D14D72"/>
-                    </g>
-                  </g>
-                </svg>
-                <span style="margin-top:10px;">Aguarde um instante</span>
-            </div>`,
+            html: pawAnimationHtml,
             showConfirmButton: false,
-            allowOutsideClick: false,
-            didOpen: () => {
-                // ANIMAÇÃO DE PATA ANDANDO MELHORADA
-                const style = document.createElement('style');
-                style.innerHTML = `
-                  @keyframes pawwalk {
-                    0% { transform: translateX(0) scale(1);}
-                    20% { transform: translateX(10px) scale(1.05);}
-                    40% { transform: translateX(20px) scale(1);}
-                    50% { transform: translateX(25px) scale(0.98);}
-                    60% { transform: translateX(20px) scale(1);}
-                    80% { transform: translateX(10px) scale(1.05);}
-                    100% { transform: translateX(0) scale(1);}
-                  }
-                `;
-                document.head.appendChild(style);
-            }
+            allowOutsideClick: false
         });
 
         try {
@@ -369,41 +348,21 @@ const RegisterOng = () => {
         }
         
         let profileImageUrl = "";
-        // Mostra o loading antes de iniciar o upload
+        // Mostra o loading antes de iniciar o upload usando o componente PawAnimation
+        const pawAnimationHtml = ReactDOMServer.renderToString(
+            <PawAnimation 
+                width={48} 
+                height={48} 
+                text="Estamos processando seu cadastro..." 
+                vertical={true}
+            />
+        );
+
         Swal.fire({
             title: 'Enviando...',
-            html: `<div style="display:flex;flex-direction:column;align-items:center;">
-                <svg width="48" height="48" viewBox="0 0 48 48" style="margin-bottom:8px;">
-                  <g>
-                    <ellipse cx="24" cy="44" rx="18" ry="4" fill="#f3d6e0"/>
-                    <g id="paw" style="animation: pawwalk 0.7s infinite;">
-                      <ellipse cx="24" cy="28" rx="10" ry="7" fill="#D14D72"/>
-                      <ellipse cx="14" cy="18" rx="3" ry="4" fill="#D14D72"/>
-                      <ellipse cx="34" cy="18" rx="3" ry="4" fill="#D14D72"/>
-                      <ellipse cx="18" cy="12" rx="2" ry="3" fill="#D14D72"/>
-                      <ellipse cx="30" cy="12" rx="2" ry="3" fill="#D14D72"/>
-                    </g>
-                  </g>
-                </svg>
-                <span style="margin-top:10px;">Estamos processando seu cadastro...</span>
-            </div>`,
+            html: pawAnimationHtml,
             showConfirmButton: false,
-            allowOutsideClick: false,
-            didOpen: () => {
-                // ANIMAÇÃO DE PATA ANDANDO
-                const style = document.createElement('style');
-                style.innerHTML = `
-                  @keyframes pawwalk {
-                    0% { transform: translateY(0);}
-                    20% { transform: translateY(-8px);}
-                    40% { transform: translateY(0);}
-                    60% { transform: translateY(8px);}
-                    80% { transform: translateY(0);}
-                    100% { transform: translateY(0);}
-                  }
-                `;
-                document.head.appendChild(style);
-            }
+            allowOutsideClick: false
         });
 
     try {
