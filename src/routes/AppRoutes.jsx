@@ -4,7 +4,6 @@ import PetInfo from "../pages/PetInfo/PetInfo";
 import AdopterProfile from "../pages/AdopterProfile/AdopterProfile";
 import ONGProfile from "../pages/ONGProfile/ONGProfile";
 import RegisterPet from "../pages/RegisterPet/RegisterPet";
-import EditPet from "../pages/EditPet/EditPet";
 import Login from "../pages/Login/Login";
 import PageNotFound from "../pages/PageNotFound/PageNotFound";
 import Home from "../pages/Home/Home";
@@ -14,23 +13,21 @@ import RegisterOng from '../pages/RegisterOng/RegisterOng'
 
 const AppRoutes = () => {
     return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/catalog" element={<Catalog />} />
-        <Route path="/pet" element={<PetInfo />} />
-        <Route path="/pet/:id" element={<PetInfo />} />{" "}
-        {/* Rota dinâmica para o pet */}
-        <Route path="/adopter-profile" element={<AdopterProfile />} />
-        <Route path="/ong-profile" element={<ONGProfile />} />
-        <Route path="/register-pet" element={<RegisterPet />} />
-        <Route path="/edit-pet" element={<EditPet />} />
-        <Route path="*" element={<PageNotFound />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/test-draft" element={<TestDraft />} />
-        <Route path="/form-safe-adopter" element={<FormSafeAdopter />} />
-        <Route path="/register-ong" element={<RegisterOng />} />
-      </Routes>
+        <Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="/pet" element={<PetInfo />} />
+            <Route path="/pet/:id" element={<PetInfo />} /> {/* Rota dinâmica para o pet */}
+            <Route path="/adopter-profile" element={<AdopterProfile />} /> 
+            <Route path="/ong-profile" element={<ONGProfile />} />
+            <Route path="/register-pet" element={<RegisterPet />} />
+            <Route path="*" element={<PageNotFound />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/test-draft" element={<TestDraft />} />
+            <Route path="/form-safe-adopter" element={<FormSafeAdopter />} />
+            <Route path="/register-ong" element={<RegisterOng />} />
+        </Routes>
     );
 };
 
