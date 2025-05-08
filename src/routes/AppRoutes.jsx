@@ -11,6 +11,9 @@ import Home from "../pages/Home/Home";
 import TestDraft from "../pages/TestDraft/TestDraft";
 import FormSafeAdopter from '../pages/FormSafeAdopter/FormSafeAdopter';
 import RegisterOng from '../pages/RegisterOng/RegisterOng'
+import EditUser from '../pages/EditUser/EditUser'
+import EditOrg from '../pages/EditOrg/EditOrg'
+
 
 const AppRoutes = () => {
     return (
@@ -30,6 +33,8 @@ const AppRoutes = () => {
         <Route path="/test-draft" element={<TestDraft />} />
         <Route path="/form-safe-adopter" element={<FormSafeAdopter />} />
         <Route path="/register-ong" element={<RegisterOng />} />
+        <Route path="/edit-user" element={<EditUser />} />
+        <Route path="/edit-org" element={<EditOrg />} />
       </Routes>
     );
 };

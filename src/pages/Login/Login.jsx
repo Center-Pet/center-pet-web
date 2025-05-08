@@ -3,6 +3,7 @@ import InputField from "../../components/Atoms/InputField/InputField";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import useAuth from "../../hooks/useAuth";
 import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
 
@@ -30,6 +31,7 @@ function validarCPF(cpf) {
 // Função para redirecionar para /register-ong
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   
   const handleRegisterOng = () => {
     navigate("/register-ong");
@@ -268,8 +270,7 @@ const Login = () => {
         if (response.ok) {
           // Login bem-sucedido
           // Armazenar token e informações do usuário no localStorage
-          localStorage.setItem('token', result.token);
-          localStorage.setItem('user', JSON.stringify(result.user));
+          login(result.user, result.token, result.userType);
 
           Swal.fire({
             title: 'Login bem-sucedido!',

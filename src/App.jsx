@@ -4,6 +4,9 @@ import Footer from "./components/Molecules/Footer/Footer";
 import Navbar from "./components/Molecules/Navbar/Navbar";
 import AnimatedBackground from "./components/Molecules/Background/Background";
 import ChatButton from "./components/Molecules/ChatButton/ChatButton";
+import AuthContext from "./contexts/AuthContext";
+import AuthProvider from "./Providers/AuthProvider"
+
 
 function AppContent() {
   const location = useLocation();
@@ -24,7 +27,9 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }

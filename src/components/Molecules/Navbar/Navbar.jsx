@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import ButtonType from '/src/components/Atoms/ButtonType/ButtonType.jsx';
+import ButtonType from '../../Atoms/ButtonType/ButtonType';
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
-import CustomAvatar from '/src/components/Atoms/CustomAvatar/CustomAvatar.jsx';
+import CustomAvatar from '../../Atoms/CustomAvatar/CustomAvatar';
+import useAuth from '../../../hooks/useAuth';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const { isAuthenticated, userType, user } = useAuth();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -24,13 +26,14 @@ const Navbar = () => {
                     id="logo" 
                     src="/assets/logo/CenterPet.png" 
                     alt="Center Pet Logo" 
-                    onClick={() => navigate('/login')} 
+                    onClick={() => navigate('/')} 
                     style={{ cursor: 'pointer' }} 
                 />
                 <button className="hamburger-menu" onClick={toggleMenu}>
                     ☰
                 </button>
-                {/* Menu padrão para telas grandes */}
+                
+                {/* Menu para desktop */}
                 <ul className="menu-desktop">
                     <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')} icon={"/assets/icons/home.png"}>Home</ButtonType>
@@ -39,34 +42,66 @@ const Navbar = () => {
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
                     </li>
                     
-                    <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')} icon={"/assets/icons/heart.png"}>ONG</ButtonType>
-                    </li>
+                    {/* Botão de ONG apenas para usuários do tipo ONG */}
+                    {isAuthenticated && userType === "Ong" && (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')} icon={"/assets/icons/heart.png"}>ONG</ButtonType>
+                        </li>
+                    )}
                     
-                    <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/form-safe-adopter')} icon={"/assets/icons/form.png"}>Formulário</ButtonType>
-                    </li>
+                    {/* Botão formulário apenas para adotantes */}
+                    {isAuthenticated && userType === "Adopter" && (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/form-safe-adopter')} icon={"/assets/icons/form.png"}>Formulário</ButtonType>
+                        </li>
+                    )}
+                    
+                    {/* Se não estiver logado, mostrar botão de login */}
+                    {!isAuthenticated && (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/login')} icon={"/assets/icons/user.png"}>Login</ButtonType>
+                        </li>
+                    )}
                 </ul>
-                {/* Menu lateral para dispositivos móveis */}
+
+                {/* Menu para mobile */}
                 <ul className={`menu ${isMenuOpen ? "open" : ""}`}>
                     <button className="close-menu" onClick={closeMenu}>✕</button>
                     <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')} icon={"/assets/icons/home.png"}>Home</ButtonType>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/home'); closeMenu(); }} icon={"/assets/icons/home.png"}>Home</ButtonType>
                     </li>
                     <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/catalog'); closeMenu(); }} icon={"/assets/icons/pawprint.png"}>Catálogo</ButtonType>
                     </li>
                     
-                    <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')} icon={"/assets/icons/heart.png"}>ONG</ButtonType>
-                    </li>
-                    <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/form-safe-adopter')} icon={"/assets/icons/form.png"}>Formulário</ButtonType>
-                    </li>
+                    {isAuthenticated && userType === "Ong" && (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/ong-profile'); closeMenu(); }} icon={"/assets/icons/heart.png"}>ONG</ButtonType>
+                        </li>
+                    )}
+                    
+                    {isAuthenticated && userType === "Adopter" && (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/form-safe-adopter'); closeMenu(); }} icon={"/assets/icons/form.png"}>Formulário</ButtonType>
+                        </li>
+                    )}
+                    
+                    {!isAuthenticated && (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/login'); closeMenu(); }} icon={"/assets/icons/user.png"}>Login</ButtonType>
+                        </li>
+                    )}
                 </ul>
-                <div className="avatar-icon">
-                    <CustomAvatar navigateTo="/adopter-profile" imageSrc="https://i.pinimg.com/736x/76/36/82/76368290b02e36e0ccc1178cfbe17652.jpg"/>
-                </div>
+
+                {/* Avatar do usuário - mostrar APENAS se estiver autenticado */}
+                {isAuthenticated && (
+                    <div className="avatar-icon">
+                        <CustomAvatar 
+                            navigateTo={userType === "Adopter" ? "/adopter-profile" : "/ong-profile"} 
+                            imageSrc={user?.profilePicture || "https://i.pinimg.com/736x/76/36/82/76368290b02e36e0ccc1178cfbe17652.jpg"}
+                        />
+                    </div>
+                )}
             </nav>
         </header>
     );

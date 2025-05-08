@@ -1,0 +1,72 @@
+#edit_user {
+    justify-items: center;
+    padding: 25px;
+}
+
+#edit-form {
+    box-shadow: 0px 9px 9px 2px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #FEF2F4;
+    border: 2px solid #FFABAB;
+}
+
+#edit-org-title{
+    text-align: center;
+}
+
+#user-img-profile{
+    margin-top: 60px;
+    justify-items: center;
+}
+
+#edit-input-textarea {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+/* Textarea */
+#edit-user-input-description {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #fcc8d1;
+    background-color: white;
+    transition: all 0.3s ease;
+    width: 70rem;
+}
+
+#edit-user-input-description:focus {
+    outline: none;
+    border-color: #d14d72;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(209, 77, 114, 0.1);
+}
+
+.row_user_form{
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+#btn-update-password{
+    padding: 10px 20px;
+    border: none;
+    background-color: #fcc8d1;
+    border-radius: 25px;
+    font-family: 'Alexandria', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+#btn-update-password:hover {
+    filter: brightness(0.9);
+    transform: scale(1.02);
+}
+
+
+#edit-buttons-options{
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-evenly;
+}
