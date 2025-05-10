@@ -4,8 +4,13 @@ import PhotoGallery from "../../components/Atoms/PhotoGallery/PhotoGallery.jsx";
 import "./FormSafeAdopter.css";
 import { useState } from "react";
 import InputMask from "react-input-mask";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"; // Supondo que você usa SweetAlert2 para notificações
 
 const FormSafeAdopter = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(0); // Estado para controlar a página atual
@@ -13,13 +18,6 @@ const FormSafeAdopter = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
-
-  const handleImageChange = (imageFile) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      environmentImages: [...(prevData.environmentImages || []), imageFile],
-    }));
   };
 
   const handleCepChange = async (e) => {
@@ -111,27 +109,97 @@ const FormSafeAdopter = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateStep()) {
+      return; // Valida o último passo antes de enviar
+    }
+    
     setIsSubmitting(true);
 
     try {
-      // Simulação de envio para o backend
-      const response = await fetch("/api/updateSafeAdopter", {
+      // Preparar os dados para envio
+      const dataToSend = {
+        ...formData,
+        email: user.email, // Importante: enviar o email para identificação
+        _id: user._id, // Importante: enviar o ID do usuário
+        // Converter strings "true"/"false" para booleanos reais
+        petsAllowed: formData.petsAllowed === "true",
+        homeSafety: formData.homeSafety === "true",
+        allergy: formData.allergy === "true",
+        familyAgreement: formData.familyAgreement === "true",
+        willingToTrain: formData.willingToTrain === "true",
+        keepVaccinesUpToDate: formData.keepVaccinesUpToDate === "true",
+        regularVetVisits: formData.regularVetVisits === "true",
+        financialConditions: formData.financialConditions === "true",
+        awareOfLaw: formData.awareOfLaw === "true",
+        commitToNeverAbandon: formData.commitToNeverAbandon === "true",
+        returnToOng: formData.returnToOng === "true",
+        awareOfResponsibilities: formData.awareOfResponsibilities === "true",
+        finalDeclarationAgreement: true,
+        safeAdopter: true
+      };
+
+      // Logging para debug
+      console.log("ID do usuário:", user._id);
+      console.log("Email do usuário:", user.email);
+      console.log("Dados enviados:", dataToSend);
+
+      // Obter token de autenticação do localStorage
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro de autenticação',
+          text: 'Você precisa estar logado para enviar este formulário.',
+          confirmButtonColor: '#D14D72'
+        });
+        navigate('/login');
+        return;
+      }
+
+      console.log("Enviando dados para a API:", dataToSend);
+
+      const response = await fetch("https://centerpet-api.onrender.com/api/adopters/updateSafeAdopter", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ ...formData, safeAdopter: true }),
+        body: JSON.stringify(dataToSend),
       });
 
+      const responseData = await response.json(); 
+
       if (response.ok) {
-        alert("Formulário enviado com sucesso! Você agora é um adotante seguro.");
-        // Aqui você pode redirecionar o usuário ou atualizar o estado global
+        Swal.fire({
+          icon: 'success',
+          title: 'Formulário enviado com sucesso!',
+          text: 'Você agora é um adotante seguro.',
+          confirmButtonColor: '#D14D72'
+        });
+        
+        // Atualizar o objeto user no context (opcional)
+        // updateUser({ ...user, safeAdopter: true });
+        
+        // Redirecionar para o perfil
+        navigate(`/adopter-profile/${user._id}`);
       } else {
-        alert("Ocorreu um erro ao enviar o formulário. Tente novamente.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao enviar formulário',
+          text: responseData.message || 'Ocorreu um erro ao processar sua solicitação.',
+          confirmButtonColor: '#D14D72'
+        });
       }
     } catch (error) {
       console.error("Erro ao enviar o formulário:", error);
-      alert("Erro ao enviar o formulário. Verifique sua conexão e tente novamente.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro de conexão',
+        text: 'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.',
+        confirmButtonColor: '#D14D72'
+      });
     } finally {
       setIsSubmitting(false);
     }

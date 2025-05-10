@@ -24,8 +24,8 @@ const AppRoutes = () => {
         <Route path="/pet" element={<PetInfo />} />
         <Route path="/pet/:id" element={<PetInfo />} />{" "}
         {/* Rota dinâmica para o pet */}
-        <Route path="/adopter-profile" element={<AdopterProfile />} />
-        <Route path="/ong-profile" element={<ONGProfile />} />
+        <Route path="/adopter-profile/:adopterId" element={<AdopterProfile />} />
+        <Route path="/ong-profile/:ongId" element={<ONGProfile />} />
         <Route path="/register-pet" element={<RegisterPet />} />
         <Route path="/edit-pet" element={<EditPet />} />
         <Route path="*" element={<PageNotFound />} />

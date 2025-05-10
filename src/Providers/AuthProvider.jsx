@@ -13,6 +13,8 @@ const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem('token');
     const storedUserType = localStorage.getItem('userType');
     
+    console.log("Usuário carregado do localStorage:", JSON.parse(storedUser));
+    
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setUserType(storedUserType);

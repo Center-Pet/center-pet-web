@@ -1,327 +1,263 @@
-import './EditUser.css'
-import ButtonType from '../../components/Atoms/ButtonType/ButtonType'
-import ImageInputField from '../../components/Atoms/ImageInputField/ImageInputField'
-import TitleType from '../../components/Atoms/TitleType/TitleType'
-import InputField from '../../components/Atoms/InputField/InputField'
-import Swal from 'sweetalert2'
-import { useState } from 'react'
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
+import InputField from "../../components/Atoms/InputField/InputField";
+import TitleType from "../../components/Atoms/TitleType/TitleType";
+import ImageInputField from "../../components/Atoms/ImageInputField/ImageInputField";
+import "./EditUser.css";
 
-const EditUser = ()=> {
+const EditUser = () => {
+    const { adopterId } = useParams(); // Obtém o ID da URL, se disponível
+    const { user } = useAuth(); // Obtém o usuário autenticado
+    const navigate = useNavigate();
 
-    const [fullName, setFullName] = useState(); // Nome completo
-    const [description, setDescription] = useState(); // Descrição
-    const [phone, setPhone] = useState(); // Telefone
+    const [adopterData, setAdopterData] = useState({
+        fullName: '',
+        description: '',
+        phone: '',
+        cep: '',
+        street: '',
+        number: '',
+        neighborhood: '',
+        complement: '',
+        city: '',
+        profileImg: '',
+        profession: '', // Novo campo para profissão
+    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const [zipCode, setZipCode] = useState(""); // CEP
-    const [street, setStreet] = useState(""); // Rua
-    const [number, setNumber] = useState(""); // Número
-    const [noNumber, setNoNumber] = useState(false); // Sem número
-    const [district, setDistrict] = useState(""); // Bairro
-    const [city, setCity] = useState(""); // Cidade
-    const [stateUf, setStateUf] = useState(""); // UF
+    useEffect(() => {
+        const fetchAdopterData = async () => {
+            try {
+                const idToFetch = adopterId || user?._id; // Usa o ID da URL ou o ID do usuário autenticado
+                if (!idToFetch) {
+                    setError("ID do adotante não encontrado.");
+                    setLoading(false);
+                    return;
+                }
 
-    // Mostra um alert para alterar senha
-    const updatePassword = async ()=>{
-    
-        const {value: formValues} = await Swal.fire({
-            title: 'Insira sua nova senha',
-            html: 
-            `<div>
-                <div style="display: flex; flex-direction: column; margin-bottom: 10px">
-                    
-                    <label style="align-self: start">Digite sua senha atual:</label>
-                    <input type="password" id="actual-password-input" class="swal-input">
-                </div>
-                <div style="display: flex; flex-direction: column">
-                    <label style="align-self: start">Digite sua nova senha:</label>
-                    <input type="password" id="new-password-input" class="swal-input">
+                console.log("Buscando dados do adotante com ID:", idToFetch);
+
+                const token = localStorage.getItem("token");
+                const response = await fetch(`https://centerpet-api.onrender.com/api/adopters/${idToFetch}`, {
+                    headers: {
+                        Authorization: token ? `Bearer ${token}` : "",
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ao buscar dados do adotante (${response.status})`);
+                }
+
+                const data = await response.json();
+                console.log("Dados do adotante recebidos:", data);
+
+                setAdopterData({
+                    fullName: data.fullName || '',
+                    description: data.description || '',
+                    phone: data.phone || '',
+                    cep: data.cep || '',
+                    street: data.street || '',
+                    number: data.number || '',
+                    neighborhood: data.neighborhood || '',
+                    complement: data.complement || '',
+                    city: data.city || '',
+                    profileImg: data.profileImg || '',
+                    profession: data.profession || '', // Inclua o campo profissão
+                });
+                setLoading(false);
+            } catch (error) {
+                console.error("Erro ao buscar os dados do adotante:", error);
+                setError("Não foi possível carregar os dados do adotante.");
+                setLoading(false);
+            }
+        };
+
+        fetchAdopterData();
+    }, [adopterId, user]);
+
+    if (loading) {
+        return (
+            <div id="edit_user" className="loading-container">
+                <div className="loading-content">
+                    <h2>Carregando dados do perfil...</h2>
+                    <div className="loading-spinner"></div>
                 </div>
             </div>
-            <style>
-                .swal-input{
-                    padding: 0.75rem 1rem;
-                    border-radius: 0.5rem;
-                    border: 1px solid #fcc8d1;
-                    background-color: white;
-                    transition: all 0.3s ease;
-                }
-                .swal-input:focus{
-                    outline: none;
-                    border-color: #d14d72;
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 6px rgba(209, 77, 114, 0.1);
-                }
-            </style>`,
-            focusConfirm: false,
-            showCancelButton: true,
-            confirmButtonText: 'Alterar',
-            cancelButtonText: 'Cancelar',
-            allowOutsideClick: true,
-            
-            preConfirm: () => {
-                if(!document.getElementById("actual-password-input").value || !document.getElementById("new-password-input").value){
-                    Swal.showValidationMessage("Preencha os dois campos!")
-                }
-                return [
-                    document.getElementById("actual-password-input").value,
-                    document.getElementById("new-password-input").value
-                ];
-            }
-        })
-        if (formValues) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Senha alterada com sucesso',
-                showConfirmButton: false,
-                timer: 2000
-            })
-        }
-        
+        );
     }
 
-    // Busca de endereço por CEP
-    const buscarEnderecoPorCep = async (cepValue) => {
-        const cepLimpo = cepValue.replace(/\D/g, "");
-        if (cepLimpo.length !== 8) return;
+    if (error) {
+        return <div className="error-container"><p>{error}</p></div>;
+    }
 
-        setIsFetchingZip(true);
+    const handleInputChange = (field, value) => {
+        setAdopterData((prevData) => ({
+            ...prevData,
+            [field]: value,
+        }));
+    };
 
-        Swal.fire({
-            title: 'Buscando endereço...',
-            html: `<div style="display:flex;flex-direction:column;align-items:center;">
-                <svg width="60" height="60" viewBox="0 0 60 60" style="margin-bottom:8px;">
-                  <g>
-                    <ellipse cx="30" cy="54" rx="18" ry="5" fill="#f3d6e0"/>
-                    <g id="paw" style="animation: pawwalk 1s infinite cubic-bezier(.4,0,.2,1);">
-                      <ellipse cx="30" cy="38" rx="12" ry="9" fill="#D14D72"/>
-                      <ellipse cx="18" cy="28" rx="4" ry="6" fill="#D14D72"/>
-                      <ellipse cx="42" cy="28" rx="4" ry="6" fill="#D14D72"/>
-                      <ellipse cx="22" cy="18" rx="3" ry="4" fill="#D14D72"/>
-                      <ellipse cx="38" cy="18" rx="3" ry="4" fill="#D14D72"/>
-                    </g>
-                  </g>
-                </svg>
-                <span style="margin-top:10px;">Aguarde um instante</span>
-            </div>`,
-            showConfirmButton: false,
-            allowOutsideClick: false,
-            didOpen: () => {
-                // ANIMAÇÃO DE PATA ANDANDO MELHORADA
-                const style = document.createElement('style');
-                style.innerHTML = `
-                  @keyframes pawwalk {
-                    0% { transform: translateX(0) scale(1);}
-                    20% { transform: translateX(10px) scale(1.05);}
-                    40% { transform: translateX(20px) scale(1);}
-                    50% { transform: translateX(25px) scale(0.98);}
-                    60% { transform: translateX(20px) scale(1);}
-                    80% { transform: translateX(10px) scale(1.05);}
-                    100% { transform: translateX(0) scale(1);}
-                  }
-                `;
-                document.head.appendChild(style);
-            }
-        });
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-            const data = await res.json();
-            if (data.erro) {
-                Swal.fire({
-                    title: 'CEP não encontrado!',
-                    text: 'Verifique o CEP digitado.',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    toast: false,
-                    position: 'center',
-                    customClass: 'swal2-toast error'
-                });
-                setStreet("");
-                setDistrict("");
-                setCity("");
-                setStateUf("");
-            } else {
-                setStreet(data.logradouro || "");
-                setDistrict(data.bairro || "");
-                setCity(data.localidade || "");
-                setStateUf(data.uf || "");
-                Swal.close();
+            const token = localStorage.getItem("token");
+            const idToUpdate = adopterId || user?._id; // Usa o ID da URL ou o ID do usuário autenticado
+
+            // Crie um FormData para enviar os dados, incluindo o arquivo de imagem
+            const formData = new FormData();
+            formData.append("fullName", adopterData.fullName);
+            formData.append("description", adopterData.description);
+            formData.append("phone", adopterData.phone);
+            formData.append("cep", adopterData.cep);
+            formData.append("street", adopterData.street);
+            formData.append("number", adopterData.number);
+            formData.append("neighborhood", adopterData.neighborhood);
+            formData.append("complement", adopterData.complement);
+            formData.append("city", adopterData.city);
+            formData.append("profession", adopterData.profession);
+
+            // Adicione a imagem ao FormData, se houver
+            if (adopterData.profileImg instanceof File) {
+                formData.append("profileImg", adopterData.profileImg);
             }
-        } catch {
-            Swal.fire({
-                title: 'Erro!',
-                text: 'Não foi possível buscar o endereço.',
-                icon: 'error',
-                showConfirmButton: false,
-                timer: 2500,
-                toast: false,
-                position: 'center',
-                customClass: 'swal2-toast error'
+
+            const response = await fetch(`http://localhost:5000/api/adopters/editProfile/${idToUpdate}`, {
+                method: "PATCH",
+                headers: {
+                    Authorization: token ? `Bearer ${token}` : "",
+                },
+                body: formData, // Envie o FormData
             });
+
+            if (!response.ok) {
+                throw new Error("Erro ao atualizar os dados do adotante.");
+            }
+
+            Swal.fire("Sucesso!", "Dados atualizados com sucesso.", "success");
+            navigate(`/adopter-profile/${idToUpdate}`);
+        } catch (error) {
+            console.error("Erro ao atualizar os dados do adotante:", error);
+            Swal.fire("Erro!", "Não foi possível atualizar os dados.", "error");
         }
-        setIsFetchingZip(false);
     };
 
     return (
         <div id="edit_user">
-            <div id='edit-form-container'>
-                <form id='edit-form' action="">
-                    <div id="edit-org-title">
-                        <TitleType>Editar perfil</TitleType>
+            <div id="edit-form-container">
+                <form id="edit-form" onSubmit={handleSubmit}>
+                    <div id="edit-user-title">
+                        <TitleType>Editar Perfil</TitleType>
                     </div>
-                    <div id='user-img-profile'>
+
+                    <div id="user-img-profile">
                         <h2>Sua foto de perfil</h2>
-                        <ImageInputField/>
+                        <div className="image-input-container">
+                            <ImageInputField
+                                currentImage={adopterData.profileImg}
+                                onImageChange={(file) => handleInputChange("profileImg", file)}
+                                size={200}
+                            />
+                        </div>
                     </div>
-                    
-                    <label>Nome completo: </label>
+
+                    <label>Nome completo:</label>
                     <InputField
                         type="text"
-                        placeholder=""
-                        width="70rem"
-                        value={fullName}
+                        value={adopterData.fullName}
+                        onChange={(e) => handleInputChange("fullName", e.target.value)}
                         required
-                        onChange={(e)=>{setFullName(e.target.value)}}
                     />
-                    <label>Número de telefone: </label>
+
+                    <label htmlFor="description">Descrição:</label>
+                    <textarea
+                        id="description"
+                        className="edit-user-description"
+                        value={adopterData.description}
+                        onChange={(e) => handleInputChange("description", e.target.value)}
+                        rows={4}
+                        placeholder="Descreva-se brevemente..."
+                    ></textarea>
+
+                    <label>Telefone:</label>
                     <InputField
                         type="tel"
-                        placeholder=""
-                        width="70rem"
-                        value={phone}
+                        value={adopterData.phone}
+                        onChange={(e) => handleInputChange("phone", e.target.value)}
                         required
-                        onChange={(e)=>{setPhone(e.target.value)}}
                     />
-                    <div id='edit-input-textarea'>
-                        <label>Descrição</label>
-                        <textarea name="edit-form-input" id="edit-user-input-description" rows={6} value={description} onChange={(e)=>{setDescription(e.target.value)}}></textarea>
+
+                    <label>Profissão:</label>
+                    <InputField
+                        type="text"
+                        value={adopterData.profession}
+                        onChange={(e) => handleInputChange("profession", e.target.value)}
+                        placeholder="Digite sua profissão"
+                    />
+
+
+                    <div className="address-section">
+                        <h3>Endereço</h3>
+                        <label>CEP:</label>
+                        <InputField
+                            type="text"
+                            value={adopterData.cep}
+                            onChange={(e) => handleInputChange("cep", e.target.value)}
+                        />
+
+                        <label>Rua:</label>
+                        <InputField
+                            type="text"
+                            value={adopterData.street}
+                            onChange={(e) => handleInputChange("street", e.target.value)}
+                        />
+
+                        <label>Número:</label>
+                        <InputField
+                            type="text"
+                            value={adopterData.number}
+                            onChange={(e) => handleInputChange("number", e.target.value)}
+                        />
+
+                        <label>Bairro:</label>
+                        <InputField
+                            type="text"
+                            value={adopterData.neighborhood}
+                            onChange={(e) => handleInputChange("neighborhood", e.target.value)}
+                        />
+
+                        <label>Complemento:</label>
+                        <InputField
+                            type="text"
+                            value={adopterData.complement}
+                            onChange={(e) => handleInputChange("complement", e.target.value)}
+                        />
+
+                        <label>Cidade:</label>
+                        <InputField
+                            type="text"
+                            value={adopterData.city}
+                            onChange={(e) => handleInputChange("city", e.target.value)}
+                        />
                     </div>
-                    
-                    <div className="endereco-section">
-                        
-
-
-
-                        <div className="row_user_form">
-                            <div className="col_user_form">
-                                <label>
-                                    CEP <span className="required">*</span>
-                                </label>
-                                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
-                                    <InputField
-                                        type="text"
-                                        placeholder="CEP"
-                                        value={zipCode}
-                                        onChange={e => {
-                                            setZipCode(e.target.value);
-                                            if (e.target.value.replace(/\D/g, "").length === 8) {
-                                                buscarEnderecoPorCep(e.target.value);
-                                            }
-                                        }}
-                                        width="11.4rem"
-                                        maxLength={9}
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        className="cep-helper-btn"
-                                        onClick={() => window.open("https://buscacepinter.correios.com.br/app/endereco/index.php", "_blank")}
-                                    >
-                                        Não sei meu CEP
-                                    </button>
-                                </div>
-                            </div>
-                            
-
-                            <div className="col_user_form">
-                                <label>Rua:</label>
-                                <InputField
-                                    type="text"
-                                    placeholder="Rua"
-                                    value={street}
-                                    width="20rem"
-                                    required
-                                    disabled
-                                />
-                            </div>
-                            <div className="col_user_form">
-                                <label>Número:</label>
-                                    <div style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
-                                    <InputField
-                                        type="text"
-                                        placeholder="Número"
-                                        value={noNumber ? "S/N" : number}
-                                        onChange={e => setNumber(e.target.value)}
-                                        width="10rem"
-                                        required={!noNumber}
-                                        disabled={noNumber}
-                                    />
-                                    <label style={{ display: "flex", alignItems: "center", fontSize: "0.97rem", color: "#d14d72", cursor: "pointer" }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={noNumber}
-                                            onChange={e => {
-                                                setNoNumber(e.target.checked);
-                                                if (e.target.checked) setNumber("S/N");
-                                                else setNumber("");
-                                            }}
-                                            style={{ marginRight: "0.4rem" }}
-                                        />
-                                        Sem número
-                                    </label>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div className="row_user_form">
-                            <div className="col_user_form">
-                                <label>Bairro:</label>
-                                <InputField
-                                    type="text"
-                                    placeholder="Bairro"
-                                    value={district}
-                                    width="21rem"
-                                    required
-                                    disabled
-                                />
-                            </div>
-                            <div className="col_user_form">
-                                <label>Cidade:</label>
-                                <InputField
-                                    type="text"
-                                    placeholder="Cidade"
-                                    value={city}
-                                    width="20rem"
-                                    required
-                                    disabled
-                                />
-                            </div>
-                            <div className="col_user_form">
-                                <label>UF:</label>
-                                <InputField
-                                    type="text"
-                                    placeholder="UF"
-                                    value={stateUf}
-                                    width="6rem"
-                                    required
-                                    disabled
-                                    
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="button" id='btn-update-password' onClick={()=>{updatePassword()}}>Clique aqui para alterar senha</button>
 
                     <div id="edit-buttons-options">
                         <ButtonType type="submit" width="250px">Salvar Alterações</ButtonType>
-                        <ButtonType type="button" width="250px">Cancelar</ButtonType>
+                        <ButtonType
+                            type="button"
+                            width="250px"
+                            onClick={() => navigate(-1)}
+                        >
+                            Cancelar
+                        </ButtonType>
                     </div>
                 </form>
             </div>
         </div>
-    )    
-}
-export default EditUser
+    );
+};
+
+export default EditUser;

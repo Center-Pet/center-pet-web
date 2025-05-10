@@ -8,7 +8,7 @@ import useAuth from '../../../hooks/useAuth';
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
-    const { isAuthenticated, userType, user } = useAuth();
+    const { isAuthenticated, userType, user, isLoading } = useAuth();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -94,14 +94,18 @@ const Navbar = () => {
                 </ul>
 
                 {/* Avatar do usuário - mostrar APENAS se estiver autenticado */}
-                {isAuthenticated && (
-                    <div className="avatar-icon">
-                        <CustomAvatar 
-                            navigateTo={userType === "Adopter" ? "/adopter-profile" : "/ong-profile"} 
-                            imageSrc={user?.profilePicture || "https://i.pinimg.com/736x/76/36/82/76368290b02e36e0ccc1178cfbe17652.jpg"}
-                        />
-                    </div>
+                {!isLoading && isAuthenticated && (
+                  <div className="avatar-icon">
+                    <CustomAvatar 
+                      navigateTo={userType === "Adopter" 
+                        ? `/adopter-profile/${user?._id}` 
+                        : `/ong-profile/${user?._id}`
+                      } 
+                      imageSrc={user?.profileImg || "https://i.imgur.com/WanR0b3.png"}
+                    />
+                  </div>
                 )}
+
             </nav>
         </header>
     );

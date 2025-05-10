@@ -36,7 +36,7 @@ const RegisterOng = () => {
     const [street, setStreet] = useState(""); // Rua
     const [number, setNumber] = useState(""); // Número
     const [noNumber, setNoNumber] = useState(false); // Sem número
-    const [district, setDistrict] = useState(""); // Bairro
+    const [neighborhood, setneighborhood] = useState(""); // Bairro
     const [city, setCity] = useState(""); // Cidade
     const [stateUf, setStateUf] = useState(""); // UF
     const [isFetchingZip, setIsFetchingZip] = useState(false); // Buscando CEP
@@ -161,12 +161,12 @@ const RegisterOng = () => {
                     customClass: 'swal2-toast error'
                 });
                 setStreet("");
-                setDistrict("");
+                setneighborhood("");
                 setCity("");
                 setStateUf("");
             } else {
                 setStreet(data.logradouro || "");
-                setDistrict(data.bairro || "");
+                setneighborhood(data.bairro || "");
                 setCity(data.localidade || "");
                 setStateUf(data.uf || "");
                 Swal.close();
@@ -378,10 +378,11 @@ const RegisterOng = () => {
             phone: phone,
             description: description || "",
             address: {
+                uf: stateUf,
                 zipCode: zipCode,
                 street: street,
                 number: noNumber ? "S/N" : number,
-                district: district,
+                neighborhood: neighborhood,
                 city: city,
                 state: stateUf
             },
@@ -461,9 +462,9 @@ const RegisterOng = () => {
 
     // Reseta os valores dos campos de organização
     const resetOrgInputs = () => {
-        setCpf("")
-        setCnpj("")
-        setCollaborators("")
+        setCpf(null)
+        setCnpj(null)
+        setCollaborators(null)
     }
 
     const socialMediaValidation = () => {
@@ -608,7 +609,7 @@ const RegisterOng = () => {
                         <InputField
                             type="text"
                             placeholder="Bairro"
-                            value={district}
+                            value={neighborhood}
                             width="20rem"
                             required
                             disabled

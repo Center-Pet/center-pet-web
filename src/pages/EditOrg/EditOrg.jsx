@@ -1,238 +1,414 @@
-import './EditOrg.css'
-import ButtonType from '../../components/Atoms/ButtonType/ButtonType'
-import ImageInputField from '../../components/Atoms/ImageInputField/ImageInputField'
-import TitleType from '../../components/Atoms/TitleType/TitleType'
-import InputField from '../../components/Atoms/InputField/InputField'
-import Swal from 'sweetalert2'
-import { useState } from 'react'
+import './EditOrg.css';
+import ButtonType from '../../components/Atoms/ButtonType/ButtonType';
+import ImageInputField from '../../components/Atoms/ImageInputField/ImageInputField';
+import TitleType from '../../components/Atoms/TitleType/TitleType';
+import InputField from '../../components/Atoms/InputField/InputField';
+import Swal from 'sweetalert2';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
-const EditOrg = ()=> {
+const EditOrg = () => {
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const API_URL = "https://centerpet-api.onrender.com/api"; // URL da API em produção
 
-    // IMPORTANTE
-    const role="Projeto" // Exemplo de role do perfil já definida (ong, projeto, protetor). Mostra o campo de colaboradores se a role for "Projeto"
+    const [loadingCep, setLoadingCep] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [profileImage, setProfileImage] = useState("");
+    const [profileImageFile, setProfileImageFile] = useState(null);
 
-    const [fullName, setFullName] = useState(); // Nome completo
-    const [description, setDescription] = useState(); // Descrição
-    const [phone, setPhone] = useState(); // Telefone
-    const [instagram, setInstagram] = useState(); // Instagram
-    const [facebook, setFacebook] = useState(); // Facebook
-    const [website, setWebsite] = useState(); // Site
-    const [pixKey, setPixKey] = useState(); // Chave Pix
-    const [collaborators, setCollaborators] = useState() // Número de colaboradores (Apenas para Projetos)
+    const [role, setRole] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [description, setDescription] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+    const [instagram, setInstagram] = useState("");
+    const [facebook, setFacebook] = useState("");
+    const [website, setWebsite] = useState("");
+    const [pixKey, setPixKey] = useState("");
+    const [collaborators, setCollaborators] = useState("");
 
-    const [zipCode, setZipCode] = useState(""); // CEP
-    const [street, setStreet] = useState(""); // Rua
-    const [number, setNumber] = useState(""); // Número
-    const [noNumber, setNoNumber] = useState(false); // Sem número
-    const [district, setDistrict] = useState(""); // Bairro
-    const [city, setCity] = useState(""); // Cidade
-    const [stateUf, setStateUf] = useState(""); // UF
+    const [zipCode, setZipCode] = useState("");
+    const [street, setStreet] = useState("");
+    const [number, setNumber] = useState("");
+    const [noNumber, setNoNumber] = useState(false);
+    const [neighborhood, setNeighborhood] = useState("");
+    const [city, setCity] = useState("");
+    const [stateUf, setStateUf] = useState("");
+    const [complement, setComplement] = useState("");
 
-
-    // Mostra um alert para alterar senha
-        const updatePassword = async ()=>{
-        
-            const {value: formValues} = await Swal.fire({
-                title: 'Insira sua nova senha',
-                html: 
-                `<div>
-                    <div style="display: flex; flex-direction: column; margin-bottom: 10px">
-                        
-                        <label style="align-self: start">Digite sua senha atual:</label>
-                        <input type="password" id="actual-password-input" class="swal-input">
-                    </div>
-                    <div style="display: flex; flex-direction: column">
-                        <label style="align-self: start">Digite sua nova senha:</label>
-                        <input type="password" id="new-password-input" class="swal-input">
-                    </div>
-                </div>
-                <style>
-                    .swal-input{
-                        padding: 0.75rem 1rem;
-                        border-radius: 0.5rem;
-                        border: 1px solid #fcc8d1;
-                        background-color: white;
-                        transition: all 0.3s ease;
-                    }
-                    .swal-input:focus{
-                        outline: none;
-                        border-color: #d14d72;
-                        transform: translateY(-2px);
-                        box-shadow: 0 4px 6px rgba(209, 77, 114, 0.1);
-                    }
-                </style>`,
-                focusConfirm: false,
-                showCancelButton: true,
-                confirmButtonText: 'Alterar',
-                cancelButtonText: 'Cancelar',
-                allowOutsideClick: true,
-                
-                preConfirm: () => {
-                    if(!document.getElementById("actual-password-input").value || !document.getElementById("new-password-input").value){
-                        Swal.showValidationMessage("Preencha os dois campos!")
-                    }
-                    return [
-                        document.getElementById("actual-password-input").value,
-                        document.getElementById("new-password-input").value
-                    ];
-                }
-            })
-            if (formValues) {
+    useEffect(() => {
+        const fetchOngData = async () => {
+            if (!user || !user._id) {
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Senha alterada com sucesso',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
+                    title: 'Erro de Autenticação',
+                    text: 'Você precisa estar logado para editar seu perfil',
+                    icon: 'error',
+                    confirmButtonColor: '#D14D72'
+                });
+                navigate('/login');
+                return;
             }
-            
-        }
 
-
-    // Busca de endereço por CEP
-    const buscarEnderecoPorCep = async (cepValue) => {
-
-        
-
-        const cepLimpo = cepValue.replace(/\D/g, "");
-            if (cepLimpo.length !== 8) return;
-
-            setIsFetchingZip(true);
-
-            Swal.fire({
-                title: 'Buscando endereço...',
-                html: `<div style="display:flex;flex-direction:column;align-items:center;">
-                    <svg width="60" height="60" viewBox="0 0 60 60" style="margin-bottom:8px;">
-                    <g>
-                        <ellipse cx="30" cy="54" rx="18" ry="5" fill="#f3d6e0"/>
-                        <g id="paw" style="animation: pawwalk 1s infinite cubic-bezier(.4,0,.2,1);">
-                        <ellipse cx="30" cy="38" rx="12" ry="9" fill="#D14D72"/>
-                        <ellipse cx="18" cy="28" rx="4" ry="6" fill="#D14D72"/>
-                        <ellipse cx="42" cy="28" rx="4" ry="6" fill="#D14D72"/>
-                        <ellipse cx="22" cy="18" rx="3" ry="4" fill="#D14D72"/>
-                        <ellipse cx="38" cy="18" rx="3" ry="4" fill="#D14D72"/>
-                        </g>
-                    </g>
-                    </svg>
-                    <span style="margin-top:10px;">Aguarde um instante</span>
-                </div>`,
-                showConfirmButton: false,
-                allowOutsideClick: false,
-                didOpen: () => {
-                    // ANIMAÇÃO DE PATA ANDANDO MELHORADA
-                    const style = document.createElement('style');
-                    style.innerHTML = `
-                    @keyframes pawwalk {
-                        0% { transform: translateX(0) scale(1);}
-                        20% { transform: translateX(10px) scale(1.05);}
-                        40% { transform: translateX(20px) scale(1);}
-                        50% { transform: translateX(25px) scale(0.98);}
-                        60% { transform: translateX(20px) scale(1);}
-                        80% { transform: translateX(10px) scale(1.05);}
-                        100% { transform: translateX(0) scale(1);}
-                    }
-                    `;
-                    document.head.appendChild(style);
-                }
-            });
+            setIsLoading(true);
 
             try {
-                const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
-                const data = await res.json();
-                if (data.erro) {
-                    Swal.fire({
-                        title: 'CEP não encontrado!',
-                        text: 'Verifique o CEP digitado.',
-                        icon: 'error',
-                        showConfirmButton: false,
-                        timer: 2500,
-                        toast: false,
-                        position: 'center',
-                        customClass: 'swal2-toast error'
-                    });
-                    setStreet("");
-                    setDistrict("");
-                    setCity("");
-                    setStateUf("");
-                } else {
-                    setStreet(data.logradouro || "");
-                    setDistrict(data.bairro || "");
-                    setCity(data.localidade || "");
-                    setStateUf(data.uf || "");
-                    Swal.close();
-                }
-            } catch {
-                Swal.fire({
-                    title: 'Erro!',
-                    text: 'Não foi possível buscar o endereço.',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    toast: false,
-                    position: 'center',
-                    customClass: 'swal2-toast error'
+                const token = localStorage.getItem('token');
+                console.log("Buscando ONG com ID:", user._id);
+
+                const response = await fetch(`${API_URL}/ongs/${user._id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
+
+                if (!response.ok) {
+                    throw new Error('Falha ao buscar dados do perfil');
+                }
+
+                const responseData = await response.json();
+                const ongData = responseData.data || responseData;
+
+                console.log("Dados da ONG recebidos:", ongData);
+
+                setRole(ongData.role || "");
+                setFullName(ongData.name || "");
+                setDescription(ongData.description || "");
+                setPhone(ongData.phone || "");
+                setEmail(ongData.email || "");
+                setPixKey(ongData.pixKey || "");
+
+                if (ongData.profileImg) {
+                    setProfileImage(ongData.profileImg);
+                }
+
+                if (ongData.socialMidia) {
+                    setInstagram(ongData.socialMidia.instagram || "");
+                    setFacebook(ongData.socialMidia.facebook || "");
+                    setWebsite(ongData.socialMidia.site || "");
+                }
+
+                if (ongData.address) {
+                    setZipCode(ongData.address.cep || "");
+                    setStreet(ongData.address.street || "");
+                    setNumber(ongData.address.number || "");
+                    setNoNumber(ongData.address.number === "S/N");
+                    setNeighborhood(ongData.address.neighborhood || "");
+                    setCity(ongData.address.city || "");
+                    setStateUf(ongData.address.uf || "");
+                    setComplement(ongData.address.complement || "");
+                }
+
+                if (ongData.role === "Projeto" && ongData.collaborators !== undefined) {
+                    setCollaborators(ongData.collaborators.toString());
+                }
+            } catch (error) {
+                console.error('Erro ao buscar dados da ONG:', error);
+                Swal.fire({
+                    title: 'Erro',
+                    text: 'Não foi possível carregar seus dados. Por favor, tente novamente mais tarde.',
+                    icon: 'error',
+                    confirmButtonColor: '#D14D72'
+                });
+            } finally {
+                setIsLoading(false);
             }
-            setIsFetchingZip(false);
+        };
+
+        fetchOngData();
+    }, [user, navigate]);
+
+    const uploadImage = async (file) => {
+        if (!file) return null;
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'centerpet_default');
+
+            const response = await fetch('https://api.cloudinary.com/v1_1/dx8zzla5s/image/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('Falha ao fazer upload da imagem');
+            }
+
+            const data = await response.json();
+            return data.secure_url;
+        } catch (error) {
+            console.error('Erro ao fazer upload da imagem:', error);
+            throw error;
+        }
     };
 
-    const socialMediaValidation = () => {
-        if (role === "Projeto" || role === "Protetor") {
-            if (!instagram && !facebook && !website) {
-                return true
-            }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!stateUf) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'O campo UF é obrigatório.',
+                icon: 'error',
+                confirmButtonColor: '#D14D72'
+            });
+            return;
         }
-        return false
+
+        if (!zipCode) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'O campo CEP é obrigatório.',
+                icon: 'error',
+                confirmButtonColor: '#D14D72'
+            });
+            return;
+        }
+
+        try {
+            let finalImageUrl = profileImage;
+
+            if (profileImageFile) {
+                Swal.fire({
+                    title: 'Enviando imagem...',
+                    text: 'Aguarde enquanto enviamos sua foto de perfil.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                try {
+                    const newImageUrl = await uploadImage(profileImageFile);
+                    if (newImageUrl) {
+                        finalImageUrl = newImageUrl;
+                    }
+                } catch (error) {
+                    console.error('Erro durante o upload da imagem:', error.message);
+                    Swal.fire({
+                        title: 'Erro no upload',
+                        text: `Não foi possível enviar a imagem: ${error.message}. Deseja continuar sem atualizar a foto?`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#D14D72',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Sim, continuar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                            return;
+                        }
+                    });
+                }
+            }
+
+            const updateData = {
+                name: fullName,
+                description,
+                phone,
+                pixKey,
+                profileImg: finalImageUrl,
+                address: {
+                    cep: zipCode,
+                    street,
+                    number: noNumber ? "S/N" : number,
+                    neighborhood: neighborhood,
+                    city,
+                    uf: stateUf, // Certifique-se de que este campo está presente
+                    complement
+                },
+                socialMidia: {
+                    instagram,
+                    facebook,
+                    site: website
+                }
+            };
+
+            if (role === "Projeto") {
+                updateData.collaborators = parseInt(collaborators) || 0;
+            }
+
+            console.log("Dados enviados para a API:", updateData);
+
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/ongs/editProfile/${user._id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updateData)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error("Resposta de erro da API:", errorData);
+                throw new Error(`Falha ao atualizar perfil: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Resposta da API após atualização:", data);
+
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Seu perfil foi atualizado com sucesso.',
+                icon: 'success',
+                confirmButtonColor: '#D14D72'
+            }).then(() => {
+                navigate(`/ong-profile/${user._id}`);
+            });
+
+        } catch (error) {
+            console.error('Erro ao atualizar perfil:', error);
+            Swal.fire({
+                title: 'Erro',
+                text: `Não foi possível atualizar seu perfil: ${error.message}`,
+                icon: 'error',
+                confirmButtonColor: '#D14D72'
+            });
+        }
+    };
+
+    // Função para alterar senha
+    const alterarSenha = async () => {
+        // Sua função existente...
+    };
+
+    // Função para buscar endereço pelo CEP - implementação correta
+    const buscarEnderecoPorCep = async (cep) => {
+        // Remover caracteres não numéricos do CEP
+        const cepLimpo = cep.replace(/\D/g, "");
+        
+        if (cepLimpo.length !== 8) {
+            return; // CEP deve ter 8 dígitos
+        }
+        
+        setLoadingCep(true);
+        try {
+            // Usar o serviço ViaCEP para buscar o endereço
+            const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+            
+            if (!response.ok) {
+                throw new Error("Erro ao buscar CEP");
+            }
+            
+            const data = await response.json();
+            
+            // Verificar se o CEP existe e não tem erro
+            if (!data.erro) {
+                setStreet(data.logradouro || "");
+                setNeighborhood(data.bairro || "");
+                setCity(data.localidade || "");
+                setStateUf(data.uf || ""); // Certifique-se de que o estado está sendo definido
+                // Limpar o número caso o CEP mude
+                if (!noNumber) {
+                    setNumber("");
+                }
+            } else {
+                // Avisar o usuário que o CEP não foi encontrado
+                Swal.fire({
+                    title: 'CEP não encontrado',
+                    text: 'O CEP informado não foi encontrado. Por favor, verifique e tente novamente.',
+                    icon: 'warning',
+                    confirmButtonColor: '#D14D72'
+                });
+            }
+        } catch (error) {
+            console.error("Erro ao buscar CEP:", error);
+            Swal.fire({
+                title: 'Erro',
+                text: 'Ocorreu um erro ao buscar o CEP. Por favor, tente novamente mais tarde.',
+                icon: 'error',
+                confirmButtonColor: '#D14D72'
+            });
+        } finally {
+            setLoadingCep(false);
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <div id="edit_org" className="loading-container">
+                <div className="loading-content">
+                    <h2>Carregando dados do perfil...</h2>
+                    <div className="loading-spinner"></div>
+                </div>
+            </div>
+        );
     }
 
     return (
         <div id="edit_org">
             <div id='edit-form-container'>
-                <form id='edit-form' action="">
-                        <div id="edit-org-title">
-                            <TitleType>Editar Perfil da Organização</TitleType>
-                        </div>
+                <form id='edit-form' onSubmit={handleSubmit}>
+                    <div id="edit-org-title">
+                        <TitleType>Editar Perfil da Organização</TitleType>
+                    </div>
                     <div id='org-img-profile'>
                         <h2>Sua foto de perfil</h2>
-                        <ImageInputField/>
+                        <ImageInputField 
+                            currentImage={profileImage} // Passar a URL da imagem atual
+                            onImageChange={(file) => {
+                                // Criar um estado local para armazenar o arquivo da nova imagem
+                                setProfileImageFile(file);
+                            }}
+                            size={200}
+                        />
                     </div>
-                    
+
+                    <label>Email: (não editável)</label>
+                    <InputField
+                        type="email"
+                        value={email}
+                        width="70rem"
+                        readOnly
+                    />
 
                     <label>Nome da organização: </label>
                     <InputField
                         type="text"
-                        placeholder=""
+                        placeholder="Nome da organização"
                         width="70rem"
                         value={fullName}
                         required
-                        onChange={(e)=>{setFullName(e.target.value)}}
+                        onChange={(e) => setFullName(e.target.value)}
                     />
 
                     <label>Número de telefone: </label>
                     <InputField
                         type="tel"
-                        placeholder=""
+                        placeholder="(XX) XXXXX-XXXX"
                         width="70rem"
                         value={phone}
                         required
-                        onChange={(e)=>{setPhone(e.target.value)}}
+                        onChange={(e) => setPhone(e.target.value)}
                     />
 
-                    {role === "Projeto" &&
+                    {role === "Projeto" && (
                         <>
                             <label>Colaboradores: </label>
                             <InputField
                                 type="number"
+                                placeholder="Número de colaboradores"
                                 width="70rem"
                                 value={collaborators}
-                                onChange={(e)=>{setCollaborators(e.target.value)}}
+                                onChange={(e) => setCollaborators(e.target.value)}
                             />
                         </>
-                    }
+                    )}
 
                     <div id='edit-input-textarea'>
                         <label>Descrição</label>
-                        <textarea name="edit-form-input" id="edit-org-input-description" rows={6} value={description} onChange={(e)=>{setDescription(e.target.value)}}></textarea>
+                        <textarea 
+                            name="edit-form-input" 
+                            id="edit-org-input-description" 
+                            rows={6} 
+                            value={description} 
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Descreva sua organização..."
+                        ></textarea>
                     </div>
                     
                    <div className="endereco-section">
@@ -247,22 +423,29 @@ const EditOrg = ()=> {
                                         placeholder="CEP"
                                         value={zipCode}
                                         onChange={e => {
-                                            setZipCode(e.target.value);
-                                            if (e.target.value.replace(/\D/g, "").length === 8) {
-                                                buscarEnderecoPorCep(e.target.value);
+                                            const newCep = e.target.value;
+                                            setZipCode(newCep);
+                                            // Verificar se o CEP tem 8 dígitos (sem formatação) para buscar automaticamente
+                                            if (newCep.replace(/\D/g, "").length === 8) {
+                                                buscarEnderecoPorCep(newCep);
                                             }
                                         }}
                                         width="11.4rem"
                                         maxLength={9}
+                                        disabled={loadingCep}
                                         required
                                     />
-                                    <button
-                                        type="button"
-                                        className="cep-helper-btn"
-                                        onClick={() => window.open("https://buscacepinter.correios.com.br/app/endereco/index.php", "_blank")}
-                                    >
-                                        Não sei meu CEP
-                                    </button>
+                                    {loadingCep ? (
+                                        <span>Buscando CEP...</span>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            className="cep-helper-btn"
+                                            onClick={() => window.open("https://buscacepinter.correios.com.br/app/endereco/index.php", "_blank")}
+                                        >
+                                            Não sei meu CEP
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                             
@@ -275,7 +458,7 @@ const EditOrg = ()=> {
                                     value={street}
                                     width="20rem"
                                     required
-                                    disabled
+                                    readOnly
                                 />
                             </div>
                             <div className="col_user_form">
@@ -313,10 +496,10 @@ const EditOrg = ()=> {
                                 <InputField
                                     type="text"
                                     placeholder="Bairro"
-                                    value={district}
+                                    value={neighborhood}
                                     width="21rem"
                                     required
-                                    disabled
+                                    readOnly
                                 />
                             </div>
                             <div className="col_user_form">
@@ -327,7 +510,7 @@ const EditOrg = ()=> {
                                     value={city}
                                     width="20rem"
                                     required
-                                    disabled
+                                    readOnly
                                 />
                             </div>
                             <div className="col_user_form">
@@ -338,7 +521,7 @@ const EditOrg = ()=> {
                                     value={stateUf}
                                     width="6rem"
                                     required
-                                    disabled
+                                    onChange={(e) => setStateUf(e.target.value)} // Permitir edição manual
                                 />
                             </div>
                         </div>
@@ -347,50 +530,58 @@ const EditOrg = ()=> {
                     <label>Instagram: </label>
                     <InputField
                         type="url"
-                        placeholder="link da sua conta instagram"
+                        placeholder="Link da sua conta Instagram"
                         width="70rem"
                         value={instagram}
-                        disabled
-                        required={socialMediaValidation()}
-                        onChange={(e)=>{setInstagram(e.target.value)}}
-                        
+                        onChange={(e) => setInstagram(e.target.value)}
                     />
+                    
                     <label>Facebook: </label>
                     <InputField
                         type="url"
-                        placeholder="link da sua conta facebook"
+                        placeholder="Link da sua conta Facebook"
                         width="70rem"
                         value={facebook}
-                        required={socialMediaValidation()}
-                        onChange={(e)=>{setFacebook(e.target.value)}}
+                        onChange={(e) => setFacebook(e.target.value)}
                     />
+                    
                     <label>Site: </label>
                     <InputField
                         type="url"
-                        placeholder="link do seu site"
+                        placeholder="Link do seu site"
                         width="70rem"
                         value={website}
-                        required={socialMediaValidation()}
-                        onChange={(e)=>{setWebsite(e.target.value)}}
+                        onChange={(e) => setWebsite(e.target.value)}
                     />
 
                     <label>Chave Pix: </label>
                     <InputField
                         type="text"
-                        placeholder=""
+                        placeholder="Sua chave PIX para doações"
                         width="70rem"
                         value={pixKey}
-                        onChange={(e)=>{setPixKey(e.target.value)}}
+                        onChange={(e) => setPixKey(e.target.value)}
                     />
-                    <button type="button" id='btn-update-password' onClick={()=>{alterarSenha()}}>Clique aqui para alterar senha</button>
+                    
+                    <button type="button" id='btn-update-password' onClick={alterarSenha}>Clique aqui para alterar senha</button>
 
                     <div id="edit-buttons-options">
                         <ButtonType type="submit" width="250px">Salvar Alterações</ButtonType>
-                        <ButtonType type="button" width="250px">Cancelar</ButtonType>
+                        <ButtonType
+                            type="button"
+                            width="250px"
+                            onClick={(e) => {
+                                e.preventDefault(); // Previne o comportamento padrão
+                                navigate(`/ong-profile/${user._id}`);
+                            }}
+                        >
+                            Cancelar
+                        </ButtonType>    
                     </div>
                 </form>
             </div>
         </div>
-    )    
-}
-export default EditOrg
+    );
+};
+
+export default EditOrg;

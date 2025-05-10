@@ -7,27 +7,25 @@ import Swal from 'sweetalert2';
 import PawAnimation from "../../Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
 
-export default function CustomAvatar({ imageSrc, navigateTo }) {
+export default function CustomAvatar({ imageSrc }) {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { logout, user } = useAuth();  // Adicionei "user" para obter os dados do usuário logado
+  const { logout, user, userType } = useAuth();
 
   const handleToggleMenu = () => {
-    setIsMenuOpen((prev) => !prev); // Alterna o estado do menu
+    setIsMenuOpen((prev) => !prev);
   };
 
   const handleCloseMenu = () => {
-    setIsMenuOpen(false); // Fecha o menu
+    setIsMenuOpen(false);
   };
 
   const handleLogout = async () => {
     try {
-      // Renderizar a animação de pata para usar no Swal
       const pawAnimationHtml = ReactDOMServer.renderToString(
         <PawAnimation text="Saindo..." vertical={true} />
       );
 
-      // Mostrar loading com a animação da pata
       Swal.fire({
         title: 'Saindo',
         html: pawAnimationHtml,
@@ -35,9 +33,8 @@ export default function CustomAvatar({ imageSrc, navigateTo }) {
         allowOutsideClick: false
       });
 
-      // Chamada para a API de logout
       const response = await fetch(
-        "https://centerpet-api.onrender.com/api/auth/logout", 
+        "https://centerpet-api.onrender.com/api/auth/logout",
         {
           method: "POST",
           headers: {
@@ -47,49 +44,28 @@ export default function CustomAvatar({ imageSrc, navigateTo }) {
         }
       );
 
-      // Fechar o loading
       Swal.close();
+      logout();
 
-      if (response.ok) {
-        // Limpar dados no AuthContext
-        logout();
-        
-        // Mostrar mensagem de sucesso
-        Swal.fire({
-          icon: 'success',
-          title: 'Logout realizado com sucesso!',
-          showConfirmButton: false,
-          timer: 1500
-        });
+      Swal.fire({
+        icon: response.ok ? 'success' : 'warning',
+        title: response.ok
+          ? 'Logout realizado com sucesso!'
+          : 'Sessão encerrada com problema de conexão',
+        showConfirmButton: false,
+        timer: 1500
+      });
 
-        // Redirecionar para a página de login
-        navigate('/login');
-      } else {
-        // Em caso de erro na API, fazer logout local de qualquer forma
-        logout();
-        
-        Swal.fire({
-          icon: 'warning',
-          title: 'Aviso',
-          text: 'Sessão encerrada, mas houve um problema na comunicação com o servidor.',
-          confirmButtonColor: '#D14D72'
-        });
-        
-        navigate('/login');
-      }
+      navigate('/login');
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
-      
-      // Em caso de falha na conexão, fazer logout local
       logout();
-      
       Swal.fire({
         icon: 'error',
         title: 'Erro',
-        text: 'Não foi possível comunicar com o servidor. Sua sessão foi encerrada localmente.',
+        text: 'Não foi possível comunicar com o servidor. Sessão encerrada localmente.',
         confirmButtonColor: '#D14D72'
       });
-      
       navigate('/login');
     }
 
@@ -97,40 +73,44 @@ export default function CustomAvatar({ imageSrc, navigateTo }) {
   };
 
   const handleProfile = () => {
-    if (user && user.id) {
-      // Se o usuário estiver logado e tiver ID, navega para a rota com o ID incluso
-      const profilePath = navigateTo ? `${navigateTo}/${user.id}` : `/profile/${user.id}`;
-      navigate(profilePath);
-    } else if (navigateTo) {
-      // Fallback para o comportamento anterior caso não tenha ID
-      navigate(navigateTo);
+    if (user) {
+      if (userType === "Adopter" && user._id) {
+        navigate(`/adopter-profile/${user._id}`);
+      } else if (userType === "Ong" && user._id) {
+        navigate(`/ong-profile/${user._id}`);
+      } else {
+        navigate('/login');
+      }
+    } else {
+      navigate('/login');
     }
     handleCloseMenu();
   };
 
   return (
-    <div className="custom-avatar-container">
-      <img
-        className="custom-avatar-icon"
-        src={imageSrc}
-        alt="Avatar"
-        onClick={handleToggleMenu}
-      />
-      {isMenuOpen && (
-        <div className="custom-avatar-menu">
-          <button className="custom-avatar-menu-item" onClick={handleProfile}>
-            Meu Perfil
-          </button>
-          <button className="custom-avatar-menu-item" onClick={handleLogout}>
-            Sair
-          </button>
-        </div>
-      )}
-    </div>
+    user && (
+      <div className="custom-avatar-container">
+        <img
+          className="custom-avatar-icon"
+          src={imageSrc}
+          alt="Avatar"
+          onClick={handleToggleMenu}
+        />
+        {isMenuOpen && (
+          <div className="custom-avatar-menu">
+            <button className="custom-avatar-menu-item" onClick={handleProfile}>
+              Meu Perfil
+            </button>
+            <button className="custom-avatar-menu-item" onClick={handleLogout}>
+              Sair
+            </button>
+          </div>
+        )}
+      </div>
+    )
   );
 }
 
 CustomAvatar.propTypes = {
-  imageSrc: PropTypes.string.isRequired,
-  navigateTo: PropTypes.string, // Propriedade opcional para definir a rota de navegação
+  imageSrc: PropTypes.string.isRequired
 };

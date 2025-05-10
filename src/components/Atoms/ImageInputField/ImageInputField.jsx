@@ -1,8 +1,15 @@
 import './ImageInputField.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const ImageInputField = ({ onImageChange, size = 300 }) => {
+const ImageInputField = ({ onImageChange, size = 300, currentImage }) => {
   const [srcImg, setSrcImg] = useState("");
+  
+  // Usar useEffect para atualizar a imagem quando currentImage mudar
+  useEffect(() => {
+    if (currentImage) {
+      setSrcImg(currentImage);
+    }
+  }, [currentImage]);
 
   const loadImage = (e) => {
     const file = e.target.files[0];
@@ -14,7 +21,7 @@ const ImageInputField = ({ onImageChange, size = 300 }) => {
       reader.readAsDataURL(file);
       onImageChange(file); // envia o arquivo para o componente pai
     } else {
-      setSrcImg("");
+      setSrcImg(currentImage || "");
       onImageChange(null);
     }
   };
