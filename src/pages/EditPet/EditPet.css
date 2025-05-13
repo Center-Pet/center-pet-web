@@ -1,8 +1,10 @@
+@import url("https://fonts.googleapis.com/css?family=Alexandria");
+
 .pet-info-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Alexandria', Arial, sans-serif;
 }
 
 .pet-profile-card {
@@ -12,17 +14,16 @@
   margin-bottom: 40px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  /* Impede que elementos saiam do contêiner */
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* Adiciona espaçamento entre os elementos internos */
 }
 
 .pet-main-info {
   display: flex;
   flex-direction: row;
   gap: 20px;
+  align-items: flex-start;
 }
 
 .pet-info-details {
@@ -41,25 +42,21 @@
   position: relative;
   min-width: 300px;
   height: 100%;
+  max-width: 600px;
 }
 
 /* Imagem principal do pet */
 .pet-main-image {
   width: 100%;
-  /* Ocupa toda a largura disponível */
   height: 530px;
-  /* Altura fixa */
   object-fit: cover;
-  /* Ajusta a imagem para cobrir o contêiner sem distorção */
   border-radius: 12px;
   transition: opacity 0.5s ease-in-out;
-  /* Animação ao trocar a imagem */
   opacity: 1;
 }
 
 .pet-main-image.fade-out {
   opacity: 0;
-  /* Transição para desaparecer */
 }
 
 .edit-button {
@@ -86,11 +83,9 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  /* Alterado de center para stretch */
   gap: 15px;
   width: 100%;
   box-sizing: border-box;
-  /* Garante que o padding não exceda a largura */
 }
 
 .pet-details h2 {
@@ -114,21 +109,19 @@
   padding-bottom: 15px;
   border-bottom: 2px solid rgba(255, 139, 167, 0.2);
   box-sizing: border-box;
-  /* Garante que o padding não exceda a largura */
 }
 
 .bio-field textarea {
   width: 100%;
   min-height: 120px;
-  /* Aumentado de 80px para 120px */
   max-height: 200px;
-  /* Aumentado de 150px para 200px */
   resize: vertical;
   padding: 12px;
   font-size: 16px;
   line-height: 1.5;
   margin-bottom: 0;
   box-sizing: border-box;
+  font-family: 'Alexandria', Arial, sans-serif;
 }
 
 /* Remove estilos antigos que podem estar interferindo */
@@ -136,7 +129,6 @@
   width: 100%;
   box-sizing: border-box;
   max-width: 100%;
-  /* Alterado de 90% para 100% */
   font-size: 1rem;
   color: #555;
   text-align: center;
@@ -148,13 +140,9 @@
 .pet-info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* Duas colunas */
   gap: 15px 30px;
-  /* Reduz o gap vertical e horizontal */
   width: 100%;
-  /* Garante que ocupe toda a largura disponível */
   margin-top: 5px;
-  /* Adiciona um pequeno espaço após a bio */
 }
 
 .info-row {
@@ -271,7 +259,6 @@
   top: 50%;
   transform: translateY(-50%);
   background-color: rgba(255, 255, 255, 0.7);
-  /* Cor mais clara */
   transition: all 0.3s ease;
   color: #d25b82;
   border: none;
@@ -288,9 +275,7 @@
 
 .nav-button:hover {
   background-color: rgba(255, 255, 255, 0.9);
-  /* Cor mais clara ao passar o mouse */
   transform: translateY(-50%) scale(1.1);
-  /* Efeito de zoom */
 }
 
 .prev-button {
@@ -318,6 +303,7 @@
   font-size: 16px;
   background-color: rgba(255, 255, 255, 0.9);
   transition: all 0.3s ease;
+  font-family: 'Alexandria', Arial, sans-serif;
 }
 
 .editable-field input:focus,
@@ -428,22 +414,18 @@
   .pet-main-info {
     flex-direction: column;
     align-items: stretch;
-    /* Faz os elementos se esticarem para ocupar toda a largura */
     gap: 20px;
   }
 
   .pet-image-container,
   .pet-details {
     width: 100%;
-    /* Garante que os elementos ocupem toda a largura disponível */
     box-sizing: border-box;
-    /* Inclui padding e borda no cálculo da largura */
   }
 
   .pet-details {
     padding: 20px;
     align-self: stretch;
-    /* Faz a div .pet-details se esticar dentro do layout */
   }
 
   .pet-details h2 {
@@ -452,7 +434,6 @@
 
   .pet-info-grid {
     grid-template-columns: 1fr;
-    /* Volta para uma coluna no mobile */
   }
 
   .adopt-button {
@@ -471,7 +452,6 @@
 
   .pet-main-image {
     height: 400px;
-    /* Altura menor para telas menores */
   }
 }
 
@@ -492,7 +472,6 @@
 
   .pet-main-image {
     height: 300px;
-    /* Altura ainda menor para telas muito pequenas */
   }
 }
 
@@ -507,12 +486,23 @@
 .bio-field textarea {
   width: 100%;
   min-height: 120px;
-  /* Aumentado de 80px para 120px */
   max-height: 200px;
-  /* Aumentado de 150px para 200px */
   resize: vertical;
   padding: 12px;
   font-size: 16px;
   line-height: 1.5;
   margin-bottom: 0;
+  font-family: 'Alexandria', Arial, sans-serif;
+}
+
+@media (max-width: 1130px) {
+  .pet-main-info {
+    flex-direction: column;
+  }
+
+  .pet-image-container,
+  .pet-details {
+    max-width: 100%;
+    width: 100%;
+  }
 }

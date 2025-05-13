@@ -1,11 +1,12 @@
 "use client";
-import { useState, useRef } from "react";
-import { BiErrorCircle } from "react-icons/bi"; // Adicione no topo do arquivo junto com os outros imports
+import { useState } from "react";
+import { BiErrorCircle } from "react-icons/bi";
+import ImageUploadGrid from "../../components/Molecules/ImageUploadGrid/ImageUploadGrid";
+import OngCard from "../../components/Molecules/OngCard/OngCard";
 import "./RegisterPet.css";
 
 export default function RegisterPet() {
   const [petImages, setPetImages] = useState([]);
-  const fileInputRef = useRef(null);
   const [petInfo, setPetInfo] = useState({
     nome: "",
     especie: "",
@@ -16,9 +17,9 @@ export default function RegisterPet() {
     idade: "",
     raca: "",
     porte: "",
-    vacinado: "", // Alterado de "Não" para ""
-    castrado: "", // Alterado de "Não" para ""
-    vermifugado: "", // Alterado de "Não" para ""
+    vacinado: "",
+    castrado: "",
+    vermifugado: "",
     condicaoEspecial: "",
     esperando: "",
   });
@@ -26,19 +27,14 @@ export default function RegisterPet() {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleImageUpload = (event) => {
-    const files = event.target.files;
-    if (files && petImages.length < 6) {
-      const newImage = URL.createObjectURL(files[0]);
-      setPetImages([...petImages, newImage]);
-
-      // Remove o erro de imagens quando uma imagem é adicionada
-      if (formErrors.images) {
-        setFormErrors((prev) => ({
-          ...prev,
-          images: undefined,
-        }));
-      }
+  const handleImageAdd = (newImage) => {
+    setPetImages([...petImages, newImage]);
+    // Remove o erro de imagens quando uma imagem é adicionada
+    if (formErrors.images) {
+      setFormErrors((prev) => ({
+        ...prev,
+        images: undefined,
+      }));
     }
   };
 
@@ -83,7 +79,6 @@ export default function RegisterPet() {
 
     // Validação dos campos do formulário
     Object.keys(petInfo).forEach((key) => {
-      // Remove a verificação especial do vermifugado e trata todos os campos vazios
       if (!petInfo[key] || petInfo[key] === "") {
         errors[key] = "Este campo é obrigatório";
       }
@@ -130,80 +125,23 @@ export default function RegisterPet() {
       <div className="pet-profile-card">
         <div className="pet-main-info">
           <div className="pet-image-container">
-            {/* Imagem Principal */}
-            <div className="main-image-slot">
-              {petImages.length > 0 ? (
-                <div className="image-container">
-                  <img
-                    src={petImages[0]}
-                    alt="Imagem principal do pet"
-                    className="main-image"
-                  />
-                  <button
-                    type="button"
-                    className="delete-image-button"
-                    onClick={() => handleDeleteImage(0)}
-                  >
-                    ×
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  className="add-image-button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={petImages.length >= 6}
-                >
-                  +
-                </button>
-              )}
-            </div>
+            <ImageUploadGrid
+              images={petImages}
+              onImageAdd={handleImageAdd}
+              onImageDelete={handleDeleteImage}
+              maxImages={6}
+              mainImage={true}
+            />
+            {formErrors.images && <ErrorMessage message={formErrors.images} />}
 
-            {/* Grid de imagens secundárias */}
-            <div className="pet-images-grid">
-              {[...Array(5)].map((_, index) => (
-                <div key={index + 1} className="image-upload-slot">
-                  {index + 1 < petImages.length ? (
-                    <div className="image-container">
-                      <img
-                        src={petImages[index + 1]}
-                        alt={`Pet ${index + 2}`}
-                        className="uploaded-image"
-                      />
-                      <button
-                        type="button"
-                        className="delete-image-button"
-                        onClick={() => handleDeleteImage(index + 1)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      className="add-image-button"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={petImages.length >= 6}
-                    >
-                      +
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageUpload}
-              accept="image/*"
-              style={{ display: "none" }}
+            <OngCard
+              imageUrl="https://pbs.twimg.com/profile_images/1758521731545780224/KjQzo0Sr_400x400.jpg"
+              ongName="Resgatiticos"
             />
           </div>
 
           <div className="pet-details">
             <h2>Registrar novo Pet</h2>
-            {formErrors.images && <ErrorMessage message={formErrors.images} />}
             <input
               type="text"
               name="nome"
@@ -419,15 +357,15 @@ export default function RegisterPet() {
                 <label className="info-label">Tempo de Espera:</label>
                 <input
                   type="text"
-                  name="esperando" // Alterado de tempoEspera para esperando
+                  name="esperando"
                   placeholder="Ex: 2 meses"
-                  value={petInfo.esperando} // Alterado de tempoEspera para esperando
+                  value={petInfo.esperando}
                   onChange={handleInputChange}
                   className={`input-field ${
                     formErrors.esperando ? "error" : ""
-                  }`} // Alterado
+                  }`}
                 />
-                {formErrors.esperando && ( // Alterado
+                {formErrors.esperando && (
                   <ErrorMessage message={formErrors.esperando} />
                 )}
               </div>
