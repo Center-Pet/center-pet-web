@@ -1,0 +1,37 @@
+@import url("https://fonts.googleapis.com/css?family=Alexandria");
+
+* {
+    font-family: 'Alexandria';}
+
+#colorblind-controls {
+    position: fixed;
+    top: 1rem;
+    right: 180px; /* Mantém no lado direito */
+    background-color: #D14D72;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#colorblind-controls select {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #FEF2F4;
+    cursor: pointer;
+}
+
+#colorblind-controls select:focus {
+    border-color: #000000;
+    outline: none;
+}
+
+#colorblind-controls label {
+    font-size: 14px;
+    margin-right: 10px;
+    color: #D14D72;
+}
