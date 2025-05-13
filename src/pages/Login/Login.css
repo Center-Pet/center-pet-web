@@ -116,7 +116,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  /* Espaçamento entre os elementos */
+  width: 100%;
+  max-width: 100%;
   transition: transform 0.6s ease-in-out, opacity 0.3s ease;
   transform-origin: top center;
 }
@@ -205,6 +206,7 @@
 
 .login-form .form-group {
   width: 100%;
+  box-sizing: border-box;
 }
 
 .login-form.switching {
@@ -256,15 +258,21 @@
 }
 
 .form-input {
-  width: 100%;
   padding: 0.6rem 0.8rem;
-  /* Reduz o padding dos inputs */
   border-radius: 0.5rem;
   border: 1px solid #FCC8D1;
   background-color: white;
   transition: all 0.3s ease;
   font-size: 0.9rem;
-  /* Reduz o tamanho da fonte */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-input:focus {
@@ -356,13 +364,6 @@
     /* Reduz ainda mais o tamanho do título */
   }
 
-  .form-input {
-    padding: 0.5rem 0.7rem;
-    /* Ajusta o padding */
-    font-size: 0.8rem;
-    /* Ajusta o tamanho da fonte */
-  }
-
   .submit-button {
     padding: 0.5rem;
     /* Ajusta o padding do botão */
@@ -434,4 +435,72 @@
   width: 100vw;
   height: 100vh;
   z-index: 9999;
+}
+
+/* Ajustar o botão para não ultrapassar o contêiner */
+.login-form button[type="submit"] {
+  width: 100% !important; /* Sobrescreve o width inline */
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-top: 0.5rem;
+}
+
+/* Ajuste fino para o SweetAlert */
+.swal2-popup {
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  width: 95%;
+  max-width: 400px;
+}
+
+.swal2-title {
+  color: #D14D72;
+  font-size: 1.3rem;
+}
+
+.swal2-input {
+  box-shadow: none !important;
+  border: 1px solid #FCC8D1 !important;
+  border-radius: 0.5rem !important;
+  width: 100% !important;
+  margin: 1em auto !important;
+  padding: 0.6rem 0.8rem !important;
+  font-size: 0.9rem !important;
+  box-sizing: border-box !important;
+}
+
+.swal2-input:focus {
+  border-color: #D14D72 !important;
+}
+
+.swal2-actions {
+  margin-top: 1.5rem;
+}
+
+/* Adicionar estas classes no fim do arquivo CSS */
+
+.forgot-password-link {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -0.2rem;
+  margin-bottom: 0.5rem;
+  box-sizing: border-box;
+}
+
+.forgot-password-link button {
+  background: none;
+  border: none;
+  color: #D14D72;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-decoration: none;
+  padding: 0;
+}
+
+.forgot-password-link button:hover {
+  color: #b93d5f;
+  text-decoration: underline;
 }

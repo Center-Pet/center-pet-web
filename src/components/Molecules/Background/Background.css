@@ -17,7 +17,7 @@
 }
 .slider-text {
   position: absolute;
-  bottom: 20px; /* Move o texto para a parte inferior */
+  bottom: 20px;
   left: 20px;
   color: white;
   text-align: left;

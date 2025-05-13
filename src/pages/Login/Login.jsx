@@ -316,6 +316,116 @@ const Login = () => {
     }
   };
 
+  const handleForgotPasswordSubmit = async (email) => {
+    if (!email) return;
+    
+    // Mostrar loading com PawAnimation
+    const pawAnimationHtml = ReactDOMServer.renderToString(
+      <PawAnimation 
+        width={60} 
+        height={60} 
+        text="Enviando..." 
+        vertical={true}
+      />
+    );
+
+    Swal.fire({
+      title: 'Enviando',
+      html: pawAnimationHtml,
+      showConfirmButton: false,
+      allowOutsideClick: false
+    });
+
+    try {
+      // Implemente a chamada à API de recuperação de senha
+      const response = await fetch(
+        "https://centerpet-api.onrender.com/api/auth/forgot-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ email })
+        }
+      );
+
+      // Fechar o loading
+      Swal.close();
+
+      if (response.ok) {
+        Swal.fire({
+          title: 'Email enviado!',
+          text: 'Verifique sua caixa de entrada para recuperar sua senha.',
+          icon: 'success',
+          showConfirmButton: true,
+          confirmButtonColor: '#D14D72',
+          position: 'center'
+        });
+      } else {
+        const result = await response.json();
+        Swal.fire({
+          title: 'Não foi possível enviar',
+          text: result.message || 'Email não encontrado ou erro no servidor.',
+          icon: 'error',
+          showConfirmButton: true,
+          confirmButtonColor: '#D14D72',
+          position: 'center'
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao solicitar recuperação de senha:', error);
+      Swal.close();
+      
+      Swal.fire({
+        title: 'Erro!',
+        text: 'Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.',
+        icon: 'error',
+        showConfirmButton: true,
+        confirmButtonColor: '#D14D72',
+        position: 'center'
+      });
+    }
+  };
+
+  const handleForgotPassword = () => {
+    Swal.fire({
+      title: 'Recuperar Senha',
+      html: `
+        <p style="margin-bottom: 15px; color: #555; font-size: 14px; text-align: left;">
+          Digite seu e-mail para receber um link de recuperação de senha
+        </p>
+        <input 
+          id="swal-input-email" 
+          class="swal2-input" 
+          placeholder="Seu email cadastrado"
+          value="${email}"
+          style="width: 100%; box-sizing: border-box; margin: 10px auto; border-color: #FCC8D1;"
+        >
+      `,
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: '#FFABAB',
+      confirmButtonText: 'Recuperar Senha',
+      confirmButtonColor: '#D14D72',
+      showLoaderOnConfirm: false,
+      allowOutsideClick: () => !Swal.isLoading(),
+      preConfirm: async () => {
+        const inputEmail = document.getElementById('swal-input-email').value;
+        
+        if (!inputEmail || !/\S+@\S+\.\S+/.test(inputEmail)) {
+          Swal.showValidationMessage('Por favor, digite um email válido');
+          return false;
+        }
+        
+        return inputEmail;
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed && result.value) {
+        await handleForgotPasswordSubmit(result.value);
+      }
+    });
+  };
+
   return (
     <div className="login-container">
       <div className="slider-section">
@@ -358,6 +468,14 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required 
                 />
+                <div className="forgot-password-link">
+                  <button 
+                    type="button" 
+                    onClick={handleForgotPassword}
+                  >
+                    Esqueci minha senha
+                  </button>
+                </div>
                 <ButtonType bgColor="#D14D72" type="submit" width="107%">
                   Entrar
                 </ButtonType>
@@ -410,15 +528,6 @@ const Login = () => {
                 </ButtonType>
               </>
             )}
-
-            {/* <ButtonType bgColor="#FFABAB" type="button" width="107%">
-              <img
-                className="google-icon"
-                src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
-                alt="Google"
-              />
-              Continue com Google
-            </ButtonType> */}
 
             <div className="toggle-row">
               <p className="toggle-form">
