@@ -1,3 +1,4 @@
+import './global.css';
 import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 import Footer from "./components/Molecules/Footer/Footer";

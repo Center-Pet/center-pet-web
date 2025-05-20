@@ -25,8 +25,8 @@
   position: absolute;
   top: 50px;
   right: 0;
-  background-color: #D14D72;
-  color: #FEF2F4;
+  background-color: var(--main-pink);
+  color: var(--white);
   border-radius: 8px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   padding: 10px 0;

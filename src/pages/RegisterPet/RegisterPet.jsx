@@ -8,20 +8,20 @@ import "./RegisterPet.css";
 export default function RegisterPet() {
   const [petImages, setPetImages] = useState([]);
   const [petInfo, setPetInfo] = useState({
-    nome: "",
-    especie: "",
-    pelagem: "",
+    name: "",
+    type: "",
+    coat: "",
     local: "",
     bio: "",
-    genero: "",
-    idade: "",
-    raca: "",
-    porte: "",
-    vacinado: "",
-    castrado: "",
-    vermifugado: "",
-    condicaoEspecial: "",
-    esperando: "",
+    gender: "",
+    age: "",
+    breed: "",
+    size: "",
+    vaccinated: "",
+    castrated: "",
+    dewormed: "",
+    specialCondition: "",
+    waitingTime: "",
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -85,16 +85,16 @@ export default function RegisterPet() {
     });
 
     // Validações específicas para os campos de seleção
-    if (petInfo.vermifugado === "") {
-      errors.vermifugado = "Selecione uma opção";
+    if (petInfo.dewormed === "") {
+      errors.dewormed = "Selecione uma opção";
     }
 
-    if (petInfo.vacinado === "") {
-      errors.vacinado = "Selecione uma opção";
+    if (petInfo.vaccinated === "") {
+      errors.vaccinated = "Selecione uma opção";
     }
 
-    if (petInfo.castrado === "") {
-      errors.castrado = "Selecione uma opção";
+    if (petInfo.castrated === "") {
+      errors.castrated = "Selecione uma opção";
     }
 
     return errors;
@@ -144,13 +144,13 @@ export default function RegisterPet() {
             <h2>Registrar novo Pet</h2>
             <input
               type="text"
-              name="nome"
+              name="name"
               placeholder="Nome do Pet"
-              value={petInfo.nome}
+              value={petInfo.name}
               onChange={handleInputChange}
-              className={`input-field ${formErrors.nome ? "error" : ""}`}
+              className={`input-field ${formErrors.name ? "error" : ""}`}
             />
-            {formErrors.nome && <ErrorMessage message={formErrors.nome} />}
+            {formErrors.name && <ErrorMessage message={formErrors.name} />}
             <textarea
               name="bio"
               placeholder="Biografia do Pet"
@@ -165,44 +165,44 @@ export default function RegisterPet() {
               <div className="info-row">
                 <label className="info-label">Espécie:</label>
                 <select
-                  name="especie"
-                  value={petInfo.especie}
+                  name="type"
+                  value={petInfo.type}
                   onChange={handleInputChange}
-                  className={`input-field ${formErrors.especie ? "error" : ""}`}
+                  className={`input-field ${formErrors.type ? "error" : ""}`}
                 >
                   <option value="">Selecione</option>
                   <option value="Cachorro">Cachorro</option>
                   <option value="Gato">Gato</option>
                 </select>
-                {formErrors.especie && (
-                  <ErrorMessage message={formErrors.especie} />
+                {formErrors.type && (
+                  <ErrorMessage message={formErrors.type} />
                 )}
               </div>
 
               <div className="info-row">
                 <label className="info-label">Gênero:</label>
                 <select
-                  name="genero"
-                  value={petInfo.genero}
+                  name="gender"
+                  value={petInfo.gender}
                   onChange={handleInputChange}
-                  className={`input-field ${formErrors.genero ? "error" : ""}`}
+                  className={`input-field ${formErrors.gender ? "error" : ""}`}
                 >
                   <option value="">Selecione</option>
                   <option value="Macho">Macho</option>
                   <option value="Fêmea">Fêmea</option>
                 </select>
-                {formErrors.genero && (
-                  <ErrorMessage message={formErrors.genero} />
+                {formErrors.gender && (
+                  <ErrorMessage message={formErrors.gender} />
                 )}
               </div>
 
               <div className="info-row">
                 <label className="info-label">Idade:</label>
                 <select
-                  name="idade"
-                  value={petInfo.idade}
+                  name="age"
+                  value={petInfo.age}
                   onChange={handleInputChange}
-                  className={`input-field ${formErrors.idade ? "error" : ""}`}
+                  className={`input-field ${formErrors.age ? "error" : ""}`}
                 >
                   <option value="">Selecione</option>
                   <option value="Filhote">Filhote</option>
@@ -210,8 +210,8 @@ export default function RegisterPet() {
                   <option value="Adulto">Adulto</option>
                   <option value="Idoso">Idoso</option>
                 </select>
-                {formErrors.idade && (
-                  <ErrorMessage message={formErrors.idade} />
+                {formErrors.age && (
+                  <ErrorMessage message={formErrors.age} />
                 )}
               </div>
 
@@ -219,105 +219,105 @@ export default function RegisterPet() {
                 <label className="info-label">Raça:</label>
                 <input
                   type="text"
-                  name="raca"
+                  name="breed"
                   placeholder="Ex: Sem Raça Definida"
-                  value={petInfo.raca}
+                  value={petInfo.breed}
                   onChange={handleInputChange}
-                  className={`input-field ${formErrors.raca ? "error" : ""}`}
+                  className={`input-field ${formErrors.breed ? "error" : ""}`}
                 />
-                {formErrors.raca && <ErrorMessage message={formErrors.raca} />}
+                {formErrors.breed && <ErrorMessage message={formErrors.breed} />}
               </div>
 
               <div className="info-row">
                 <label className="info-label">Porte:</label>
                 <select
-                  name="porte"
-                  value={petInfo.porte}
+                  name="size"
+                  value={petInfo.size}
                   onChange={handleInputChange}
-                  className={`input-field ${formErrors.porte ? "error" : ""}`}
+                  className={`input-field ${formErrors.size ? "error" : ""}`}
                 >
                   <option value="">Selecione</option>
                   <option value="Pequeno">Pequeno</option>
                   <option value="Médio">Médio</option>
                   <option value="Grande">Grande</option>
                 </select>
-                {formErrors.porte && (
-                  <ErrorMessage message={formErrors.porte} />
+                {formErrors.size && (
+                  <ErrorMessage message={formErrors.size} />
                 )}
               </div>
 
               <div className="info-row">
                 <label className="info-label">Pelagem:</label>
                 <select
-                  name="pelagem"
-                  value={petInfo.pelagem}
+                  name="coat"
+                  value={petInfo.coat}
                   onChange={handleInputChange}
-                  className={`input-field ${formErrors.pelagem ? "error" : ""}`}
+                  className={`input-field ${formErrors.coat ? "error" : ""}`}
                 >
                   <option value="">Selecione</option>
                   <option value="Curta">Curta</option>
                   <option value="Média">Média</option>
                   <option value="Longa">Longa</option>
                 </select>
-                {formErrors.pelagem && (
-                  <ErrorMessage message={formErrors.pelagem} />
+                {formErrors.coat && (
+                  <ErrorMessage message={formErrors.coat} />
                 )}
               </div>
 
               <div className="info-row">
                 <label className="info-label">Vacinado:</label>
                 <select
-                  name="vacinado"
-                  value={petInfo.vacinado}
+                  name="vaccinated"
+                  value={petInfo.vaccinated}
                   onChange={handleInputChange}
                   className={`input-field ${
-                    formErrors.vacinado ? "error" : ""
+                    formErrors.vaccinated ? "error" : ""
                   }`}
                 >
                   <option value="">Selecione</option>
                   <option value="Sim">Sim</option>
                   <option value="Não">Não</option>
                 </select>
-                {formErrors.vacinado && (
-                  <ErrorMessage message={formErrors.vacinado} />
+                {formErrors.vaccinated && (
+                  <ErrorMessage message={formErrors.vaccinated} />
                 )}
               </div>
 
               <div className="info-row">
                 <label className="info-label">Castrado:</label>
                 <select
-                  name="castrado"
-                  value={petInfo.castrado}
+                  name="castrated"
+                  value={petInfo.castrated}
                   onChange={handleInputChange}
                   className={`input-field ${
-                    formErrors.castrado ? "error" : ""
+                    formErrors.castrated ? "error" : ""
                   }`}
                 >
                   <option value="">Selecione</option>
                   <option value="Sim">Sim</option>
                   <option value="Não">Não</option>
                 </select>
-                {formErrors.castrado && (
-                  <ErrorMessage message={formErrors.castrado} />
+                {formErrors.castrated && (
+                  <ErrorMessage message={formErrors.castrated} />
                 )}
               </div>
 
               <div className="info-row">
                 <label className="info-label">Vermifugado:</label>
                 <select
-                  name="vermifugado"
-                  value={petInfo.vermifugado}
+                  name="dewormed"
+                  value={petInfo.dewormed}
                   onChange={handleInputChange}
                   className={`input-field ${
-                    formErrors.vermifugado ? "error" : ""
+                    formErrors.dewormed ? "error" : ""
                   }`}
                 >
                   <option value="">Selecione</option>
                   <option value="Sim">Sim</option>
                   <option value="Não">Não</option>
                 </select>
-                {formErrors.vermifugado && (
-                  <ErrorMessage message={formErrors.vermifugado} />
+                {formErrors.dewormed && (
+                  <ErrorMessage message={formErrors.dewormed} />
                 )}
               </div>
 
@@ -340,16 +340,16 @@ export default function RegisterPet() {
                 <label className="info-label">Condição Especial:</label>
                 <input
                   type="text"
-                  name="condicaoEspecial"
+                  name="specialCondition"
                   placeholder="Ex: Nenhuma"
-                  value={petInfo.condicaoEspecial}
+                  value={petInfo.specialCondition}
                   onChange={handleInputChange}
                   className={`input-field ${
-                    formErrors.condicaoEspecial ? "error" : ""
+                    formErrors.specialCondition ? "error" : ""
                   }`}
                 />
-                {formErrors.condicaoEspecial && (
-                  <ErrorMessage message={formErrors.condicaoEspecial} />
+                {formErrors.specialCondition && (
+                  <ErrorMessage message={formErrors.specialCondition} />
                 )}
               </div>
 
@@ -357,16 +357,16 @@ export default function RegisterPet() {
                 <label className="info-label">Tempo de Espera:</label>
                 <input
                   type="text"
-                  name="esperando"
+                  name="waitingTime"
                   placeholder="Ex: 2 meses"
-                  value={petInfo.esperando}
+                  value={petInfo.waitingTime}
                   onChange={handleInputChange}
                   className={`input-field ${
-                    formErrors.esperando ? "error" : ""
+                    formErrors.waitingTime ? "error" : ""
                   }`}
                 />
-                {formErrors.esperando && (
-                  <ErrorMessage message={formErrors.esperando} />
+                {formErrors.waitingTime && (
+                  <ErrorMessage message={formErrors.waitingTime} />
                 )}
               </div>
             </div>
