@@ -16,12 +16,12 @@ export default function PetInfo() {
   ];
 
   const petInfo = {
-    nome: "Juninho Maldade Pura",
+    nome: "Juninho",
     especie: "Cachorro",
     pelagem: "Curta",
     local: "São Paulo, SP",
     bio: "Juninho é um filhote cheio de energia e amor para dar. Ele adora brincar e está esperando por um lar cheio de carinho!",
-    genero: "Macho Alpha",
+    genero: "Macho",
     idade: "Filhote",
     raca: "Sem Raça Definida",
     porte: "Médio",
@@ -185,13 +185,23 @@ export default function PetInfo() {
                 ))}
               </div>
 
-              <div className="social-share">
-                <SocialShare />
-              </div>
+             
             </div>
 
             <div className="pet-details">
-              <h2>Conheça {petInfo.nome}</h2>
+             
+              <h2>Conheça {petInfo.nome}
+              <SocialShare />
+              </h2>
+              <h4 className="ong-subtitle">
+                De{" "}
+                
+                <strong>
+                  <a href={`/api/ONGs/${encodeURIComponent(petInfo.ong)}`}>
+                    {petInfo.ong}
+                  </a>
+                </strong>
+              </h4>
               <p className="pet-bio">{petInfo.bio}</p>
               <div className="pet-info-grid two-columns">
                 {Object.entries({
@@ -200,12 +210,13 @@ export default function PetInfo() {
                   Idade: petInfo.idade,
                   Local: petInfo.local,
                   Gênero: petInfo.genero,
+                  Raça: petInfo.raca,
+                  Porte: petInfo.porte,
                   Vacinado: petInfo.vacinado,
                   Castrado: petInfo.castrado,
                   Vermifugado: petInfo.vermifugado,
                   "Condição Especial": petInfo.condicaoEspecial,
                   "Esperando um amigo há": petInfo.esperando,
-                  ONG: petInfo.ong,
                 }).map(([label, value]) => (
                   <div className="info-row" key={label}>
                     <span className="info-label">{label}:</span>

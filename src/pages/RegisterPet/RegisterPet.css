@@ -73,7 +73,7 @@
   color: #333;
 }
 
-/* Reorganiza os dados em duas colunas */
+/* Ajuste no grid de informações para evitar quebra na div de idade */
 .pet-info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -88,16 +88,19 @@
   flex-direction: column;
   gap: 5px;
   width: 100%;
+  margin-bottom: 10px;
+  /* Adicionando margem inferior para evitar sobreposição */
+  position: relative;
+  /* Para posicionamento correto de elementos filhos */
 }
 
-.info-label {
-  font-weight: 600;
-  color: #333;
-  font-size: 0.9rem;
-}
-
-.info-value {
-  color: #333;
+/* Ajuste específico para a div de idade e outros selects */
+.info-row select,
+.info-row input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 40px;
+  /* Altura mínima fixa para todos os inputs/selects */
 }
 
 /* Campos de entrada */
@@ -127,16 +130,19 @@ select.input-field {
   cursor: pointer;
 }
 
-/* Mensagens de erro */
+/* Garante que as mensagens de erro não quebrem o layout */
 .error-message {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  /* Alterado para flex-start */
   gap: 5px;
   color: #dc3545;
   font-size: 0.85rem;
   margin-top: 4px;
   padding: 2px 0;
   animation: fadeIn 0.3s ease-in-out;
+  position: relative;
+  /* Adicionado para melhor posicionamento */
 }
 
 .error-message .error-icon {
@@ -185,6 +191,88 @@ select.input-field {
 
 .adopt-button:disabled {
   background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Ajuste para os botões de ação */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+
+}
+
+.adopt-button.cancel-button {
+  background-color: #FFFFFF;
+  color: #ff8ba7;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.adopt-button.cancel-button:hover {
+  background-color: #f7eaf1;
+}
+
+/* Estilo para os botões do SweetAlert */
+
+
+/* Ajustes específicos para a lista de sugestões do autocomplete */
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ff8ba7;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ajuste no container do autocomplete */
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+  min-height: 38px;
+  /* Altura mínima para garantir consistência */
+  margin-bottom: 5px;
+  /* Reduzido para não criar muito espaço vazio */
+}
+
+.suggestion-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  /* Alinhar texto à esquerda */
+  width: 100%;
+  /* Ocupar toda largura disponível */
+  box-sizing: border-box;
+  /* Garantir que padding não aumente largura */
+  border-bottom: 1px solid #f0f0f0;
+  /* Separador sutil entre itens */
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+  /* Remove borda do último item */
+}
+
+.suggestion-item:hover {
+  background-color: #fff0f3;
+  color: #ff6b8b;
+}
+
+input[disabled] {
+  background-color: #f9f9f9;
   cursor: not-allowed;
 }
 

@@ -1,75 +1,37 @@
-"use client"
+"use client";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faFacebookF,
-  faTwitter,
-  faInstagram,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons"
+import { Share } from "@phosphor-icons/react";
 import "./SocialShare.css";
 
 export default function SocialShare() {
-  const shareLinks = [
-    {
-      name: "Facebook",
-      icon: <FontAwesomeIcon icon={faFacebookF} size="lg" color="#9ca3af" />,
-      url: "https://www.facebook.com/sharer/sharer.php?u=",
-    },
-    {
-      name: "Twitter",
-      icon: <FontAwesomeIcon icon={faTwitter} size="lg" color="#9ca3af" />,
-      url: "https://twitter.com/intent/tweet?url=",
-    },
-    {
-      name: "Instagram",
-      icon: <FontAwesomeIcon icon={faInstagram} size="lg" color="#9ca3af" />,
-      url: "https://www.instagram.com/",
-    },
-    {
-      name: "YouTube",
-      icon: <FontAwesomeIcon icon={faYoutube} size="lg" color="#9ca3af" />,
-      url: "https://www.youtube.com/",
-    },
-  ]
+  const handleShare = async () => {
+    const shareData = {
+      title: document.title,
+      url: window.location.href,
+    };
 
-  const handleShare = (url) => {
-    window.open(url + window.location.href, "_blank")
-  }
+    try {
+      if (navigator.share) {
+        // Usa a API de compartilhamento nativa
+        await navigator.share(shareData);
+      } else {
+        // Fallback para navegadores que não suportam a API nativa
+        alert(
+          "Seu navegador não suporta o compartilhamento nativo. Por favor, copie a URL manualmente."
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao compartilhar:", error);
+    }
+  };
 
   return (
-    <div className="social-share-container">
-      <div className="social-share-title">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="#1e4e76"
-          stroke="#1e4e76"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="18" cy="5" r="3" />
-          <circle cx="6" cy="12" r="3" />
-          <circle cx="18" cy="19" r="3" />
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-        </svg>
-        <span>Compartilhe:</span>
-      </div>
-      <div className="social-share-buttons">
-        {shareLinks.map((link, index) => (
-          <button
-            key={index}
-            onClick={() => handleShare(link.url)}
-            aria-label={`Share on ${link.name}`}
-          >
-            {link.icon}
-          </button>
-        ))}
-      </div>
-    </div>
-  )
+    <button
+      className="inline-share-button"
+      onClick={handleShare}
+      aria-label="Compartilhar esta página"
+    >
+      <Share size={27} weight="regular" color="#d25b82" />
+    </button>
+  );
 }

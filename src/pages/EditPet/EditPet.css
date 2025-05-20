@@ -23,7 +23,8 @@
   display: flex;
   flex-direction: row;
   gap: 20px;
-  align-items: flex-start;
+  align-items: stretch;
+  min-height: 100%;
 }
 
 .pet-info-details {
@@ -31,6 +32,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
+  min-height: 100%;
+  align-self: stretch;
 }
 
 .pet-image-container,
@@ -172,10 +176,40 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin-top: 20px;
+  width: 100%;
 }
 
 .adopt-button:hover {
   background-color: #ff6b8b;
+}
+
+/* Aumentando o espaçamento para o botão de cancelamento */
+.adopt-button.cancel-button {
+  background-color: #FFFFFF;
+  color: #ff8ba7;
+  border: none;
+  transition: all 0.3s ease;
+  margin-top: 15px;
+  /* Aumentando a margem superior */
+}
+
+.adopt-button.cancel-button:hover {
+  background-color: #f7eaf1;
+}
+
+/* Você também pode ajustar o container de botões para ter mais espaço */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px;
+  /* Adicionando espaço entre os botões usando gap */
+}
+
+.adopt-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .pet-thumbnails {
@@ -328,40 +362,10 @@
 /* Botões de ação */
 .action-buttons {
   display: flex;
-  gap: 15px;
-  margin-top: 20px;
-  justify-content: center;
-}
-
-.save-button,
-.cancel-button {
-  padding: 10px 25px;
-  border-radius: 25px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.save-button {
-  background-color: #ff8ba7;
-  color: white;
-  border: none;
-}
-
-.save-button:hover {
-  background-color: #ff6b8b;
-  transform: translateY(-2px);
-}
-
-.cancel-button {
-  background-color: transparent;
-  border: 2px solid #ff8ba7;
-  color: #ff8ba7;
-}
-
-.cancel-button:hover {
-  background-color: #fff0f3;
-  transform: translateY(-2px);
+  flex-direction: column;
+  /* Mudado para column */
+  width: 100%;
+  
 }
 
 /* Ajustes para o grid de informações editáveis */

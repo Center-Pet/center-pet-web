@@ -11,10 +11,12 @@
   padding: 20px;
   margin-bottom: 40px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* Impede que elementos saiam do contêiner */
+  overflow: hidden;
+  /* Impede que elementos saiam do contêiner */
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Adiciona espaçamento entre os elementos internos */
+  gap: 20px;
+  /* Adiciona espaçamento entre os elementos internos */
 }
 
 .pet-main-info {
@@ -43,16 +45,21 @@
 
 /* Imagem principal do pet */
 .pet-main-image {
-  width: 100%; /* Ocupa toda a largura disponível */
-  height: 530px; /* Altura fixa */
-  object-fit: cover; /* Ajusta a imagem para cobrir o contêiner sem distorção */
+  width: 100%;
+  /* Ocupa toda a largura disponível */
+  height: 530px;
+  /* Altura fixa */
+  object-fit: cover;
+  /* Ajusta a imagem para cobrir o contêiner sem distorção */
   border-radius: 12px;
-  transition: opacity 0.5s ease-in-out; /* Animação ao trocar a imagem */
+  transition: opacity 0.5s ease-in-out;
+  /* Animação ao trocar a imagem */
   opacity: 1;
 }
 
 .pet-main-image.fade-out {
-  opacity: 0; /* Transição para desaparecer */
+  opacity: 0;
+  /* Transição para desaparecer */
 }
 
 .edit-button {
@@ -78,7 +85,8 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centraliza a bio */
+  align-items: center;
+  /* Centraliza a bio */
   gap: 20px;
 }
 
@@ -102,15 +110,19 @@
   text-align: center;
   margin-bottom: 20px;
   line-height: 1.5;
-  max-width: 90%; /* Limita a largura da bio */
+  max-width: 90%;
+  /* Limita a largura da bio */
 }
 
 /* Reorganiza os dados em duas colunas */
 .pet-info-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Duas colunas */
-  gap: 20px 40px; /* Aumenta o espaçamento horizontal entre as colunas */
-  width: 100%; /* Garante que ocupe toda a largura disponível */
+  grid-template-columns: repeat(2, 1fr);
+  /* Duas colunas */
+  gap: 20px 40px;
+  /* Aumenta o espaçamento horizontal entre as colunas */
+  width: 100%;
+  /* Garante que ocupe toda a largura disponível */
 }
 
 .info-row {
@@ -226,7 +238,8 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.7); /* Cor mais clara */
+  background-color: rgba(255, 255, 255, 0.7);
+  /* Cor mais clara */
   transition: all 0.3s ease;
   color: #d25b82;
   border: none;
@@ -242,8 +255,10 @@
 }
 
 .nav-button:hover {
-  background-color: rgba(255, 255, 255, 0.9); /* Cor mais clara ao passar o mouse */
-  transform: translateY(-50%) scale(1.1); /* Efeito de zoom */
+  background-color: rgba(255, 255, 255, 0.9);
+  /* Cor mais clara ao passar o mouse */
+  transform: translateY(-50%) scale(1.1);
+  /* Efeito de zoom */
 }
 
 .prev-button {
@@ -258,19 +273,23 @@
 @media (max-width: 768px) {
   .pet-main-info {
     flex-direction: column;
-    align-items: stretch; /* Faz os elementos se esticarem para ocupar toda a largura */
+    align-items: stretch;
+    /* Faz os elementos se esticarem para ocupar toda a largura */
     gap: 20px;
   }
 
   .pet-image-container,
   .pet-details {
-    width: 100%; /* Garante que os elementos ocupem toda a largura disponível */
-    box-sizing: border-box; /* Inclui padding e borda no cálculo da largura */
+    width: 100%;
+    /* Garante que os elementos ocupem toda a largura disponível */
+    box-sizing: border-box;
+    /* Inclui padding e borda no cálculo da largura */
   }
 
   .pet-details {
     padding: 20px;
-    align-self: stretch; /* Faz a div .pet-details se esticar dentro do layout */
+    align-self: stretch;
+    /* Faz a div .pet-details se esticar dentro do layout */
   }
 
   .pet-details h2 {
@@ -278,7 +297,8 @@
   }
 
   .pet-info-grid {
-    grid-template-columns: 1fr; /* Volta para uma coluna no mobile */
+    grid-template-columns: 1fr;
+    /* Volta para uma coluna no mobile */
   }
 
   .adopt-button {
@@ -296,7 +316,8 @@
   }
 
   .pet-main-image {
-    height: 400px; /* Altura menor para telas menores */
+    height: 400px;
+    /* Altura menor para telas menores */
   }
 }
 
@@ -316,6 +337,50 @@
   }
 
   .pet-main-image {
-    height: 300px; /* Altura ainda menor para telas muito pequenas */
+    height: 300px;
+    /* Altura ainda menor para telas muito pequenas */
   }
+}
+
+/* Estilo atualizado para o subtítulo da ONG */
+.ong-subtitle {
+  margin-top: -22px;
+  margin-bottom: -10px;
+  color: #555;
+  font-weight: 400;
+  font-size: 1rem;
+  text-align: center;
+  padding: 4px 15px;
+  border-radius: 20px;
+
+  display: inline-block;
+
+  letter-spacing: 0.5px;
+}
+
+.ong-subtitle strong {
+  font-weight: 700;
+  color: #d25b82;
+}
+
+/* Estilo para o link da ONG no subtítulo */
+.ong-subtitle a {
+  color: #d25b82;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.ong-subtitle a:hover {
+  color: #ae3861;
+  text-decoration: underline;
+}
+
+.pet-name-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pet-name-container h1 {
+  margin: 0;
 }

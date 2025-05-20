@@ -6,7 +6,8 @@
 }
 
 .main-image-slot {
-    aspect-ratio: 4/3;
+    aspect-ratio: 4/4;
+    /* Alterado de 4/3 para 4/4 para tornar mais quadrado */
     position: relative;
     border-radius: 12px;
     overflow: hidden;

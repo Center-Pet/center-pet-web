@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { BiErrorCircle } from "react-icons/bi";
+import Swal from "sweetalert2";
 import ImageUploadGrid from "../../components/Molecules/ImageUploadGrid/ImageUploadGrid";
 import OngCard from "../../components/Molecules/OngCard/OngCard";
+import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import "./EditPet.css";
 
 export default function EditPet() {
@@ -107,23 +109,71 @@ export default function EditPet() {
   };
 
   const handleSave = async () => {
-    try {
-      // Aqui você implementará a chamada à API para atualizar o pet
-      const updatedPetData = {
-        ...petInfo,
-        images: petImages,
-      };
+    // Primeiro, mostramos o modal de confirmação
+    Swal.fire({
+      title: "Confirmar alterações",
+      text: "Tem certeza que todos os dados estão corretos?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#FF8BA7",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Sim, salvar alterações",
+      cancelButtonText: "Revisar dados",
+      showCloseButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Aqui você implementará a chamada à API para atualizar o pet
+          const updatedPetData = {
+            ...petInfo,
+            images: petImages,
+          };
 
-      console.log("Dados atualizados:", updatedPetData);
-      // Adicione aqui a chamada à API
-    } catch (error) {
-      console.error("Erro ao salvar alterações:", error);
-    }
+          console.log("Dados atualizados:", updatedPetData);
+          // Adicione aqui a chamada à API
+
+          // Mostrar mensagem de sucesso após salvar
+          Swal.fire({
+            title: "Sucesso!",
+            text: "As alterações foram salvas com sucesso.",
+            icon: "success",
+            confirmButtonColor: "#FF8BA7",
+          });
+        } catch (error) {
+          console.error("Erro ao salvar alterações:", error);
+
+          // Mostrar mensagem de erro se algo der errado
+          Swal.fire({
+            title: "Erro",
+            text: "Não foi possível salvar as alterações. Por favor, tente novamente.",
+            icon: "error",
+            confirmButtonColor: "#FF8BA7",
+          });
+        }
+      }
+    });
   };
 
   const handleCancel = () => {
-    // Implementar lógica de cancelamento
-    console.log("Edição cancelada");
+    Swal.fire({
+      title: "Tem certeza?",
+      text: "Todas as alterações feitas serão perdidas.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#FF8BA7",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Sim, cancelar ",
+      cancelButtonText: "Continuar editando",
+      showCloseButton: true,
+      customClass: {
+        actions: "swal2-horizontal-buttons", // Aplicando classe personalizada
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("Edição cancelada pelo usuário");
+        window.history.back();
+      }
+    });
   };
 
   const ErrorMessage = ({ message }) => (
@@ -329,10 +379,14 @@ export default function EditPet() {
             </div>
 
             <div className="action-buttons">
-              <button className="save-button" onClick={handleSave}>
+              <button onClick={handleSave} className="adopt-button">
                 Salvar Alterações
               </button>
-              <button className="cancel-button" onClick={handleCancel}>
+
+              <button
+                onClick={handleCancel}
+                className="adopt-button cancel-button"
+              >
                 Cancelar
               </button>
             </div>
