@@ -7,7 +7,7 @@
 /* Estilo do avatar */
 .custom-avatar-icon {
   width: 50px;
-  height: 50px;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;

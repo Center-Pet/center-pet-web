@@ -17,7 +17,7 @@ function ThemeToggle() {
 
   return (
     <button className="theme-toggle-button" onClick={toggleTheme} aria-label="Alternar tema">
-      {theme === 'light' ? '🌙' : '☀️'}
+      {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
     </button>
   );
 }

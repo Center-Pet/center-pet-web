@@ -1,11 +1,11 @@
 .theme-toggle-button {
     position: fixed;
     top: 1.5rem;
-    right: 12rem;
+    right: 23rem;
     z-index: 1000;
   
     background-color: var(--bg-color, #f0f0f0);
-    color: var(--text-color, #D14D72);
+    color: var(--text-color, #111);
     border: 2px solid currentColor;
     border-radius: 999px;
     padding: 0.5rem 1rem;
@@ -18,7 +18,7 @@
   
   .theme-toggle-button:hover {
     transform: scale(1.05);
-    background-color: var(--text-color, #D14D72);
+    background-color: var(--text-color, #111);
     color: var(--bg-color, #fff);
   }
   
@@ -26,9 +26,4 @@
     outline: 3px solid #888;
     outline-offset: 4px;
   }
-
-  @media (max-width: 780px) {
-    .theme-toggle-button {
-      right: 15rem;
-    }
-  }
+  

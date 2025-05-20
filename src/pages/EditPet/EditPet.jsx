@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { BiErrorCircle } from "react-icons/bi";
 import ImageUploadGrid from "../../components/Molecules/ImageUploadGrid/ImageUploadGrid";
-import OngCard from "../../components/Molecules/StampOng/StampOng";
+import OngCard from "../../components/Molecules/OngCard/OngCard";
 import "./EditPet.css";
 
 export default function EditPet() {
