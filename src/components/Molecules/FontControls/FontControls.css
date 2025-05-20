@@ -24,3 +24,8 @@
     background-color: #D14D72;
   }
   
+  @media (max-width: 780px) {
+    #accessibility-controls {
+      right: 5rem; /* Oculta o botão em telas menores */
+    }
+  }

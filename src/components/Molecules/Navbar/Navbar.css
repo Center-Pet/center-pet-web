@@ -113,7 +113,7 @@ a:link {
     right: -100%;
     /* Esconde o menu fora da tela */
     width: 180px;
-    height: 50%;
+    height: auto;
     background-color: #D14D72;
     padding: 10px 20px;
     /* Ajusta o espaçamento interno */
@@ -189,7 +189,7 @@ a:link {
     }
 
     #logo {
-        position: fixed;
+        position: absolute;
         /* Fixa o logo na tela */
         top: 10px;
         left: 80px;
@@ -213,7 +213,7 @@ a:link {
     }
 
     #logo {
-        position: fixed;
+        position: absolute;
         /* Fixa o logo na tela */
         top: 10px;
         left: 50px;

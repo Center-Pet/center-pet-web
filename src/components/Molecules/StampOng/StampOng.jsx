@@ -1,7 +1,7 @@
 import React from "react";
-import "./OngCard.css";
+import "./StampOng.css";
 
-export default function OngCard({ imageUrl, ongName }) {
+export default function StampOng({ imageUrl, ongName }) {
   return (
     <div className="register-ong-section">
       <div>

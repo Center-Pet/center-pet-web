@@ -1,0 +1,10 @@
+.conjunt-catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsivo */
+    gap: 20px; /* Espaçamento entre os cards */
+    padding: 20px;
+    justify-content: center; /* Centraliza os itens */
+    align-items: start; /* Alinha os itens ao topo */
+    margin: 0 auto; /* Centraliza o grid na tela */
+    max-width: 1200px; /* Largura máxima do grid */
+}

@@ -13,7 +13,7 @@
     text-align: center;
 }
 
-.register-ong-card {
+.register-ong-stamp {
     background: #FEF2F4;
     border: 1.5px solid #fcc8d1;
     border-radius: 14px;
@@ -51,7 +51,7 @@
 }
 
 @media (max-width: 768px) {
-    .register-ong-card {
+    .register-ong-stamp {
         min-width: 160px;
         padding: 1.5rem 1rem 1rem 1rem;
     }

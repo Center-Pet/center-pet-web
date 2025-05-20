@@ -13,6 +13,7 @@ import FormSafeAdopter from '../pages/FormSafeAdopter/FormSafeAdopter';
 import RegisterOng from '../pages/RegisterOng/RegisterOng'
 import EditUser from '../pages/EditUser/EditUser'
 import EditOrg from '../pages/EditOrg/EditOrg'
+import CastONG from '../pages/CastONG/CastONG';
 
 
 const AppRoutes = () => {
@@ -35,6 +36,7 @@ const AppRoutes = () => {
         <Route path="/register-ong" element={<RegisterOng />} />
         <Route path="/edit-user" element={<EditUser />} />
         <Route path="/edit-org" element={<EditOrg />} />
+        <Route path="/cast-ong" element={<CastONG />} />
       </Routes>
     );
 };
