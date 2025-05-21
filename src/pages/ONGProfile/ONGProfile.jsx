@@ -74,8 +74,7 @@ const ONGProfile = () => {
     
     const fetchOngPets = async (ongId, token) => {
       try {
-        // Alterando a URL para usar a rota correta no localhost
-        const response = await fetch(`http://localhost:5000/api/pets/by-ong/${ongId}`, {
+        const response = await fetch(`https://centerpet-api.onrender.com/api/pets/by-ong/${ongId}`, {
           headers: {
             'Authorization': token ? `Bearer ${token}` : ''
           }

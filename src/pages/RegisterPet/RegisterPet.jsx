@@ -152,8 +152,7 @@ export default function RegisterPet() {
         try {
           console.log("Buscando dados da ONG:", user._id);
           
-          // Use 127.0.0.1 ou localhost conforme necessário
-          const url = `http://localhost:5000/api/ongs/${user._id}`;
+          const url = `https://centerpet-api.onrender.com/api/ongs/${user._id}`;
           console.log("URL da requisição:", url);
           
           const response = await fetch(url, {
@@ -417,7 +416,7 @@ export default function RegisterPet() {
 
             // Enviar dados para a API
             const response = await fetch(
-              "http://localhost:5000/api/pets/register",
+              "https://centerpet-api.onrender.com/api/pets/register",
               {
                 method: "POST",
                 headers: {

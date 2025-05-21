@@ -41,7 +41,7 @@ export default function EditPet() {
       try {
         setLoading(true);
         // Buscar informações do pet
-        const response = await fetch(`http://localhost:5000/api/pets/${petId}`);
+        const response = await fetch(`https://centerpet-api.onrender.com/api/pets/${petId}`);
         
         if (!response.ok) {
           throw new Error(`Erro ao buscar informações do pet (${response.status})`);
@@ -269,7 +269,7 @@ export default function EditPet() {
           });
 
           // PASSO 4: Enviar para a API
-          const response = await fetch(`http://localhost:5000/api/pets/update/${petId}`, {
+          const response = await fetch(`https://centerpet-api.onrender.com/api/pets/update/${petId}`, {
             method: "PATCH", 
             headers: {
               "Content-Type": "application/json",

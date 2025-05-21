@@ -26,7 +26,7 @@ export default function PetInfo() {
       try {
         setLoading(true);
         // Buscar informações do pet
-        const response = await fetch(`http://localhost:5000/api/pets/${petId}`);
+        const response = await fetch(`https://centerpet-api.onrender.com/api/pets/${petId}`);
         
         if (!response.ok) {
           throw new Error(`Erro ao buscar informações do pet (${response.status})`);
@@ -63,7 +63,7 @@ export default function PetInfo() {
         // Após carregar o pet, buscar pets similares (mesma espécie)
         if (data.type) {
           try {
-            const similarResponse = await fetch(`http://localhost:5000/api/pets?type=${data.type}&limit=12&exclude=${petId}`);
+            const similarResponse = await fetch(`https://centerpet-api.onrender.com/api/pets?type=${data.type}&limit=12&exclude=${petId}`);
             if (similarResponse.ok) {
               const similarData = await similarResponse.json();
               // Formatar os dados para o PetShowcase
@@ -127,7 +127,7 @@ export default function PetInfo() {
           });
 
           // Fazer requisição para deletar o pet
-          const response = await fetch(`http://localhost:5000/api/pets/delete/${petId}`, {
+          const response = await fetch(`https://centerpet-api.onrender.com/api/pets/delete/${petId}`, {
             method: "DELETE",
             headers: {
               "Authorization": `Bearer ${localStorage.getItem("token")}`
