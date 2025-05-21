@@ -1,3 +1,4 @@
+import { Sliders } from 'phosphor-react';
 import './Filter.css';
 import { useState, useEffect, useRef } from 'react';
 
@@ -42,8 +43,7 @@ const Filter = () => {
     return (
         <div id="filter" className={hasSelection ? 'selected' : ''} ref={filterRef}>
             <button id="filter_button" onClick={toggleFilter}>
-                <img src="/assets/icons/filter.png" alt="Filtro" className='filter-icon'/>
-                Filtros
+            <Sliders size={25}/> Filtros
             </button>
             <div id="filtros_filter" className={isOpen ? 'show' : ''}>
                 {Object.entries(categories).map(([category, options], index) => (

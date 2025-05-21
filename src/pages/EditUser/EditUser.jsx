@@ -101,36 +101,59 @@ const EditUser = () => {
         }));
     };
 
+    const uploadImageToCloudinary = async (file) => {
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", "centerpet_default");
+        data.append("cloud_name", "dx8zzla5s");
+
+        const response = await fetch(
+            "https://api.cloudinary.com/v1_1/dx8zzla5s/image/upload",
+            {
+                method: "POST",
+                body: data,
+            }
+        );
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.error?.message || "Erro ao fazer upload da imagem");
+        }
+        return result.secure_url;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const token = localStorage.getItem("token");
-            const idToUpdate = adopterId || user?._id; // Usa o ID da URL ou o ID do usuário autenticado
+            const idToUpdate = adopterId || user?._id;
 
-            // Crie um FormData para enviar os dados, incluindo o arquivo de imagem
-            const formData = new FormData();
-            formData.append("fullName", adopterData.fullName);
-            formData.append("description", adopterData.description);
-            formData.append("phone", adopterData.phone);
-            formData.append("cep", adopterData.cep);
-            formData.append("street", adopterData.street);
-            formData.append("number", adopterData.number);
-            formData.append("neighborhood", adopterData.neighborhood);
-            formData.append("complement", adopterData.complement);
-            formData.append("city", adopterData.city);
-            formData.append("profession", adopterData.profession);
-
-            // Adicione a imagem ao FormData, se houver
+            let profileImgUrl = adopterData.profileImg;
             if (adopterData.profileImg instanceof File) {
-                formData.append("profileImg", adopterData.profileImg);
+                profileImgUrl = await uploadImageToCloudinary(adopterData.profileImg);
             }
 
-            const response = await fetch(`http://localhost:5000/api/adopters/editProfile/${idToUpdate}`, {
+            // Monta o objeto com os dados a serem enviados
+            const updateData = {
+                fullName: adopterData.fullName,
+                description: adopterData.description,
+                phone: adopterData.phone,
+                cep: adopterData.cep,
+                street: adopterData.street,
+                number: adopterData.number,
+                neighborhood: adopterData.neighborhood,
+                complement: adopterData.complement,
+                city: adopterData.city,
+                profession: adopterData.profession,
+                profileImg: profileImgUrl,
+            };
+
+            const response = await fetch(`https://centerpet-api.onrender.com/api/adopters/editProfile/${idToUpdate}`, {
                 method: "PATCH",
                 headers: {
+                    "Content-Type": "application/json",
                     Authorization: token ? `Bearer ${token}` : "",
                 },
-                body: formData, // Envie o FormData
+                body: JSON.stringify(updateData),
             });
 
             if (!response.ok) {

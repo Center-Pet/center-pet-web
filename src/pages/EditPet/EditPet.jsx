@@ -1,60 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { BiErrorCircle } from "react-icons/bi";
 import Swal from "sweetalert2";
 import ImageUploadGrid from "../../components/Molecules/ImageUploadGrid/ImageUploadGrid";
 import OngCard from "../../components/Molecules/OngCard/OngCard";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
+import useAuth from "../../hooks/useAuth";
 import "./EditPet.css";
 
 export default function EditPet() {
-  // Simula o carregamento inicial das imagens do pet (depois virá da API)
+  const { petId } = useParams(); // Obter o ID do pet da URL
+  const navigate = useNavigate();
+  const { token } = useAuth(); // Obtém apenas o token que será usado na requisição
+  
   const [petImages, setPetImages] = useState([]);
-
-  // Simula o carregamento dos dados do pet
-  useEffect(() => {
-    // Aqui você fará a chamada à API para carregar os dados do pet
-    // Por enquanto, vamos simular com dados estáticos
-    const mockPetData = {
-      images: [
-        "/assets/teste.jpg",
-        "/assets/teste2.jpg",
-        "/assets/teste.jpg",
-        "/assets/teste2.jpg",
-        "/assets/teste.jpg",
-      ],
-      nome: "Juninho Maldade Pura",
-      especie: "Cachorro",
-      idade: "Filhote",
-      bio: "Juninho é um filhote cheio de energia e amor para dar. Ele adora brincar e está esperando por um lar cheio de carinho!",
-      pelagem: "Curta",
-      local: "São Paulo, SP",
-      genero: "Macho Alpha",
-      raca: "Sem Raça Definida",
-      porte: "Médio",
-      vacinado: "Sim",
-      castrado: "Sim",
-      vermifugado: "Sim",
-      condicaoEspecial: "Nenhuma",
-      esperando: "2 meses",
-    };
-
-    setPetImages(mockPetData.images);
-    setPetName(mockPetData.nome);
-    setSpecies(mockPetData.especie);
-    setAge(mockPetData.idade);
-    setBio(mockPetData.bio);
-    setPelagem(mockPetData.pelagem);
-    setLocal(mockPetData.local);
-    setGenero(mockPetData.genero);
-    setRaca(mockPetData.raca);
-    setPorte(mockPetData.porte);
-    setVacinado(mockPetData.vacinado);
-    setCastrado(mockPetData.castrado);
-    setVermifugado(mockPetData.vermifugado);
-    setCondicaoEspecial(mockPetData.condicaoEspecial);
-    setEsperando(mockPetData.esperando);
-  }, []);
+  const [ongData, setOngData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [petName, setPetName] = useState("");
   const [species, setSpecies] = useState("");
@@ -71,6 +34,73 @@ export default function EditPet() {
   const [condicaoEspecial, setCondicaoEspecial] = useState("");
   const [esperando, setEsperando] = useState("");
   const [formErrors, setFormErrors] = useState({});
+
+  // Buscar dados do pet da API
+  useEffect(() => {
+    const fetchPetData = async () => {
+      try {
+        setLoading(true);
+        // Buscar informações do pet
+        const response = await fetch(`http://localhost:5000/api/pets/${petId}`);
+        
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar informações do pet (${response.status})`);
+        }
+        
+        const data = await response.json();
+        console.log("Dados do pet:", data);
+        
+        // Preencher os estados com os dados recebidos da API
+        setPetImages(data.image || []);
+        setPetName(data.name || "");
+        setSpecies(data.type || "");
+        setAge(data.age || "");
+        setBio(data.description || "");
+        setPelagem(data.coat || "");
+        setLocal(data.location || "");
+        setGenero(data.gender || "");
+        setRaca(data.breed || "");
+        setPorte(data.size || "");
+        setVacinado(data.health?.vaccinated ? "Sim" : "Não");
+        setCastrado(data.health?.castrated ? "Sim" : "Não");
+        setVermifugado(data.health?.dewormed ? "Sim" : "Não");
+        setCondicaoEspecial(data.health?.specialCondition || "");
+        setEsperando(data.waitingTime || "");
+        
+        // Buscar dados da ONG
+        if (data.ongId) {
+          try {
+            const ongResponse = await fetch(`https://centerpet-api.onrender.com/api/ongs/${data.ongId}`);
+            
+            if (ongResponse.ok) {
+              const ongResponseData = await ongResponse.json();
+              if (ongResponseData.success && ongResponseData.data) {
+                setOngData(ongResponseData.data);
+              }
+            }
+          } catch (err) {
+            console.error("Erro ao buscar dados da ONG:", err);
+          }
+        }
+        
+      } catch (err) {
+        console.error("Erro ao carregar pet:", err);
+        setError(err.message);
+        Swal.fire({
+          title: "Erro",
+          text: "Não foi possível carregar os dados do pet para edição.",
+          icon: "error",
+          confirmButtonColor: "#FF8BA7",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (petId) {
+      fetchPetData();
+    }
+  }, [petId]);
 
   const handleImageAdd = (newImage) => {
     if (petImages.length < 6) {
@@ -91,25 +121,76 @@ export default function EditPet() {
     );
   };
 
+  // Preparar os dados do pet no formato que o backend espera
   const petInfo = {
-    nome: petName,
-    especie: species,
-    pelagem,
-    local,
-    bio,
-    genero,
-    idade: age,
-    raca,
-    porte,
-    vacinado,
-    castrado,
-    vermifugado,
-    condicaoEspecial,
-    esperando,
+    name: petName,
+    type: species,
+    coat: pelagem,
+    location: local,
+    description: bio,
+    gender: genero,
+    age: age,
+    breed: raca,
+    size: porte,
+    health: {
+      vaccinated: vacinado === "Sim",
+      castrated: castrado === "Sim",
+      dewormed: vermifugado === "Sim",
+      specialCondition: condicaoEspecial,
+    },
+    waitingTime: esperando,
+    image: petImages, // Incluir imagens atualizadas
+  };
+
+  // Adicione a função de upload para o Cloudinary (igual à do RegisterPet)
+  const uploadImageToCloudinary = async (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "centerpet_default"); // mesmo upload preset da ONG
+    data.append("cloud_name", "dx8zzla5s"); // mesmo cloud name da ONG
+
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dx8zzla5s/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const result = await response.json();
+      console.log("Resposta do Cloudinary:", result);
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ? result.error.message : "Erro ao fazer upload da imagem"
+        );
+      }
+      console.log("URL da imagem gerada:", result.secure_url);
+      return result.secure_url; // retorna a URL da imagem
+    } catch (error) {
+      console.error("Erro ao enviar imagem:", error);
+      throw error;
+    }
   };
 
   const handleSave = async () => {
-    // Primeiro, mostramos o modal de confirmação
+    // Validações básicas de acordo com o schema
+    const errors = {};
+    if (!petName.trim()) errors.name = "Nome do pet é obrigatório";
+    if (!species) errors.species = "Espécie é obrigatória";
+    if (!age) errors.age = "Idade é obrigatória";
+    if (!genero) errors.gender = "Gênero é obrigatório";
+    if (!porte) errors.size = "Porte é obrigatório";
+    if (!pelagem) errors.coat = "Pelagem é obrigatória";
+    if (!local) errors.location = "Localização é obrigatória";
+    
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    // Modal de confirmação
     Swal.fire({
       title: "Confirmar alterações",
       text: "Tem certeza que todos os dados estão corretos?",
@@ -123,29 +204,104 @@ export default function EditPet() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          // Aqui você implementará a chamada à API para atualizar o pet
-          const updatedPetData = {
+          // Mostrar loading
+          Swal.fire({
+            title: "Salvando alterações...",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+
+          // PASSO 1: Separar URLs existentes e novos arquivos de imagem
+          const existingImageUrls = petImages.filter(img => typeof img === 'string');
+          const newImageFiles = petImages.filter(img => img instanceof File);
+
+          let allImageUrls = [...existingImageUrls];
+
+          // PASSO 2: Se houver novas imagens, fazer upload para o Cloudinary diretamente
+          if (newImageFiles.length > 0) {
+            console.log("Enviando novas imagens para processamento:", newImageFiles.length);
+            
+            // Mostrar loading de uploads
+            Swal.fire({
+              title: "Enviando imagens...",
+              text: "Isso pode levar alguns instantes",
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+            
+            try {
+              // Upload das imagens para o Cloudinary
+              const cloudinaryUrls = [];
+              for (const imageFile of newImageFiles) {
+                const imageUrl = await uploadImageToCloudinary(imageFile);
+                cloudinaryUrls.push(imageUrl);
+              }
+              
+              // Adicionar as novas URLs às existentes
+              allImageUrls = [...allImageUrls, ...cloudinaryUrls];
+              console.log("URLs de todas as imagens após upload:", allImageUrls);
+              
+            } catch (uploadError) {
+              console.error("Erro ao fazer upload de imagens:", uploadError);
+              throw new Error("Falha ao processar as novas imagens. Tente novamente.");
+            }
+          }
+
+          // PASSO 3: Atualizar o objeto petInfo com as URLs das imagens processadas
+          const updatedPetInfo = {
             ...petInfo,
-            images: petImages,
+            image: allImageUrls
           };
 
-          console.log("Dados atualizados:", updatedPetData);
-          // Adicione aqui a chamada à API
+          console.log("Dados completos para atualização:", updatedPetInfo);
+          
+          // Mostrar loading de atualização
+          Swal.fire({
+            title: "Atualizando pet...",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
 
-          // Mostrar mensagem de sucesso após salvar
+          // PASSO 4: Enviar para a API
+          const response = await fetch(`http://localhost:5000/api/pets/update/${petId}`, {
+            method: "PATCH", 
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": token ? `Bearer ${token}` : ""
+            },
+            body: JSON.stringify(updatedPetInfo)
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Erro ao atualizar pet (${response.status})`);
+          }
+
+          const responseData = await response.json();
+          console.log("Pet atualizado com sucesso:", responseData);
+
+          // Mostrar sucesso
           Swal.fire({
             title: "Sucesso!",
             text: "As alterações foram salvas com sucesso.",
             icon: "success",
             confirmButtonColor: "#FF8BA7",
+          }).then(() => {
+            // Voltar para a página do pet
+            navigate(`/pet-info/${petId}`);
           });
         } catch (error) {
           console.error("Erro ao salvar alterações:", error);
 
-          // Mostrar mensagem de erro se algo der errado
           Swal.fire({
             title: "Erro",
-            text: "Não foi possível salvar as alterações. Por favor, tente novamente.",
+            text: error.message || "Não foi possível salvar as alterações. Por favor, tente novamente.",
             icon: "error",
             confirmButtonColor: "#FF8BA7",
           });
@@ -166,12 +322,11 @@ export default function EditPet() {
       cancelButtonText: "Continuar editando",
       showCloseButton: true,
       customClass: {
-        actions: "swal2-horizontal-buttons", // Aplicando classe personalizada
+        actions: "swal2-horizontal-buttons",
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Edição cancelada pelo usuário");
-        window.history.back();
+        navigate(`/pet-info/${petId}`);
       }
     });
   };
@@ -182,6 +337,26 @@ export default function EditPet() {
       <span>{message}</span>
     </div>
   );
+
+  if (loading) {
+    return (
+      <div className="pet-info-container">
+        <div className="loading-container">
+          <p>Carregando informações do pet...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="pet-info-container">
+        <div className="error-container">
+          <p>Erro ao carregar informações: {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pet-info-container">
@@ -198,8 +373,8 @@ export default function EditPet() {
             {formErrors.images && <ErrorMessage message={formErrors.images} />}
 
             <OngCard
-              imageUrl="https://pbs.twimg.com/profile_images/1758521731545780224/KjQzo0Sr_400x400.jpg"
-              ongName="Resgatiticos"
+              imageUrl={ongData?.profileImg || "https://i.imgur.com/WanR0b3.png"}
+              ongName={ongData?.name || "ONG"}
             />
           </div>
 
@@ -212,6 +387,7 @@ export default function EditPet() {
                 onChange={(e) => setPetName(e.target.value)}
                 placeholder="Nome do pet"
               />
+              {formErrors.name && <ErrorMessage message={formErrors.name} />}
             </div>
 
             <div className="editable-field bio-field">
@@ -231,10 +407,12 @@ export default function EditPet() {
                     value={species}
                     onChange={(e) => setSpecies(e.target.value)}
                   >
-                    <option value="cachorro">Cachorro</option>
-                    <option value="gato">Gato</option>
-                    <option value="outro">Outro</option>
+                    <option value="">Selecione</option>
+                    <option value="Cachorro">Cachorro</option>
+                    <option value="Gato">Gato</option>
+                    <option value="Outro">Outro</option>
                   </select>
+                  {formErrors.species && <ErrorMessage message={formErrors.species} />}
                 </div>
               </div>
 
@@ -245,6 +423,7 @@ export default function EditPet() {
                     value={pelagem}
                     onChange={(e) => setPelagem(e.target.value)}
                   >
+                    <option value="">Selecione</option>
                     <option value="Curta">Curta</option>
                     <option value="Média">Média</option>
                     <option value="Longa">Longa</option>
@@ -271,6 +450,7 @@ export default function EditPet() {
                     value={genero}
                     onChange={(e) => setGenero(e.target.value)}
                   >
+                    <option value="">Selecione</option>
                     <option value="Macho">Macho</option>
                     <option value="Fêmea">Fêmea</option>
                   </select>
@@ -281,10 +461,13 @@ export default function EditPet() {
                 <div className="editable-field">
                   <label className="required">Idade</label>
                   <select value={age} onChange={(e) => setAge(e.target.value)}>
+                    <option value="">Selecione</option>
                     <option value="Filhote">Filhote</option>
+                    <option value="Jovem">Jovem</option>
                     <option value="Adulto">Adulto</option>
                     <option value="Idoso">Idoso</option>
                   </select>
+                  {formErrors.age && <ErrorMessage message={formErrors.age} />}
                 </div>
               </div>
 
@@ -307,6 +490,7 @@ export default function EditPet() {
                     value={porte}
                     onChange={(e) => setPorte(e.target.value)}
                   >
+                    <option value="">Selecione</option>
                     <option value="Pequeno">Pequeno</option>
                     <option value="Médio">Médio</option>
                     <option value="Grande">Grande</option>

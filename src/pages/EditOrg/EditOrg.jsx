@@ -120,148 +120,134 @@ const EditOrg = () => {
     }, [user, navigate]);
 
     const uploadImage = async (file) => {
-        if (!file) return null;
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", "centerpet_default");
+        data.append("cloud_name", "dx8zzla5s");
 
         try {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'centerpet_default');
+            const response = await fetch(
+                "https://api.cloudinary.com/v1_1/dx8zzla5s/image/upload",
+                {
+                    method: "POST",
+                    body: data,
+                }
+            );
 
-            const response = await fetch('https://api.cloudinary.com/v1_1/dx8zzla5s/image/upload', {
-                method: 'POST',
-                body: formData
-            });
+            const result = await response.json();
+            console.log("Resposta do Cloudinary:", result);
 
             if (!response.ok) {
-                throw new Error('Falha ao fazer upload da imagem');
+                throw new Error(
+                    result.error ? result.error.message : "Erro ao fazer upload da imagem"
+                );
             }
-
-            const data = await response.json();
-            return data.secure_url;
+            
+            return result.secure_url;
         } catch (error) {
-            console.error('Erro ao fazer upload da imagem:', error);
+            console.error("Erro ao enviar imagem:", error);
             throw error;
         }
-    };
-
-    const handleSubmit = async (e) => {
+    };    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!stateUf) {
-            Swal.fire({
-                title: 'Erro',
-                text: 'O campo UF é obrigatório.',
-                icon: 'error',
-                confirmButtonColor: '#D14D72'
-            });
-            return;
-        }
+        Swal.fire({
+            title: "Confirmar alterações",
+            text: "Tem certeza que deseja salvar as alterações no perfil?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#D14D72",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: "Sim, salvar alterações",
+            cancelButtonText: "Revisar dados",
+            showCloseButton: true,
+        }).then(async (result) => {
+            if (!result.isConfirmed) return;
 
-        if (!zipCode) {
-            Swal.fire({
-                title: 'Erro',
-                text: 'O campo CEP é obrigatório.',
-                icon: 'error',
-                confirmButtonColor: '#D14D72'
-            });
-            return;
-        }
-
-        try {
-            let finalImageUrl = profileImage;
-
-            if (profileImageFile) {
+            try {
                 Swal.fire({
-                    title: 'Enviando imagem...',
-                    text: 'Aguarde enquanto enviamos sua foto de perfil.',
+                    title: 'Processando...',
+                    text: 'Aguarde enquanto salvamos as alterações',
                     allowOutsideClick: false,
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
 
-                try {
-                    const newImageUrl = await uploadImage(profileImageFile);
-                    if (newImageUrl) {
-                        finalImageUrl = newImageUrl;
+                let finalImageUrl = profileImage;
+                if (profileImageFile) {
+                    try {
+                        finalImageUrl = await uploadImage(profileImageFile);
+                    } catch {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: 'Não foi possível fazer o upload da imagem. Tente novamente.',
+                            icon: 'error',
+                            confirmButtonColor: '#D14D72'
+                        });
+                        return;
                     }
-                } catch (error) {
-                    console.error('Erro durante o upload da imagem:', error.message);
-                    Swal.fire({
-                        title: 'Erro no upload',
-                        text: `Não foi possível enviar a imagem: ${error.message}. Deseja continuar sem atualizar a foto?`,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#D14D72',
-                        cancelButtonColor: '#6c757d',
-                        confirmButtonText: 'Sim, continuar',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (!result.isConfirmed) {
-                            return;
-                        }
-                    });
                 }
-            }
 
+            // ATENÇÃO: use os nomes corretos dos campos!
             const updateData = {
                 name: fullName,
                 description,
+                email,
                 phone,
                 pixKey,
-                profileImg: finalImageUrl,
+                profileImage: finalImageUrl, // <-- nome esperado pelo backend
+                collaborators: role === "Projeto" ? Number(collaborators) : undefined,
                 address: {
                     cep: zipCode,
                     street,
                     number: noNumber ? "S/N" : number,
-                    neighborhood: neighborhood,
+                    neighborhood,
                     city,
-                    uf: stateUf, // Certifique-se de que este campo está presente
+                    uf: stateUf,
                     complement
                 },
-                socialMidia: {
+                socialMedia: { // <-- nome esperado pelo backend
                     instagram,
                     facebook,
-                    site: website
+                    website // será convertido para .site no backend
                 }
             };
 
-            if (role === "Projeto") {
-                updateData.collaborators = parseInt(collaborators) || 0;
-            }
+            // Remove campos undefined (especialmente collaborators se não for Projeto)
+            Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
 
-            console.log("Dados enviados para a API:", updateData);
-
-            const token = localStorage.getItem('token');
             const response = await fetch(`${API_URL}/ongs/editProfile/${user._id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
                 body: JSON.stringify(updateData)
             });
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                console.error("Resposta de erro da API:", errorData);
-                throw new Error(`Falha ao atualizar perfil: ${response.status}`);
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Erro ao atualizar perfil');
             }
 
             const data = await response.json();
-            console.log("Resposta da API após atualização:", data);
-
             Swal.fire({
                 title: 'Sucesso!',
                 text: 'Seu perfil foi atualizado com sucesso.',
                 icon: 'success',
                 confirmButtonColor: '#D14D72'
             }).then(() => {
+                setProfileImage(finalImageUrl);
+                setProfileImageFile(null);
+                if (data.data) {
+                    const updatedUser = { ...user, ...data.data };
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+                }
                 navigate(`/ong-profile/${user._id}`);
             });
 
         } catch (error) {
-            console.error('Erro ao atualizar perfil:', error);
             Swal.fire({
                 title: 'Erro',
                 text: `Não foi possível atualizar seu perfil: ${error.message}`,
@@ -269,12 +255,13 @@ const EditOrg = () => {
                 confirmButtonColor: '#D14D72'
             });
         }
-    };
+    }); // <-- fechamento do .then do Swal
+}; // <-- fechamento da função handleSubmit
 
-    // Função para alterar senha
-    const alterarSenha = async () => {
-        // Sua função existente...
-    };
+// Função para alterar senha
+const alterarSenha = async () => {
+    // Sua função existente...
+};
 
     // Função para buscar endereço pelo CEP - implementação correta
     const buscarEnderecoPorCep = async (cep) => {
@@ -488,9 +475,7 @@ const EditOrg = () => {
                                     </label>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="row_user_form">
+                        </div>                        <div className="row_user_form">
                             <div className="col_user_form">
                                 <label>Bairro:</label>
                                 <InputField
@@ -522,6 +507,18 @@ const EditOrg = () => {
                                     width="6rem"
                                     required
                                     onChange={(e) => setStateUf(e.target.value)} // Permitir edição manual
+                                />
+                            </div>
+                        </div>
+                        <div className="row_user_form">
+                            <div className="col_user_form">
+                                <label>Complemento:</label>
+                                <InputField
+                                    type="text"
+                                    placeholder="Complemento"
+                                    value={complement}
+                                    width="100%"
+                                    onChange={(e) => setComplement(e.target.value)}
                                 />
                             </div>
                         </div>

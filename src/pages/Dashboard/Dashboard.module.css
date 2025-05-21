@@ -1,0 +1,115 @@
+
+.row_cards_dashboard{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 30px
+}
+.total_dashboard{
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+    gap: 30px;
+    width: 87vw;
+    margin-bottom: 30px
+}
+.col_cards_dashboard{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.total_info{
+    background-color: #FEF2F4;
+    flex: 1;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 9px 3px rgba(0, 0, 0, 0.2);
+}
+.total_info>h3, .total_info>h1{
+    color: #D14D72;
+}
+
+.card_dashboard{
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 9px 3px rgba(0, 0, 0, 0.2);
+    background-color: #FEF2F4;
+    width: 500px;
+}
+h2{
+    text-align: center;
+}
+
+.big_graph, .circle_graph{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.big_graph>canvas{
+    height: 400px;
+}
+.circle_graph>canvas{
+    height: 250px;
+}
+
+.big_card_dashboard{
+    max-width: 90%;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 9px 3px rgba(0, 0, 0, 0.2);
+    background-color: #FEF2F4;
+    justify-self: center;
+}
+
+
+#look_button_space{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+
+
+
+
+/* Gráficos grandes */
+@media (max-width: 499px){
+    .total_dashboard{
+        display: grid;
+        grid-template-columns: 50% 50%;
+        flex: none;
+    }
+    .big_graph>canvas{
+        height: 350px;
+    }
+    
+    .circle_graph>canvas{
+        height: 300px;
+        width: 300px;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 1200px){
+    .total_dashboard{
+        display: grid;
+        grid-template-columns: 30% 30% 30%;
+        flex: none;
+    }
+    .big_graph>canvas{
+        width: 800px;
+        height: 280px;
+    }
+}
+@media (min-width: 1201px) and (max-width:1400px){
+    .big_graph>canvas{
+        width: 520px;
+    }
+}
+
+/* Gráficos circulares */

@@ -384,3 +384,40 @@
 .pet-name-container h1 {
   margin: 0;
 }
+
+/* Ajustando a largura dos botões e colocando-os lado a lado */
+.button-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px; /* Espaçamento entre os botões */
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.pet-action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.info-message {
+  color: #666;
+  font-style: italic;
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* Ajustes responsivos para telas menores */
+@media (max-width: 576px) {
+  .button-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .button-row button {
+    width: 100% !important; /* Força a largura total em telas pequenas */
+  }
+}

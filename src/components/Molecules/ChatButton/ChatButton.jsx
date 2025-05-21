@@ -1,3 +1,4 @@
+import { ChatsCircle } from 'phosphor-react';
 import './ChatButton.css'
 const ChatButton = () => {
   return (
@@ -6,8 +7,8 @@ const ChatButton = () => {
         aria-label="Ajuda ou Chat"
         onClick={() => alert('Em breve você poderá falar com a gente!')}
       >
-        <i className="fas fa-comments"></i>
-      </button>
+    <ChatsCircle/>
+    </button>
       )
     }
 

@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import { BiErrorCircle } from "react-icons/bi";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 import ImageUploadGrid from "../../components/Molecules/ImageUploadGrid/ImageUploadGrid";
 import OngCard from "../../components/Molecules/OngCard/OngCard";
 import "./RegisterPet.css";
@@ -84,7 +86,10 @@ const catBreeds = [
 ];
 
 export default function RegisterPet() {
-  const [petImages, setPetImages] = useState([]);
+  const { user } = useAuth(); // Obtenha o usuário autenticado
+  const navigate = useNavigate();
+  const [petImageFiles, setPetImageFiles] = useState([]); // Armazena os arquivos reais das imagens
+  const [petImagePreviews, setPetImagePreviews] = useState([]); // Armazena as URLs de preview
   const [petInfo, setPetInfo] = useState({
     name: "",
     type: "",
@@ -108,6 +113,12 @@ export default function RegisterPet() {
 
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Adicione um novo estado para armazenar os detalhes da ONG
+  const [ongDetails, setOngDetails] = useState({
+    name: "",
+    profileImage: ""
+  });
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -134,8 +145,79 @@ export default function RegisterPet() {
     }
   }, [petInfo.breed, petInfo.type]);
 
-  const handleImageAdd = (newImage) => {
-    setPetImages([...petImages, newImage]);
+  // Ajuste o useEffect que busca os detalhes da ONG
+  useEffect(() => {
+    const fetchOngDetails = async () => {
+      if (user && user._id) {
+        try {
+          console.log("Buscando dados da ONG:", user._id);
+          
+          // Use 127.0.0.1 ou localhost conforme necessário
+          const url = `http://localhost:5000/api/ongs/${user._id}`;
+          console.log("URL da requisição:", url);
+          
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch ONG details: ${response.status}`);
+          }
+
+          const responseData = await response.json();
+          console.log("ONG details fetched:", responseData);
+          
+          // A resposta tem um formato { success: true, data: {...} }
+          // onde os dados da ONG estão dentro do objeto data
+          const data = responseData.data;
+          
+          // O campo correto é profileImg, não profileImage
+          const imgUrl = data?.profileImg;
+          const ongName = data?.name;
+          
+          console.log("URL da imagem encontrada:", imgUrl);
+          console.log("Nome da ONG encontrado:", ongName);
+          
+          const placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABLSURBVHhe7cExAQAAAMKg9U9tDQ8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AUJsAAHAchrDAAAAAElFTkSuQmCC";
+
+          setOngDetails({
+            name: ongName || user.name || "ONG",
+            profileImage: imgUrl || placeholderImage
+          });
+          
+          console.log("ongDetails após atualização:", {
+            name: ongName || user.name || "ONG",
+            profileImage: imgUrl || placeholderImage
+          });
+        } catch (error) {
+          console.error("Error fetching ONG details:", error);
+          
+          // Em caso de falha na API, use os dados do objeto user como fallback
+          const placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABLSURBVHhe7cExAQAAAMKg9U9tDQ8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AUJsAAHAchrDAAAAAElFTkSuQmCC";
+      
+          setOngDetails({
+            name: user.name || "ONG",
+            profileImage: user.profileImg || placeholderImage
+          });
+        }
+      }
+    };
+
+    fetchOngDetails();
+  }, [user]);
+
+  const handleImageAdd = (newImageFile) => {
+    // Adicionar o arquivo ao array de arquivos
+    setPetImageFiles([...petImageFiles, newImageFile]);
+
+    // Criar URL de preview para mostrar ao usuário
+    const previewUrl = URL.createObjectURL(newImageFile);
+    setPetImagePreviews([...petImagePreviews, previewUrl]);
+
     if (formErrors.images) {
       setFormErrors((prev) => ({
         ...prev,
@@ -145,9 +227,15 @@ export default function RegisterPet() {
   };
 
   const handleDeleteImage = (indexToDelete) => {
-    setPetImages((currentImages) =>
-      currentImages.filter((_, index) => index !== indexToDelete)
+    setPetImageFiles((currentFiles) =>
+      currentFiles.filter((_, index) => index !== indexToDelete)
     );
+
+    setPetImagePreviews((currentPreviews) => {
+      // Revoga a URL para evitar vazamento de memória
+      URL.revokeObjectURL(currentPreviews[indexToDelete]);
+      return currentPreviews.filter((_, index) => index !== indexToDelete);
+    });
   };
 
   const handleInputChange = (e) => {
@@ -215,7 +303,7 @@ export default function RegisterPet() {
   const validateForm = () => {
     const errors = {};
 
-    if (petImages.length === 0) {
+    if (petImageFiles.length === 0) {
       errors.images = "Adicione pelo menos uma foto do pet";
     }
 
@@ -240,6 +328,39 @@ export default function RegisterPet() {
     return errors;
   };
 
+  // Adicione a função de upload para o Cloudinary
+  const uploadImageToCloudinary = async (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "centerpet_default"); // mesmo upload preset da ONG
+    data.append("cloud_name", "dx8zzla5s"); // mesmo cloud name da ONG
+
+    try {
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dx8zzla5s/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const result = await response.json();
+      console.log("Resposta do Cloudinary:", result);
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ? result.error.message : "Erro ao fazer upload da imagem"
+        );
+      }
+      console.log("URL da imagem gerada:", result.secure_url);
+      return result.secure_url; // retorna a URL da imagem
+    } catch (error) {
+      console.error("Erro ao enviar imagem:", error);
+      throw error;
+    }
+  };
+
+  // Modifique a função handleSubmit para usar o Cloudinary
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -261,23 +382,78 @@ export default function RegisterPet() {
         if (result.isConfirmed) {
           try {
             setIsSubmitting(true);
-            console.log("Dados do pet:", petInfo);
-            console.log("Imagens:", petImages);
 
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            // Mostrar loading de uploads
+            Swal.fire({
+              title: "Enviando imagens...",
+              text: "Isso pode levar alguns instantes",
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+
+            // Upload das imagens para o Cloudinary
+            const cloudinaryUrls = [];
+            for (const imageFile of petImageFiles) {
+              const imageUrl = await uploadImageToCloudinary(imageFile);
+              cloudinaryUrls.push(imageUrl);
+            }
+
+            // Preparar dados para envio
+            const petData = {
+              ...petInfo,
+              ongId: user._id, // ID da ONG logada
+              imagens: cloudinaryUrls, // Array de URLs do Cloudinary
+            };
+
+            Swal.fire({
+              title: "Registrando pet...",
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+
+            // Enviar dados para a API
+            const response = await fetch(
+              "http://localhost:5000/api/pets/register",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify(petData),
+              }
+            );
+
+            // Verificar se a requisição foi bem-sucedida
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.message || "Erro ao registrar pet");
+            }
+
+            const data = await response.json();
+            console.log("Pet registrado:", data);
 
             Swal.fire({
               title: "Sucesso!",
               text: "Pet registrado com sucesso.",
               icon: "success",
               confirmButtonColor: "#FF8BA7",
+            }).then(() => {
+              // Redirecionar para o perfil da ONG após o registro bem-sucedido
+              navigate(`/ong-profile/${user._id}`);
             });
           } catch (error) {
             console.error("Erro ao registrar pet:", error);
 
             Swal.fire({
               title: "Erro",
-              text: "Não foi possível registrar o pet. Por favor, tente novamente.",
+              text:
+                error.message ||
+                "Não foi possível registrar o pet. Por favor, tente novamente.",
               icon: "error",
               confirmButtonColor: "#FF8BA7",
             });
@@ -312,13 +488,20 @@ export default function RegisterPet() {
     });
   };
 
+  // Adicione este useEffect para debug
+  useEffect(() => {
+    if (user) {
+      console.log("Objeto user:", user);
+    }
+  }, [user]);
+
   return (
     <form onSubmit={handleSubmit} className="pet-info-container">
       <div className="pet-profile-card">
         <div className="pet-main-info">
           <div className="pet-image-container">
             <ImageUploadGrid
-              images={petImages}
+              images={petImagePreviews}
               onImageAdd={handleImageAdd}
               onImageDelete={handleDeleteImage}
               maxImages={6}
@@ -327,8 +510,8 @@ export default function RegisterPet() {
             {formErrors.images && <ErrorMessage message={formErrors.images} />}
 
             <OngCard
-              imageUrl="https://pbs.twimg.com/profile_images/1758521731545780224/KjQzo0Sr_400x400.jpg"
-              ongName="Resgatiticos"
+              imageUrl={ongDetails.profileImage}
+              ongName={ongDetails.name}
             />
           </div>
 

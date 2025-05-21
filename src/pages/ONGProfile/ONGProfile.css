@@ -106,3 +106,46 @@ p, h1, h2, h3, h4, h5, h6, li {
   margin: 40px 0px;
   width: 70vw;
 }
+
+.name-ong {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.name-ong-title {
+  flex-shrink: 0;
+}
+
+.name-ong-buttons {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.carousel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .name-ong {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .name-ong-buttons {
+    margin-top: 10px;
+    margin-left: 0;
+  }
+
+  .carousel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}

@@ -13,6 +13,7 @@ import FormSafeAdopter from '../pages/FormSafeAdopter/FormSafeAdopter';
 import RegisterOng from '../pages/RegisterOng/RegisterOng'
 import EditUser from '../pages/EditUser/EditUser'
 import EditOrg from '../pages/EditOrg/EditOrg'
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 
 const AppRoutes = () => {
@@ -21,13 +22,13 @@ const AppRoutes = () => {
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/catalog" element={<Catalog />} />
-        <Route path="/pet" element={<PetInfo />} />
-        <Route path="/pet/:id" element={<PetInfo />} />{" "}
+        <Route path="/pet-info/:petId" element={<PetInfo />} />
         {/* Rota dinâmica para o pet */}
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/adopter-profile/:adopterId" element={<AdopterProfile />} />
         <Route path="/ong-profile/:ongId" element={<ONGProfile />} />
         <Route path="/register-pet" element={<RegisterPet />} />
-        <Route path="/edit-pet" element={<EditPet />} />
+        <Route path="/edit-pet/:petId" element={<EditPet />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/home" element={<Home />} />
         <Route path="/test-draft" element={<TestDraft />} />

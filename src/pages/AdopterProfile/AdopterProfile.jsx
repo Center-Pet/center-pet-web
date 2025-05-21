@@ -1,5 +1,6 @@
 import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { PencilSimple, Trash } from 'phosphor-react'
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import "./AdopterProfile.css";
 import useAuth from "../../hooks/useAuth";
@@ -83,20 +84,65 @@ const AdopterProfile = () => {
               <div className="adopter-profile-header-top-item">
                 <div className="name-adopter">
                   <TitleType color="#D14D72">{adopter.fullName || "Nome não disponível"}</TitleType>
+                  {user && user._id === adopter._id && (
+                    <div className="adopter-profile-buttons">
+                      <ButtonType
+                        onClick={() => navigate('/edit-user')}
+                        bgColor="#D14D72"
+                        color="#FFFFFF"
+                        width="200px"
+                        margin="0"
+                      >
+                        <PencilSimple/>Editar
+                      </ButtonType>
+                      <ButtonType
+                        width="200px"
+                        bgColor="#FF4D4D"
+                        color="#FFFFFF"
+                        margin="0"
+                        onClick={() => {
+                          Swal.fire({
+                            title: 'Tem certeza?',
+                            text: 'Esta ação é irreversível. Deseja realmente deletar sua conta?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#FF4D4D',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Sim, deletar',
+                            cancelButtonText: 'Cancelar'
+                          }).then(async (result) => {
+                            if (result.isConfirmed) {
+                              try {
+                                const token = localStorage.getItem('token');
+                                const response = await fetch(`https://centerpet-api.onrender.com/api/adopters/delete/${adopterId}`, {
+                                  method: 'DELETE',
+                                  headers: {
+                                    'Authorization': token ? `Bearer ${token}` : '',
+                                    'Content-Type': 'application/json'
+                                  }
+                                });
+                                if (!response.ok) {
+                                  throw new Error('Erro ao deletar a conta. Tente novamente.');
+                                }
+                                localStorage.removeItem('token');
+                                logout();
+                                Swal.fire('Deletado!', 'Sua conta foi deletada com sucesso.', 'success');
+                                navigate('/home');
+                              } catch (error) {
+                                console.error(error);
+                                Swal.fire('Erro!', 'Não foi possível deletar a conta. Tente novamente mais tarde.', 'error');
+                              }
+                            }
+                          });
+                        }}
+                      >
+                        <Trash/>Deletar conta
+                      </ButtonType>
+                    </div>
+                  )}
                 </div>
                 <div>
                   {/* Adicionar botão de edição - apenas se o usuário logado for o dono do perfil */}
-                  {user && user._id === adopter._id && (
-                    <ButtonType
-                      onClick={() => navigate('/edit-user')}
-                      bgColor="#D14D72"
-                      color="#FFFFFF"
-                      width="150px"
-                      margin="0 auto"
-                    >
-                      Editar
-                    </ButtonType>
-                  )}
                 </div>
               </div>
               <div className="description-adopter">
@@ -123,53 +169,6 @@ const AdopterProfile = () => {
           </div>
         </div>
       </div>
-      <div style={{ textAlign: 'center', marginTop: '1rem', marginBottom: '1.5dhv' }}>
-          <ButtonType
-            width="200px"
-            bgColor="#FF4D4D" // Cor de fundo para indicar ação perigosa
-            color="#FFFFFF" // Cor do texto
-            onClick={() => {
-              Swal.fire({
-                title: 'Tem certeza?',
-                text: 'Esta ação é irreversível. Deseja realmente deletar sua conta?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#FF4D4D',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sim, deletar',
-                cancelButtonText: 'Cancelar'
-              }).then(async (result) => {
-                if (result.isConfirmed) {
-                  try {
-                    const token = localStorage.getItem('token'); // Obter o token de autenticação
-                    const response = await fetch(`https://centerpet-api.onrender.com/api/adopters/delete/${adopterId}`, {
-                      method: 'DELETE',
-                      headers: {
-                        'Authorization': token ? `Bearer ${token}` : '',
-                        'Content-Type': 'application/json'
-                      }
-                    });
-
-                    if (!response.ok) {
-                      throw new Error('Erro ao deletar a conta. Tente novamente.');
-                    }
-
-                    // Logout: limpar token e atualizar estado de autenticação
-                    localStorage.removeItem('token'); // Remove o token do localStorage
-                    logout(); // Chama a função de logout do contexto de autenticação
-                    Swal.fire('Deletado!', 'Sua conta foi deletada com sucesso.', 'success');
-                    navigate('/home'); // Redireciona para a página /home após a exclusão
-                  } catch (error) {
-                    console.error(error);
-                    Swal.fire('Erro!', 'Não foi possível deletar a conta. Tente novamente mais tarde.', 'error');
-                  }
-                }
-              });
-            }}
-          >
-            Deletar conta
-          </ButtonType>
-        </div>
     </div>
   );
 };

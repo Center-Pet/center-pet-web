@@ -37,7 +37,7 @@ const PetShowcase = ({ title, pets }) => {
   };
 
   const handleCardClick = (petId) => {
-    navigate(`/pet/${petId}`);
+    navigate(`/pet-info/${petId}`);
   };
 
   const handleSeeMore = () => {

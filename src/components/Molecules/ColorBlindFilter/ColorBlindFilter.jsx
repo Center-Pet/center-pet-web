@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Eye } from 'phosphor-react';
 import SvgColorBlindFilters from './SvgColorBlindFilters';
 import './ColorBlindFilter.css';
 
@@ -46,7 +47,7 @@ export default function ColorBlindFilter() {
           onClick={toggleDropdown}
           title="Filtros para daltonismo"
         >
-          👁️
+          <Eye size={32} />
         </button>
         
         {isOpen && (

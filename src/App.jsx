@@ -19,10 +19,10 @@ function AppContent() {
   return (
     <div className="app-wrapper" style={{ position: 'relative' }}>
       <AnimatedBackground /> {/* 👈 Background animado adicionado aqui */}
-      <FontControls /> {/* 👈 Controles de acessibilidade adicionados aqui */}
+      {/* <FontControls /> 👈 Controles de acessibilidade adicionados aqui */}
       <ColorBlindFilter />{/* 👈 Filtro de daltonismo adicionado aqui */}
       <SvgColorBlindFilters /> {/* 👈 SVGs para filtros de daltonismo */}
-      <ThemeToggle /> {/* 👈 Pode ficar na navbar ou flutuando */}
+      {/* <ThemeToggle /> 👈 Pode ficar na navbar ou flutuando */}
       {!shouldHideNavbar && <Navbar />} 
       <AppRoutes />
       <ChatButton />

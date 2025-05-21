@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { PencilSimple, Plus, Trash } from 'phosphor-react'
 import { useParams, useNavigate } from "react-router-dom";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
@@ -73,8 +74,8 @@ const ONGProfile = () => {
     
     const fetchOngPets = async (ongId, token) => {
       try {
-        // Corrigir URL - usar a rota de pets por ONG
-        const response = await fetch(`https://centerpet-api.onrender.com/api/pets/ong/${ongId}`, {
+        // Alterando a URL para usar a rota correta no localhost
+        const response = await fetch(`http://localhost:5000/api/pets/by-ong/${ongId}`, {
           headers: {
             'Authorization': token ? `Bearer ${token}` : ''
           }
@@ -85,10 +86,21 @@ const ONGProfile = () => {
         }
         
         const responseData = await response.json();
-        console.log("Pets da ONG recebidos:", responseData);
+        console.log("Pets da ONG recebidos (resposta completa):", responseData);
         
         // Extrair os dados - verificar se tem propriedade 'data'
         const petsData = responseData.data || responseData;
+        
+        // Verificar a estrutura do primeiro pet (se existir)
+        if (Array.isArray(petsData) && petsData.length > 0) {
+          console.log("Estrutura do primeiro pet:", JSON.stringify(petsData[0], null, 2));
+          console.log("Campos de imagem disponíveis:", {
+            "image": petsData[0].image,
+            "images": petsData[0].images,
+            "imagens": petsData[0].imagens, 
+            "photos": petsData[0].photos
+          });
+        }
         
         // Garantir que temos um array
         setOngPets(Array.isArray(petsData) ? petsData : []);
@@ -159,26 +171,72 @@ const ONGProfile = () => {
             />
             <div className="ong-profile-header-main">
               <div className="ong-profile-header-top-item">
-                <div className="name-ong" style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  width: '100%'
-                }}>
-                  <TitleType color="#D14D72">{ongData.name || "Nome da ONG"}</TitleType>
+                <div className="name-ong">
+                  <div className="name-ong-title">
+                    <TitleType color="#D14D72">{ongData.name || "Nome da ONG"}</TitleType>
+                  </div>
                   
-                  {/* Adicionar botão de edição - apenas se o usuário logado for o dono do perfil */}
-                  {user && user._id === ongData._id && (
-                    <ButtonType
-                    onClick={() => navigate('/edit-org')}
-                    bgColor="#D14D72"
-                    color="#FFFFFF"
-                    width="150px"
-                    margin="0 auto"
-                  >
-                    Editar
-                  </ButtonType>
-                  )}
+                  <div className="name-ong-buttons">
+                    {user && user._id === ongData._id && (
+                      <ButtonType
+                        onClick={() => navigate('/edit-org')}
+                        bgColor="#D14D72"
+                        color="#FFFFFF"
+                        width="150px"
+                        margin="0"
+                      >
+                        <PencilSimple/>Editar
+                      </ButtonType>
+                    )}
+                    {user && user._id === ongData._id && (
+                      <ButtonType
+                        width="200px"
+                        bgColor="#FF4D4D"
+                        color="#FFFFFF"
+                        margin="0"
+                        onClick={() => {
+                          Swal.fire({
+                            title: 'Tem certeza?',
+                            text: 'Esta ação é irreversível. Deseja realmente deletar sua conta?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#FF4D4D',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Sim, deletar',
+                            cancelButtonText: 'Cancelar'
+                          }).then(async (result) => {
+                            if (result.isConfirmed) {
+                              try {
+                                const token = localStorage.getItem('token'); // Obter o token de autenticação
+                                const response = await fetch(`https://centerpet-api.onrender.com/api/ongs/delete/${ongData._id}`, {
+                                  method: 'DELETE',
+                                  headers: {
+                                    'Authorization': token ? `Bearer ${token}` : '',
+                                    'Content-Type': 'application/json'
+                                  }
+                                });
+
+                                if (!response.ok) {
+                                  throw new Error('Erro ao deletar a conta. Tente novamente.');
+                                }
+
+                                // Logout: limpar token e atualizar estado de autenticação
+                                localStorage.removeItem('token'); // Remove o token do localStorage
+                                logout(); // Chama a função de logout do contexto de autenticação
+                                Swal.fire('Deletado!', 'Sua conta foi deletada com sucesso.', 'success');
+                                navigate('/home'); // Redireciona para a página /home após a exclusão
+                              } catch (error) {
+                                console.error(error);
+                                Swal.fire('Erro!', 'Não foi possível deletar a conta. Tente novamente mais tarde.', 'error');
+                              }
+                            }
+                          });
+                        }}
+                      >
+                         <Trash/>Deletar conta
+                      </ButtonType>
+                    )}
+                  </div>
                 </div>
               </div>
               
@@ -212,67 +270,38 @@ const ONGProfile = () => {
         {/* Condicional para mostrar os pets ou mensagem */}
         <div className="carousel-container">
           <div className="carousel-content">
-            <TitleType>Pets desta ONG disponíveis para adoção</TitleType>
+            <div className="carousel-header">
+              <TitleType>Pets desta ONG disponíveis para adoção</TitleType>
+              {user && user._id === ongData._id && (
+                <ButtonType
+                  onClick={() => navigate('/register-pet')}
+                  bgColor="#D14D72"
+                  color="#FFFFFF"
+                  width="15rem"
+                  margin="0"
+                >
+                  <Plus/>Adicionar Pet
+                </ButtonType>
+              )}
+            </div>
             {ongPets && ongPets.length > 0 ? (
-              <PetShowcase pets={ongPets.map(pet => ({
-                id: pet._id,
-                image: pet.photos && pet.photos.length > 0 ? pet.photos[0] : "https://i.imgur.com/WanR0b3.png",
-                name: pet.name,
-                gender: pet.gender,
-                age: pet.age
-              }))} />
+              <PetShowcase pets={ongPets.map(pet => {
+                console.log("Mapeando pet:", pet); // Para debug - ver a estrutura real do pet
+                return {
+                  id: pet._id,
+                  // Verificar todos os possíveis campos de imagem
+                  image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
+                         (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
+                         "https://i.imgur.com/WanR0b3.png",
+                  name: pet.name,
+                  gender: pet.gender,
+                  age: pet.age
+                };
+              })} />
             ) : (
               <p className="no-pets-message">Nenhum pet disponível para adoção no momento.</p>
             )}
           </div>
-        </div>
-
-        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-          <ButtonType
-            width="200px"
-            bgColor="#FF4D4D" // Cor de fundo para indicar ação perigosa
-            color="#FFFFFF" // Cor do texto
-            onClick={() => {
-              Swal.fire({
-                title: 'Tem certeza?',
-                text: 'Esta ação é irreversível. Deseja realmente deletar sua conta?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#FF4D4D',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Sim, deletar',
-                cancelButtonText: 'Cancelar'
-              }).then(async (result) => {
-                if (result.isConfirmed) {
-                  try {
-                    const token = localStorage.getItem('token'); // Obter o token de autenticação
-                    const response = await fetch(`https://centerpet-api.onrender.com/api/ongs/delete/${ongData._id}`, {
-                      method: 'DELETE',
-                      headers: {
-                        'Authorization': token ? `Bearer ${token}` : '',
-                        'Content-Type': 'application/json'
-                      }
-                    });
-
-                    if (!response.ok) {
-                      throw new Error('Erro ao deletar a conta. Tente novamente.');
-                    }
-
-                    // Logout: limpar token e atualizar estado de autenticação
-                    localStorage.removeItem('token'); // Remove o token do localStorage
-                    logout(); // Chama a função de logout do contexto de autenticação
-                    Swal.fire('Deletado!', 'Sua conta foi deletada com sucesso.', 'success');
-                    navigate('/home'); // Redireciona para a página /home após a exclusão
-                  } catch (error) {
-                    console.error(error);
-                    Swal.fire('Erro!', 'Não foi possível deletar a conta. Tente novamente mais tarde.', 'error');
-                  }
-                }
-              });
-            }}
-          >
-            Deletar conta
-          </ButtonType>
         </div>
       </div>
       

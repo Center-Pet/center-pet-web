@@ -76,3 +76,15 @@ p, h1, h2, h3, h4, h5, h6, li {
 .info-adopter h3{
   font-weight: 100;
 }
+
+.name-adopter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.adopter-profile-buttons {
+  display: flex;
+  gap: 1rem;
+}
