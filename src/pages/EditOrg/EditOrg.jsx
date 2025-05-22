@@ -258,10 +258,10 @@ const EditOrg = () => {
     }); // <-- fechamento do .then do Swal
 }; // <-- fechamento da função handleSubmit
 
-// Função para alterar senha
-const alterarSenha = async () => {
-    // Sua função existente...
-};
+// // Função para alterar senha
+// const alterarSenha = async () => {
+//     // Sua função existente...
+// };
 
     // Função para buscar endereço pelo CEP - implementação correta
     const buscarEnderecoPorCep = async (cep) => {
@@ -560,7 +560,7 @@ const alterarSenha = async () => {
                         onChange={(e) => setPixKey(e.target.value)}
                     />
                     
-                    <button type="button" id='btn-update-password' onClick={alterarSenha}>Clique aqui para alterar senha</button>
+                    {/* <button type="button" id='btn-update-password' onClick={alterarSenha}>Clique aqui para alterar senha</button> */}
 
                     <div id="edit-buttons-options">
                         <ButtonType type="submit" width="250px">Salvar Alterações</ButtonType>
