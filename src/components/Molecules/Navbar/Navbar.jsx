@@ -4,7 +4,7 @@ import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
 import CustomAvatar from '../../Atoms/CustomAvatar/CustomAvatar';
 import useAuth from '../../../hooks/useAuth';
-import { Heart, House, PawPrint, Note, User } from "phosphor-react";
+import { Heart, House, PawPrint, Note, User, ChartLine } from "phosphor-react";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,7 +46,7 @@ const Navbar = () => {
                     {/* Botão de ONG apenas para usuários do tipo ONG */}
                     {isAuthenticated && userType === "Ong" && (
                         <li>
-                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/ong-profile')}><Heart size={25}/>ONG</ButtonType>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/dashboard')}><ChartLine size={25}/>Estatísticas</ButtonType>
                         </li>
                     )}
                     
