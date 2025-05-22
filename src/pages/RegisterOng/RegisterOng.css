@@ -255,6 +255,36 @@ label {
     margin-left: 0.1rem;
 }
 
+.project-type-info-btn {
+    background: none;
+    border: none;
+    color: #d14d72;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.1rem 0.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: background 0.2s;
+    text-decoration: underline;
+}
+
+.project-type-info-btn:hover {
+    background: #fef2f4;
+}
+
+.project-type-info-icon {
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+}
+
+.project-type-modal-wide {
+  max-width: 900px !important;
+  width: 90vw !important;
+}
+
 @media screen and (min-width: 300px) and (max-width: 400px) {
 
     .form-input,

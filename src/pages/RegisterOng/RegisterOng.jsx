@@ -487,7 +487,7 @@ const RegisterOng = () => {
             <div id="form-container">
                 <form id="register-form" onSubmit={handleSubmit}>
                     <label>Nome: </label>
-                    <InputField type="text" placeholder="Nome completo" value={fullName} onChange={(e) => setFullName(e.target.value)} width='30rem' required />
+                    <InputField type="text" placeholder="Nome da organização" value={fullName} onChange={(e) => setFullName(e.target.value)} width='30rem' required />
                     <label>Telefone: </label>
                     <InputField type="tel" placeholder="(00)00000-0000" value={phone} onChange={(e) => { setPhone(e.target.value) }} width='30rem' required />
                     <label>Email: </label>
@@ -655,13 +655,52 @@ const RegisterOng = () => {
                         <h2>Insira sua imagem de perfil</h2>
                         <ImageInputField onImageChange={setProfileImg} />
                     </div>
-
+                                       
                     <div id="options">
                         <label><input type="radio" className='orgOption' name='orgOption' onChange={() => showOrgInputs("ONG")} checked={roleOption === "ONG"} />ONG</label>
                         <label><input type="radio" className='orgOption' name='orgOption' onChange={() => showOrgInputs("Projeto")} checked={roleOption === "Projeto"} />Projeto</label>
                         <label><input type="radio" className='orgOption' name='orgOption' onChange={() => showOrgInputs("Protetor")} checked={roleOption === "Protetor"} />Protetor</label>
+                        
+                    <button
+                        type="button"
+                        className="project-type-info-btn"
+                        title="Como saber o tipo de projeto?"
+                        onClick={() =>
+                            Swal.fire({
+                                title: `<div style="display:flex;align-items:center;gap:0.6rem;">
+                                            <span style="font-size:1.7rem;color:#d14d72;">❓</span>
+                                            <span style="font-size:1.18rem;color:#d14d72;font-weight:700;">Como saber o tipo de projeto?</span>
+                                        </div>`,
+                                html: `
+                                <div style="font-size:1.05rem;text-align:left;max-width:600px;margin:auto;line-height:1.5;">
+                                    <b style="color:#d14d72;">Escolha o tipo que melhor representa sua atuação:</b>
+                                    <div style="display:flex;gap:1.2rem;justify-content:center;align-items:stretch;margin:1.2em 0 0.8em 0;flex-wrap:wrap;">
+                                        <div style="background:#fef2f4;border-radius:8px;padding:0.7em 1.2em;min-width:160px;border:1px solid #ffd6e0;display:flex;flex-direction:column;align-items:center;">
+                                            <span style="font-weight:700;color:#d14d72;">ONG</span>
+                                            <span style="font-size:0.98rem;color:#d14d72;">Organização formal, registrada com CNPJ, geralmente com equipe e estrutura própria.</span>
+                                        </div>
+                                        <div style="background:#fef2f4;border-radius:8px;padding:0.7em 1.2em;min-width:160px;border:1px solid #ffd6e0;display:flex;flex-direction:column;align-items:center;">
+                                            <span style="font-weight:700;color:#d14d72;">Projeto</span>
+                                            <span style="font-size:0.98rem;color:#d14d72;">Iniciativa organizada, pode ser temporária ou permanente, normalmente com CPF do responsável e colaboradores.</span>
+                                        </div>
+                                        <div style="background:#fef2f4;border-radius:8px;padding:0.7em 1.2em;min-width:160px;border:1px solid #ffd6e0;display:flex;flex-direction:column;align-items:center;">
+                                            <span style="font-weight:700;color:#d14d72;">Protetor</span>
+                                            <span style="font-size:0.98rem;color:#d14d72;">Pessoa física que resgata e cuida de animais individualmente, sem CNPJ, apenas CPF.</span>
+                                        </div>
+                                    </div>                                </div>`,
+                                icon: undefined,
+                                confirmButtonColor: '#d14d72',
+                                confirmButtonText: 'Entendi',
+                                customClass: {
+                                    popup: 'custom-swal-popup project-type-modal-wide'
+                                }
+                            })
+                        }
+                    >
+                        <span className="project-type-info-icon" aria-label="informação" title="Como saber o tipo de projeto?">ℹ️</span> Como saber o tipo de projeto?
+                    </button>
                     </div>
-
+                    
                     {roleOption === "ONG" && (
                         <>
                             <label>CNPJ: </label>
