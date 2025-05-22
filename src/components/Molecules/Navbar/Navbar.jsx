@@ -77,7 +77,7 @@ const Navbar = () => {
                     
                     {isAuthenticated && userType === "Ong" && (
                         <li>
-                            <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/ong-profile'); closeMenu(); }}><Heart size={25}/>ONG</ButtonType>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/dashboard'); closeMenu(); }}><ChartLine size={25}/>Estatísticas</ButtonType>
                         </li>
                     )}
                     

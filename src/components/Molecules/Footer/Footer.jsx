@@ -6,17 +6,40 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-container">
+        <div className="mobile-social-links">
+          <div className="social-links">
+
+            <div className="footer-logo">
+              <img src="/assets/logo/CPCenterPet.png" alt="Center Pet Logo" />
+            </div>
+            <div className="social-media">
+              <span>Siga-nos:</span>
+              <a href="https://www.instagram.com/centerpet_oficial/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <i className="fab fa-instagram"></i>
+              </a>
+              <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <i className="fab fa-facebook"></i>
+              </a>
+              <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                <i className="fab fa-whatsapp"></i>
+              </a>
+            </div>
+
+          </div>
+        </div>
         <div className="social-links">
           <span>Siga-nos:</span>
-          <a href="https://www.instagram.com/centerpet_oficial/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <i className="fab fa-facebook"></i>
-          </a>
-          <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-            <i className="fab fa-whatsapp"></i>
-          </a>
+          <div className="social-media">
+            <a href="https://www.instagram.com/centerpet_oficial/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <i className="fab fa-instagram"></i>
+            </a>
+            <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <i className="fab fa-facebook"></i>
+            </a>
+            <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <i className="fab fa-whatsapp"></i>
+            </a>
+          </div>
         </div>
         <div className="footer-logo">
           <img src="/assets/logo/CPCenterPet.png" alt="Center Pet Logo" />
