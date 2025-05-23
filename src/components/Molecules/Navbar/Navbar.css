@@ -109,11 +109,11 @@ a:link {
     /* Esconde o menu lateral em telas grandes */
     flex-direction: column;
     position: fixed;
-    top: 0;
+    top: -7px;
     right: -100%;
     /* Esconde o menu fora da tela */
     width: 180px;
-    height: 50%;
+    height: min-content;
     background-color: #D14D72;
     padding: 10px 20px;
     /* Ajusta o espaçamento interno */
@@ -189,7 +189,7 @@ a:link {
     }
 
     #logo {
-        position: fixed;
+        position: absolute;
         /* Fixa o logo na tela */
         top: 10px;
         left: 80px;
@@ -213,7 +213,7 @@ a:link {
     }
 
     #logo {
-        position: fixed;
+        position: absolute;
         /* Fixa o logo na tela */
         top: 10px;
         left: 50px;
@@ -290,6 +290,7 @@ a:link {
         margin-left: 0;
         /* Remove o espaçamento à esquerda */
         z-index: 3;
+        
         display: flex;
         align-items: center;
         /* Alinha verticalmente o CustomComponent */

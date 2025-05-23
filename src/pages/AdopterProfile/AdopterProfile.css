@@ -37,8 +37,6 @@ p, h1, h2, h3, h4, h5, h6, li {
 }
 
 .adopter-profile-header-top-item {
-  display: flex;
-  flex-direction: row;
   justify-content: start;
   gap: 30px;
   align-items: center;
@@ -51,11 +49,18 @@ p, h1, h2, h3, h4, h5, h6, li {
   gap: 40px;
 }
 
+.adopter-profile-img{
+  border: 2px solid black;
+  width: 170px;
+  height: 170px;
+}
+
 .adopter-profile-header img {
-  width: 10vw;
-  height: auto;
+  width: 200px;
+  height: 200px;
   border-radius: 100%;
   border: #D14D72  solid 8px;
+  object-fit: cover;
 }
 
 .adopter-profile-header-main {
@@ -87,4 +92,11 @@ p, h1, h2, h3, h4, h5, h6, li {
 .adopter-profile-buttons {
   display: flex;
   gap: 1rem;
+}
+
+@media (max-width: 780px) {
+  .adopter-profile-header{
+    display: flexbox;
+    flex-direction: column;
+  }
 }

@@ -58,6 +58,7 @@ label {
     background-color: white;
     transition: all 0.3s ease;
     width: 30rem;
+    resize: none;
 }
 
 #input-description:focus {

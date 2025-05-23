@@ -80,6 +80,7 @@ const AdopterProfile = () => {
               alt={`Foto de ${adopter.fullName}`}
               className="adopter-profile-image"
             />
+            
             <div className="adopter-profile-header-main">
               <div className="adopter-profile-header-top-item">
                 <div className="name-adopter">
