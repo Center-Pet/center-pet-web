@@ -1,6 +1,7 @@
 import React from "react";
 import ScrollToTop from "../../Atoms/ScrollToTop/ScrollToTop";
 import "./Footer.css";
+import { EnvelopeSimple, FacebookLogo, InstagramLogo } from "phosphor-react";
 
 function Footer() {
   return (
@@ -15,13 +16,13 @@ function Footer() {
             <div className="social-media">
               <span>Siga-nos:</span>
               <a href="https://www.instagram.com/centerpet_oficial/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <i className="fab fa-instagram"></i>
+                <InstagramLogo size={30} color="rgb(254, 242, 244)"/>
               </a>
               <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                <i className="fab fa-facebook"></i>
+                <FacebookLogo size={30} color="rgb(254, 242, 244)"/>
               </a>
               <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                <i className="fab fa-whatsapp"></i>
+                <EnvelopeSimple size={30} color="rgb(254, 242, 244)"/>
               </a>
             </div>
 
@@ -31,13 +32,13 @@ function Footer() {
           <span>Siga-nos:</span>
           <div className="social-media">
             <a href="https://www.instagram.com/centerpet_oficial/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <i className="fab fa-instagram"></i>
+              <InstagramLogo size={30} color="rgb(254, 242, 244)"/>
             </a>
             <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-              <i className="fab fa-facebook"></i>
+              <FacebookLogo size={30} color="rgb(254, 242, 244)"/>
             </a>
             <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-              <i className="fab fa-whatsapp"></i>
+              <EnvelopeSimple size={30} color="rgb(254, 242, 244)"/>
             </a>
           </div>
         </div>
