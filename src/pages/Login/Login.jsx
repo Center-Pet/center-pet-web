@@ -6,12 +6,11 @@ import Swal from 'sweetalert2';
 import useAuth from "../../hooks/useAuth";
 import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
+import { Check, Eye, EyeSlash } from "phosphor-react"; // Importando ícones do Phosphor
 
 import "./Login.css";
-<link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
 
 // Função para verificar cpf
-
 function validarCPF(cpf) {
   cpf = cpf.replace(/[^\d]+/g, '');
   if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
@@ -28,17 +27,40 @@ function validarCPF(cpf) {
   return true;
 }
 
+// Função para validar senha forte (corrigida)
+function validarSenhaForte(senha) {
+  // Critérios de senha forte
+  const comprimentoMinimo = senha.length >= 8;
+  const temNumero = /[0-9]/.test(senha);
+  const temMaiuscula = /[A-Z]/.test(senha);
+  const temMinuscula = /[a-z]/.test(senha);
+  // Corrigindo a expressão regular para remover escapes desnecessários
+  const temCaractereEspecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(senha);
+
+  // Retorna objeto com detalhes da validação
+  return {
+    valido: comprimentoMinimo && temNumero && temMaiuscula && temMinuscula && temCaractereEspecial,
+    comprimentoMinimo,
+    temNumero,
+    temMaiuscula,
+    temMinuscula,
+    temCaractereEspecial
+  };
+}
+
 // Função para redirecionar para /register-ong
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  
+
   const handleRegisterOng = () => {
     navigate("/register-ong");
   };
   const [isLogin, setIsLogin] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
   const [isSwitching, setIsSwitching] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Campos do cadastro
   const [fullName, setFullName] = useState("");
@@ -47,6 +69,16 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
+
+  const [passwordValidation, setPasswordValidation] = useState({
+    valido: false,
+    comprimentoMinimo: false,
+    temNumero: false,
+    temMaiuscula: false,
+    temMinuscula: false,
+    temCaractereEspecial: false
+  });
 
   const images = [
     "https://www.opovo.com.br/_midias/jpg/2023/07/31/818x460/1_cao_e_gato_1_scaled_e1690826292317-22828962.jpg",
@@ -91,7 +123,37 @@ const Login = () => {
     e.preventDefault();
 
     if (!isLogin) {
-      // Lógica para cadastro
+      // PRIMEIRO, verificar os termos e condições antes de qualquer outra validação
+      if (!agreeToTerms) {
+        try {
+          await Swal.fire({
+            title: 'Termos e Condições',
+            text: 'Por favor, aceite os Termos e Condições para continuar.',
+            icon: 'warning',
+            confirmButtonColor: '#D14D72',
+            confirmButtonText: 'Entendi'
+          });
+          return;
+        } catch (error) {
+          console.error("Erro ao mostrar SweetAlert:", error);
+        }
+      }
+
+      // DEPOIS, verificar os outros campos
+      if (!fullName || !cpf || !email || !password || !confirmPassword) {
+        try {
+          await Swal.fire({
+            title: 'Campos incompletos!',
+            text: 'Por favor, preencha todos os campos obrigatórios.',
+            icon: 'warning',
+            confirmButtonColor: '#D14D72',
+          });
+          return;
+        } catch (error) {
+          console.error("Erro ao mostrar SweetAlert:", error);
+        }
+      }
+
       if (!validarCPF(cpf)) {
         Swal.fire({
           title: 'CPF inválido!',
@@ -105,25 +167,43 @@ const Login = () => {
         });
         return;
       }
-      
+
+      // Modifique a verificação de senha no handleSubmit
+
+      // Substitua a validação de senha existente:
+      // if (password.length < 6) {
+      //   setPasswordError("A senha deve ter pelo menos 6 caracteres.");
+      //   return;
+      // }
+
+      // Por esta validação mais robusta:
+      if (!passwordValidation.valido) {
+        try {
+          await Swal.fire({
+            title: 'Senha fraca!',
+            text: 'Por favor, utilize uma senha forte que atenda a todos os requisitos.',
+            icon: 'warning',
+            confirmButtonColor: '#D14D72',
+          });
+          return;
+        } catch (error) {
+          console.error("Erro ao mostrar SweetAlert:", error);
+        }
+      }
+
       if (password !== confirmPassword) {
         setPasswordError("As senhas não coincidem.");
         return;
       }
-      
-      if (password.length < 6) {
-        setPasswordError("A senha deve ter pelo menos 6 caracteres.");
-        return;
-      }
-      
+
       setPasswordError("");
-      
+
       // Mostrar loading com PawAnimation
       const pawAnimationHtml = ReactDOMServer.renderToString(
-        <PawAnimation 
-          width={60} 
-          height={60} 
-          text="Cadastrando..." 
+        <PawAnimation
+          width={60}
+          height={60}
+          text="Cadastrando..."
           vertical={true}
         />
       );
@@ -147,7 +227,7 @@ const Login = () => {
         };
 
         const response = await fetch(
-          "https://centerpet-api.onrender.com/api/adopters/register", 
+          "https://centerpet-api.onrender.com/api/adopters/register",
           {
             method: "POST",
             headers: {
@@ -179,7 +259,7 @@ const Login = () => {
         } else {
           // Verificar o tipo de erro retornado pela API
           let errorMessage = 'Ocorreu um erro durante o cadastro.';
-          
+
           if (result && result.message) {
             // Verificar mensagens específicas de erro
             if (result.message.includes('email') || result.message.toLowerCase().includes('e-mail')) {
@@ -188,7 +268,7 @@ const Login = () => {
               errorMessage = result.message;
             }
           }
-          
+
           Swal.fire({
             title: 'Não foi possível cadastrar',
             text: errorMessage,
@@ -201,10 +281,10 @@ const Login = () => {
       } catch (error) {
         Swal.close();
         let errorMessage = 'Ocorreu um erro durante o cadastro.';
-        
+
         // Adaptando o tratamento de erros para a API fetch
         console.error('Erro ao cadastrar:', error);
-        
+
         Swal.fire({
           title: 'Erro!',
           text: errorMessage,
@@ -230,10 +310,10 @@ const Login = () => {
 
       // Mostrar loading com PawAnimation
       const pawAnimationHtml = ReactDOMServer.renderToString(
-        <PawAnimation 
-          width={60} 
-          height={60} 
-          text="Entrando..." 
+        <PawAnimation
+          width={60}
+          height={60}
+          text="Entrando..."
           vertical={true}
         />
       );
@@ -263,7 +343,7 @@ const Login = () => {
         );
 
         const result = await response.json();
-        
+
         // Fechar o loading
         Swal.close();
 
@@ -286,11 +366,11 @@ const Login = () => {
         } else {
           // Login falhou
           let errorMessage = 'Email ou senha incorretos.';
-          
+
           if (result && result.message) {
             errorMessage = result.message;
           }
-          
+
           Swal.fire({
             title: 'Erro ao entrar',
             text: errorMessage,
@@ -303,7 +383,7 @@ const Login = () => {
       } catch (error) {
         Swal.close();
         console.error('Erro ao fazer login:', error);
-        
+
         Swal.fire({
           title: 'Erro!',
           text: 'Ocorreu um erro ao tentar fazer login. Por favor, tente novamente mais tarde.',
@@ -318,13 +398,13 @@ const Login = () => {
 
   const handleForgotPasswordSubmit = async (email) => {
     if (!email) return;
-    
+
     // Mostrar loading com PawAnimation
     const pawAnimationHtml = ReactDOMServer.renderToString(
-      <PawAnimation 
-        width={60} 
-        height={60} 
-        text="Enviando..." 
+      <PawAnimation
+        width={60}
+        height={60}
+        text="Enviando..."
         vertical={true}
       />
     );
@@ -375,7 +455,7 @@ const Login = () => {
     } catch (error) {
       console.error('Erro ao solicitar recuperação de senha:', error);
       Swal.close();
-      
+
       Swal.fire({
         title: 'Erro!',
         text: 'Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.',
@@ -411,12 +491,12 @@ const Login = () => {
       allowOutsideClick: () => !Swal.isLoading(),
       preConfirm: async () => {
         const inputEmail = document.getElementById('swal-input-email').value;
-        
+
         if (!inputEmail || !/\S+@\S+\.\S+/.test(inputEmail)) {
           Swal.showValidationMessage('Por favor, digite um email válido');
           return false;
         }
-        
+
         return inputEmail;
       }
     }).then(async (result) => {
@@ -425,6 +505,11 @@ const Login = () => {
       }
     });
   };
+
+  // Verificar se o Swal foi carregado corretamente
+  if (!Swal || !Swal.fire) {
+    console.error("SweetAlert2 não foi carregado corretamente!");
+  }
 
   return (
     <div className="login-container">
@@ -454,23 +539,34 @@ const Login = () => {
           <form className={`login-form ${isSwitching ? "switching" : ""}`} onSubmit={handleSubmit}>
             {isLogin ? (
               <>
-                <InputField 
-                  type="email" 
-                  placeholder="Email" 
+                <InputField
+                  type="email"
+                  placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required 
+                  required
                 />
-                <InputField 
-                  type="password" 
-                  placeholder="Senha" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required 
-                />
+                <div className="password-input-container">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Senha"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="form-input"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle-button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                  >
+                    {showPassword ? <EyeSlash size={20} weight="bold" /> : <Eye size={20} weight="bold" />}
+                  </button>
+                </div>
                 <div className="forgot-password-link">
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={handleForgotPassword}
                   >
                     Esqueci minha senha
@@ -507,22 +603,64 @@ const Login = () => {
                   required
                 />
                 <div className="password-group">
-                  <InputField
-                    type="password"
-                    placeholder="Senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <InputField
-                    type="password"
-                    placeholder="Confirme sua Senha"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                  />
+                  <div className="password-input-container">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Senha"
+                      value={password}
+                      onChange={(e) => {
+                        const novaSenha = e.target.value;
+                        setPassword(novaSenha);
+                        setPasswordValidation(validarSenhaForte(novaSenha));
+                      }}
+                      className={`form-input ${password && !passwordValidation.valido ? "input-error" : ""}`}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                    >
+                      {showPassword ? <EyeSlash size={20} weight="bold" /> : <Eye size={20} weight="bold" />}
+                    </button>
+                  </div>
+
+                  <div className="password-input-container">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirme sua Senha"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="form-input"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      aria-label={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
+                    >
+                      {showConfirmPassword ? <EyeSlash size={20} weight="bold" /> : <Eye size={20} weight="bold" />}
+                    </button>
+                  </div>
                 </div>
                 {passwordError && <p className="error-text">{passwordError}</p>}
+                <div className="terms-agreement">
+                  <label className="terms-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={agreeToTerms}
+                      onChange={() => setAgreeToTerms(prevState => !prevState)}
+                    />
+                    <span className="checkbox-custom">
+                      {agreeToTerms && <Check weight="bold" size={16} />}
+                    </span>
+                    <span className="checkbox-label">
+                      Li e concordo com os <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer">Termos e Condições</a>
+                    </span>
+                  </label>
+                </div>
                 <ButtonType bgColor="#D14D72" type="submit" width="107%">
                   Cadastrar
                 </ButtonType>

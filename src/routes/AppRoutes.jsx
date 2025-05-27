@@ -14,30 +14,32 @@ import RegisterOng from '../pages/RegisterOng/RegisterOng'
 import EditUser from '../pages/EditUser/EditUser'
 import EditOrg from '../pages/EditOrg/EditOrg'
 import Dashboard from "../pages/Dashboard/Dashboard";
+import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
 
 
 const AppRoutes = () => {
-    return (
-      <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/catalog" element={<Catalog />} />
-        <Route path="/pet-info/:petId" element={<PetInfo />} />
-        {/* Rota dinâmica para o pet */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/adopter-profile/:adopterId" element={<AdopterProfile />} />
-        <Route path="/ong-profile/:ongId" element={<ONGProfile />} />
-        <Route path="/register-pet" element={<RegisterPet />} />
-        <Route path="/edit-pet/:petId" element={<EditPet />} />
-        <Route path="*" element={<PageNotFound />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/test-draft" element={<TestDraft />} />
-        <Route path="/form-safe-adopter" element={<FormSafeAdopter />} />
-        <Route path="/register-ong" element={<RegisterOng />} />
-        <Route path="/edit-user" element={<EditUser />} />
-        <Route path="/edit-org" element={<EditOrg />} />
-      </Routes>
-    );
+  return (
+    <Routes>
+      <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/catalog" element={<Catalog />} />
+      <Route path="/pet-info/:petId" element={<PetInfo />} />
+      {/* Rota dinâmica para o pet */}
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/adopter-profile/:adopterId" element={<AdopterProfile />} />
+      <Route path="/ong-profile/:ongId" element={<ONGProfile />} />
+      <Route path="/register-pet" element={<RegisterPet />} />
+      <Route path="/edit-pet/:petId" element={<EditPet />} />
+      <Route path="*" element={<PageNotFound />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/test-draft" element={<TestDraft />} />
+      <Route path="/form-safe-adopter" element={<FormSafeAdopter />} />
+      <Route path="/register-ong" element={<RegisterOng />} />
+      <Route path="/edit-user" element={<EditUser />} />
+      <Route path="/edit-org" element={<EditOrg />} />
+      <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+    </Routes>
+  );
 };
 
 export default AppRoutes;

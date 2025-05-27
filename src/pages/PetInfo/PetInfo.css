@@ -158,6 +158,17 @@
   background-color: #ff6b8b;
 }
 
+/* Estilo para o botão quando a adoção já foi solicitada */
+.adopt-button.requested {
+  background-color: #B3C0AD;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.adopt-button.requested:hover {
+  background-color: #B3C0AD;
+}
+
 .pet-thumbnails {
   display: flex;
   gap: 10px;
@@ -389,7 +400,8 @@
 .button-row {
   display: flex;
   flex-direction: row;
-  gap: 20px; /* Espaçamento entre os botões */
+  gap: 20px;
+  /* Espaçamento entre os botões */
   justify-content: center;
   margin-top: 20px;
   width: 100%;
@@ -416,8 +428,9 @@
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .button-row button {
-    width: 100% !important; /* Força a largura total em telas pequenas */
+    width: 100% !important;
+    /* Força a largura total em telas pequenas */
   }
 }

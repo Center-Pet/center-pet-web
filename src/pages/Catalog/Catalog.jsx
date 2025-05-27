@@ -1,513 +1,72 @@
+import { useState, useEffect } from "react";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import Filter from "../../components/Atoms/Filter/Filter";
+import { getPets } from "../../services/petService";
 import './Catalog.css';
 
 const Catalog = () => {
-    const petsMaisPacientes = [
-      {
-        id: 1,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 2,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 3,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 4,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 1,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 2,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 3,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 4,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 1,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 2,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 3,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 4,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-    ];
+  const [petsMaisPacientes, setPetsMaisPacientes] = useState([]);
+  const [novosPets, setNovosPets] = useState([]);
+  const [petsEspeciais, setPetsEspeciais] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const novosPets = [
-      {
-        id: 5,
-        image: "/assets/teste.jpg",
-        name: "Max",
-        gender: "Macho",
-        age: "1 ano",
-      },
-      {
-        id: 6,
-        image: "/assets/teste2.jpg",
-        name: "Bella",
-        gender: "Fêmea",
-        age: "6 meses",
-      },
-      {
-        id: 7,
-        image: "/assets/teste.jpg",
-        name: "Charlie",
-        gender: "Macho",
-        age: "2 anos",
-      },
-      {
-        id: 8,
-        image: "/assets/teste2.jpg",
-        name: "Molly",
-        gender: "Fêmea",
-        age: "4 meses",
-      },
-      {
-        id: 5,
-        image: "/assets/teste.jpg",
-        name: "Max",
-        gender: "Macho",
-        age: "1 ano",
-      },
-      {
-        id: 6,
-        image: "/assets/teste2.jpg",
-        name: "Bella",
-        gender: "Fêmea",
-        age: "6 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 7,
-        image: "/assets/teste.jpg",
-        name: "Charlie",
-        gender: "Macho",
-        age: "2 anos",
-      },
-      {
-        id: 8,
-        image: "/assets/teste2.jpg",
-        name: "Molly",
-        gender: "Fêmea",
-        age: "4 meses",
-      },
-      {
-        id: 5,
-        image: "/assets/teste.jpg",
-        name: "Max",
-        gender: "Macho",
-        age: "1 ano",
-      },
-      {
-        id: 6,
-        image: "/assets/teste2.jpg",
-        name: "Bella",
-        gender: "Fêmea",
-        age: "6 meses",
-      },
-      {
-        id: 7,
-        image: "/assets/teste.jpg",
-        name: "Charlie",
-        gender: "Macho",
-        age: "2 anos",
-      },
-      {
-        id: 8,
-        image: "/assets/teste2.jpg",
-        name: "Molly",
-        gender: "Fêmea",
-        age: "4 meses",
-      },
-      {
-        id: 5,
-        image: "/assets/teste.jpg",
-        name: "Max",
-        gender: "Macho",
-        age: "1 ano",
-      },
-      {
-        id: 6,
-        image: "/assets/teste2.jpg",
-        name: "Bella",
-        gender: "Fêmea",
-        age: "6 meses",
-      },
-      {
-        id: 7,
-        image: "/assets/teste.jpg",
-        name: "Charlie",
-        gender: "Macho",
-        age: "2 anos",
-      },
-      {
-        id: 8,
-        image: "/assets/teste2.jpg",
-        name: "Molly",
-        gender: "Fêmea",
-        age: "4 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-    ];
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        setIsLoading(true);
 
-    const petsEspeciais = [
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-    ];
+        // Buscar pets pacientes
+        const pacientes = await getPets('pacientes');
+        setPetsMaisPacientes(pacientes);
 
-    return (
-        <div className="conjunt-catalog">
-            <div className="filter-container">
-                <Filter />
-            </div>
-            <div className="catalog-header">
-                
-            </div>
-            <PetShowcase title="Pets mais Pacientes" pets={petsMaisPacientes} />
-            <div className="catalog-header">
-               
-            </div>
-            <PetShowcase title="Novos Pets" pets={novosPets} />
-            <div className="catalog-header">
-                
-            </div>
-            <PetShowcase title="Pets Especiais" pets={petsEspeciais} />
-        </div>
-    );
+        // Buscar pets novos
+        const novos = await getPets('novos');
+        setNovosPets(novos);
+
+        // Buscar pets especiais
+        const especiais = await getPets('especiais');
+        setPetsEspeciais(especiais);
+
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Erro ao buscar os pets:', error);
+        setError('Não foi possível carregar os pets. Tente novamente mais tarde.');
+        setIsLoading(false);
+      }
+    };
+
+    fetchPets();
+  }, []);
+
+  if (isLoading) {
+    return <div className="loading">Carregando pets...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
+  return (
+    <div className="conjunt-catalog">
+      <div className="filter-container">
+        <Filter />
+      </div>
+      <div className="catalog-header">
+
+      </div>
+      <PetShowcase title="Pets mais Pacientes" pets={petsMaisPacientes} />
+      <div className="catalog-header">
+
+      </div>
+      <PetShowcase title="Novos Pets" pets={novosPets} />
+      <div className="catalog-header">
+
+      </div>
+      <PetShowcase title="Pets Especiais" pets={petsEspeciais} />
+    </div>
+  );
 };
 
 export default Catalog;
