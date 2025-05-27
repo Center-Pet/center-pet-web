@@ -326,7 +326,7 @@ const Home = () => {
           {/* Sem href por enquanto */}
           <a className="cta-secondary donate">Doar para um projeto</a>
         </div>
-      </section>
+      </section>  
 
       <button
         className="floating-help"

@@ -15,6 +15,7 @@ import EditUser from '../pages/EditUser/EditUser'
 import EditOrg from '../pages/EditOrg/EditOrg'
 import Dashboard from "../pages/Dashboard/Dashboard";
 import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
+import CatalogFilter from "../pages/CatalogFilter/CatalogFilter"
 
 
 const AppRoutes = () => {
@@ -38,6 +39,8 @@ const AppRoutes = () => {
       <Route path="/edit-user" element={<EditUser />} />
       <Route path="/edit-org" element={<EditOrg />} />
       <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+      <Route path="/catalog-filter" element={<CatalogFilter />} />
+      
     </Routes>
   );
 };

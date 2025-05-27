@@ -415,3 +415,112 @@ label {
     padding-right: 6px;
   }
 }
+
+/* Adicione no final do arquivo */
+
+/* Estilos para o verificador de força de senha */
+.password-strength-meter {
+  margin-top: 8px;
+  background-color: #fff6f8;
+  border-radius: 8px;
+  padding: 10px 15px;
+  border: 1px solid #ffd6e0;
+  max-width: 30rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.password-strength-meter h4 {
+  color: #D14D72;
+  font-size: 14px;
+  margin-bottom: 5px;
+  margin-top: 0;
+}
+
+.password-requirements {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2px 15px;
+}
+
+.password-requirement-item {
+  margin-bottom: 3px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.password-requirement-item.valid {
+  color: green;
+}
+
+.password-requirement-item.invalid {
+  color: #D14D72;
+}
+
+.password-requirement-icon {
+  font-weight: bold;
+}
+
+/* Media queries para os requisitos de senha */
+@media screen and (max-width: 600px) {
+  .password-strength-meter {
+    padding: 8px 12px;
+  }
+  
+  .password-requirements {
+    grid-template-columns: 1fr;
+  }
+  
+  .password-requirement-item {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .password-strength-meter {
+    padding: 6px 10px;
+  }
+  
+  .password-strength-meter h4 {
+    font-size: 13px;
+  }
+  
+  .password-requirement-item {
+    font-size: 11px;
+  }
+}
+
+/* Estilos para o botão de mostrar/ocultar senha */
+.password-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-toggle-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: #666;
+  z-index: 10;
+}
+
+.password-toggle-button:hover {
+  color: #D14D72;
+}
+
+@media screen and (max-width: 400px) {
+  .password-toggle-button {
+    right: 6px;
+  }
+}

@@ -27,14 +27,13 @@ function validarCPF(cpf) {
   return true;
 }
 
-// Função para validar senha forte (corrigida)
+// Função para validar senha forte
 function validarSenhaForte(senha) {
   // Critérios de senha forte
   const comprimentoMinimo = senha.length >= 8;
   const temNumero = /[0-9]/.test(senha);
   const temMaiuscula = /[A-Z]/.test(senha);
   const temMinuscula = /[a-z]/.test(senha);
-  // Corrigindo a expressão regular para remover escapes desnecessários
   const temCaractereEspecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(senha);
 
   // Retorna objeto com detalhes da validação
@@ -645,6 +644,33 @@ const Login = () => {
                     </button>
                   </div>
                 </div>
+                {password && password.length > 0 && (
+                  <div className="password-strength-meter">
+                    <h4>Requisitos de senha:</h4>
+                    <ul className="password-requirements">
+                      <li className={passwordValidation.comprimentoMinimo ? 'valid' : 'invalid'}>
+                        <span className="password-requirement-icon">{passwordValidation.comprimentoMinimo ? '✓' : '○'}</span>
+                        Mínimo de 8 caracteres
+                      </li>
+                      <li className={passwordValidation.temNumero ? 'valid' : 'invalid'}>
+                        <span className="password-requirement-icon">{passwordValidation.temNumero ? '✓' : '○'}</span>
+                        Pelo menos um número
+                      </li>
+                      <li className={passwordValidation.temMaiuscula ? 'valid' : 'invalid'}>
+                        <span className="password-requirement-icon">{passwordValidation.temMaiuscula ? '✓' : '○'}</span>
+                        Pelo menos uma maiúscula
+                      </li>
+                      <li className={passwordValidation.temMinuscula ? 'valid' : 'invalid'}>
+                        <span className="password-requirement-icon">{passwordValidation.temMinuscula ? '✓' : '○'}</span>
+                        Pelo menos uma minúscula
+                      </li>
+                      <li className={passwordValidation.temCaractereEspecial ? 'valid' : 'invalid'}>
+                        <span className="password-requirement-icon">{passwordValidation.temCaractereEspecial ? '✓' : '○'}</span>
+                        Pelo menos um caractere especial
+                      </li>
+                    </ul>
+                  </div>
+                )}
                 {passwordError && <p className="error-text">{passwordError}</p>}
                 <div className="terms-agreement">
                   <label className="terms-checkbox">

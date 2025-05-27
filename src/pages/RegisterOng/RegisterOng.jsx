@@ -8,7 +8,7 @@ import Swal from 'sweetalert2'
 import './RegisterOng.css'
 import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
-
+import { Eye, EyeSlash } from "phosphor-react";
 
 // link para rota: <Route path="/register-user" element={<RegisterUser />} />
 // import para página: import RegisterUser from '../pages/RegisterUser/RegisterUser'
@@ -41,6 +41,9 @@ const RegisterOng = () => {
     const [stateUf, setStateUf] = useState(""); // UF
     const [isFetchingZip, setIsFetchingZip] = useState(false); // Buscando CEP
     const [profileImg, setProfileImg] = useState("");
+    const [passwordValidation, setPasswordValidation] = useState({}); // Estado para validação da senha
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
     /* Função para definir a URL da imagem de perfil*/
@@ -121,6 +124,26 @@ const RegisterOng = () => {
         if ((resto === 10) || (resto === 11)) resto = 0;
         if (resto !== parseInt(cpf.substring(10, 11))) return false;
         return true;
+    }
+
+    // Função para validar senha forte
+    function validarSenhaForte(senha) {
+        // Critérios de senha forte
+        const comprimentoMinimo = senha.length >= 8;
+        const temNumero = /[0-9]/.test(senha);
+        const temMaiuscula = /[A-Z]/.test(senha);
+        const temMinuscula = /[a-z]/.test(senha);
+        const temCaractereEspecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(senha);
+
+        // Retorna objeto com detalhes da validação
+        return {
+            valido: comprimentoMinimo && temNumero && temMaiuscula && temMinuscula && temCaractereEspecial,
+            comprimentoMinimo,
+            temNumero,
+            temMaiuscula,
+            temMinuscula,
+            temCaractereEspecial
+        };
     }
 
     // Função para buscar endereço por CEP
@@ -204,6 +227,23 @@ const RegisterOng = () => {
             });
             return;
         }
+        
+        // ADICIONE ESTA VERIFICAÇÃO DE SENHA FORTE
+        const senhaValidada = validarSenhaForte(password);
+        if (!senhaValidada.valido) {
+            Swal.fire({
+                title: 'Senha fraca!',
+                text: 'Por favor, utilize uma senha forte que atenda a todos os requisitos.',
+                icon: 'warning',
+                showConfirmButton: false,
+                timer: 3000,
+                toast: false,
+                position: 'center',
+                customClass: 'swal2-toast warning'
+            });
+            return;
+        }
+        
         if (passwordConfirm !== password) {
             Swal.fire({
                 title: 'Atenção!',
@@ -646,9 +686,102 @@ const RegisterOng = () => {
                     <InputField type="text" value={pixKey} onChange={(e) => setPixKey(e.target.value)} width='30rem' />
 
                     <label>Senha: </label>
-                    <InputField type="password" placeholder="Senha" value={password} onChange={(e) => setPassword(e.target.value)} required width='30rem' />
+                    <div style={{ position: 'relative', width: '100%', maxWidth: '30rem' }}>
+                      <div className="password-input-container" style={{ position: 'relative', width: '100%' }}>
+                        <InputField 
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Senha" 
+                          value={password} 
+                          onChange={(e) => {
+                            const novaSenha = e.target.value;
+                            setPassword(novaSenha);
+                            setPasswordValidation(validarSenhaForte(novaSenha));
+                          }} 
+                          className={`${password && !passwordValidation.valido ? "input-error" : ""}`}
+                          required 
+                          width='100%' 
+                        />
+                        <button
+                          type="button"
+                          className="password-toggle-button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                          style={{
+                            position: 'absolute',
+                            right: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#666'
+                          }}
+                        >
+                          {showPassword ? <EyeSlash size={20} weight="bold" /> : <Eye size={20} weight="bold" />}
+                        </button>
+                      </div>
+                      {/* Mantenha o verificador de requisitos de senha */}
+                      {password && password.length > 0 && (
+                        <div className="password-strength-meter">
+                          <h4>Requisitos de senha:</h4>
+                          <ul className="password-requirements">
+                            <li className={`password-requirement-item ${passwordValidation.comprimentoMinimo ? 'valid' : 'invalid'}`}>
+                              <span className="password-requirement-icon">{passwordValidation.comprimentoMinimo ? '✓' : '○'}</span>
+                              Mínimo de 8 caracteres
+                            </li>
+                            <li className={`password-requirement-item ${passwordValidation.temNumero ? 'valid' : 'invalid'}`}>
+                              <span className="password-requirement-icon">{passwordValidation.temNumero ? '✓' : '○'}</span>
+                              Pelo menos um número
+                            </li>
+                            <li className={`password-requirement-item ${passwordValidation.temMaiuscula ? 'valid' : 'invalid'}`}>
+                              <span className="password-requirement-icon">{passwordValidation.temMaiuscula ? '✓' : '○'}</span>
+                              Pelo menos uma maiúscula
+                            </li>
+                            <li className={`password-requirement-item ${passwordValidation.temMinuscula ? 'valid' : 'invalid'}`}>
+                              <span className="password-requirement-icon">{passwordValidation.temMinuscula ? '✓' : '○'}</span>
+                              Pelo menos uma minúscula
+                            </li>
+                            <li className={`password-requirement-item ${passwordValidation.temCaractereEspecial ? 'valid' : 'invalid'}`}>
+                              <span className="password-requirement-icon">{passwordValidation.temCaractereEspecial ? '✓' : '○'}</span>
+                              Pelo menos um caractere especial
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                     <label>Confirmar Senha: </label>
-                    <InputField type="password" placeholder="Confirmar Senha" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} required width='30rem' />
+                    <div className="password-input-container" style={{ position: 'relative', width: '100%', maxWidth: '30rem' }}>
+                      <InputField 
+                        type={showConfirmPassword ? "text" : "password"} 
+                        placeholder="Confirmar Senha" 
+                        value={passwordConfirm} 
+                        onChange={(e) => setPasswordConfirm(e.target.value)} 
+                        required 
+                        width='100%' 
+                      />
+                      <button
+                        type="button"
+                        className="password-toggle-button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        aria-label={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
+                        style={{
+                          position: 'absolute',
+                          right: '10px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          color: '#666'
+                        }}
+                      >
+                        {showConfirmPassword ? <EyeSlash size={20} weight="bold" /> : <Eye size={20} weight="bold" />}
+                      </button>
+                    </div>
 
 
                     <div id="image">

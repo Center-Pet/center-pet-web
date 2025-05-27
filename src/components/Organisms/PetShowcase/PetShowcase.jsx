@@ -1,14 +1,15 @@
 "use client";
 
 import { useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import CardPet from "../../Molecules/CardPet/CardPet";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import "./PetShowcase.css";
 
-const PetShowcase = ({ title, pets = [] }) => {
+const PetShowcase = ({ title, pets, category }) => {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const scrollRight = () => {
     const container = carouselRef.current;
@@ -41,17 +42,16 @@ const PetShowcase = ({ title, pets = [] }) => {
   };
 
   const handleSeeMore = () => {
-    window.location.href = "/catalog";
+      // Se estiver no catálogo, navega para CatalogFilter com a categoria e título
+    if (location.pathname === "/catalog") {
+      navigate(
+        `/catalog-filter?category=${category}&title=${encodeURIComponent(title)}`
+      );
+    } else {
+      // Se estiver em outras páginas, navega para o catálogo
+      navigate("/catalog");
+    }
   };
-
-  if (pets.length === 0) {
-    return (
-      <div className="pet-showcase">
-        <h2 className="showcase-title">{title}</h2>
-        <p className="no-pets-message">Nenhum pet encontrado nesta categoria.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="pet-showcase-container">
@@ -73,7 +73,7 @@ const PetShowcase = ({ title, pets = [] }) => {
             <ChevronRight size={16} />
           </button>
           <button className="pet-see-more-button" onClick={handleSeeMore}>
-            Veja Mais
+            {location.pathname === "/catalog" ? "Ver Categoria" : "Ver Mais"}
           </button>
         </div>
       </div>
