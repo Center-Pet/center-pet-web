@@ -1,28 +1,39 @@
-body{
+body {
     background-color: #FEF2F4;
 }
 
-.catalog-header{
+.catalog-header {
     display: flex;
     justify-content: left;
     margin-left: 100px;
 }
 
-.filter-container{
+.filter-container {
     margin: 0 110px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
+.loading,
+.error {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+}
+
+.error {
+    color: #e74c3c;
+}
+
 @media (max-width: 780px) {
-    .catalog-header{
+    .catalog-header {
         margin-left: 80px;
-    }    
+    }
 }
 
 @media (max-width: 480px) {
-    .catalog-header{
+    .catalog-header {
         margin-left: 50px;
-    }    
+    }
 }

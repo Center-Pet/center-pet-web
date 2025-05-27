@@ -1,12 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import CardPet from "../../Molecules/CardPet/CardPet";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import "./PetShowcase.css";
 
-const PetShowcase = ({ title, pets }) => {
+const PetShowcase = ({ title, pets = [] }) => {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
 
@@ -43,6 +43,15 @@ const PetShowcase = ({ title, pets }) => {
   const handleSeeMore = () => {
     window.location.href = "/catalog";
   };
+
+  if (pets.length === 0) {
+    return (
+      <div className="pet-showcase">
+        <h2 className="showcase-title">{title}</h2>
+        <p className="no-pets-message">Nenhum pet encontrado nesta categoria.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="pet-showcase-container">

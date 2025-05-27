@@ -133,37 +133,49 @@
 
 /* Responsivo: em telas pequenas, os campos voltam a ficar empilhados */
 @media (max-width: 768px) {
+
   /* Esconder o slider em telas menores */
   .slider-section {
     display: none;
   }
-  
+
   .form-section {
-    width: 100%; /* Ocupar toda a largura disponível */
-    padding: 1rem 1.5rem; /* Adicionar mais padding horizontal */
-    height: 100vh; /* Ocupar toda a altura */
-    overflow-y: auto; /* Permitir rolagem se necessário */
+    width: 100%;
+    /* Ocupar toda a largura disponível */
+    padding: 1rem 1.5rem;
+    /* Adicionar mais padding horizontal */
+    height: 100vh;
+    /* Ocupar toda a altura */
+    overflow-y: auto;
+    /* Permitir rolagem se necessário */
   }
 
   .form-container {
-    max-width: 90%; /* Reduz a largura máxima */
-    margin: 0 auto; /* Centraliza horizontalmente */
+    max-width: 90%;
+    /* Reduz a largura máxima */
+    margin: 0 auto;
+    /* Centraliza horizontalmente */
   }
 
   .logo {
-    width: 10%; /* Ajustar tamanho da logo em telas médias */
-    margin-top: 2.5rem; /* Adicionar espaço abaixo da logo */
+    width: 10%;
+    /* Ajustar tamanho da logo em telas médias */
+    margin-top: 2.5rem;
+    /* Adicionar espaço abaixo da logo */
   }
 
   .form-header h2 {
-    font-size: 1.4rem; /* Aumenta um pouco o título para melhor visibilidade */
+    font-size: 1.4rem;
+    /* Aumenta um pouco o título para melhor visibilidade */
     margin-bottom: 0.5rem;
   }
 
   /* Outras regras responsivas existentes... */
   .form-input {
-    padding: 0.7rem 0.8rem; /* Aumentar levemente o padding para melhor toque */
-    font-size: 0.9rem; /* Ajusta o tamanho da fonte */
+    padding: 0.7rem 0.8rem;
+    /* Aumentar levemente o padding para melhor toque */
+    font-size: 0.9rem;
+    /* Ajusta o tamanho da fonte */
   }
 
   .submit-button {
@@ -172,7 +184,8 @@
   }
 
   .login-form {
-    gap: 0.8rem; /* Aumentar espaçamento entre campos para facilitar o toque */
+    gap: 0.8rem;
+    /* Aumentar espaçamento entre campos para facilitar o toque */
   }
 
   /* Campos de senha em coluna para telas menores */
@@ -185,20 +198,23 @@
 /* Media query adicional para telas muito pequenas */
 @media (max-width: 480px) {
   .form-container {
-    max-width: 100%; /* Usa toda a largura disponível */
+    max-width: 100%;
+    /* Usa toda a largura disponível */
   }
-  
+
   .form-header .logo {
-    width: 45%; /* Logo um pouco maior em telas muito pequenas */
+    width: 45%;
+    /* Logo um pouco maior em telas muito pequenas */
   }
-  
+
   .toggle-row {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
-  
-  .toggle-form, .toggle-ong {
+
+  .toggle-form,
+  .toggle-ong {
     margin-top: 0.5rem;
     font-size: 0.9rem;
   }
@@ -439,7 +455,8 @@ input[type="password"] {
 
 /* Ajustar o botão para não ultrapassar o contêiner */
 .login-form button[type="submit"] {
-  width: 100% !important; /* Sobrescreve o width inline */
+  width: 100% !important;
+  /* Sobrescreve o width inline */
   max-width: 100%;
   box-sizing: border-box;
   margin-top: 0.5rem;
@@ -503,4 +520,162 @@ input[type="password"] {
 .forgot-password-link button:hover {
   color: #b93d5f;
   text-decoration: underline;
+}
+
+/* Estilos para a seção de termos e condições */
+.terms-agreement {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.terms-checkbox input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-custom {
+  height: 18px;
+  width: 18px;
+  background-color: white;
+  border: 2px solid #D14D72;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  color: white;
+}
+
+.terms-checkbox input:checked+.checkbox-custom {
+  background-color: #D14D72;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  user-select: none;
+}
+
+.checkbox-label a {
+  color: #D14D72;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.checkbox-label a:hover {
+  text-decoration: underline;
+}
+
+/* Estilos para o botão de mostrar/ocultar senha */
+.password-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-toggle-button {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+  transition: color 0.2s ease;
+  z-index: 2;
+  padding: 5px;
+}
+
+.password-toggle-button:hover {
+  color: #D14D72;
+}
+
+.password-toggle-button:focus {
+  outline: none;
+  color: #D14D72;
+}
+
+/* Ajustes para garantir que o texto da senha não fique sob o ícone */
+.password-input-container input {
+  padding-right: 40px !important;
+}
+
+/* Estilos para indicadores de força de senha */
+.password-strength-meter {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px 15px;
+  border-left: 3px solid #D14D72;
+}
+
+.password-strength-meter h4 {
+  font-size: 14px;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.password-requirements {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.password-requirements li {
+  font-size: 13px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.password-requirements li.valid {
+  color: #28a745;
+}
+
+.password-requirements li.invalid {
+  color: #dc3545;
+}
+
+.password-requirements li:before {
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.input-error {
+  border-color: #dc3545 !important;
+}
+
+.input-error:focus {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+  .password-strength-meter {
+    padding: 8px 12px;
+  }
+
+  .password-strength-meter h4 {
+    font-size: 13px;
+  }
+
+  .password-requirements li {
+    font-size: 12px;
+  }
 }

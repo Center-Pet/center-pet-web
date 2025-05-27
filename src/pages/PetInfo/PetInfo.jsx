@@ -19,6 +19,7 @@ export default function PetInfo() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [similarPets, setSimilarPets] = useState([]);
+  const [adoptionRequested, setAdoptionRequested] = useState(false); // Novo estado para controlar a solicitação de adoção
 
   // Buscar dados do pet da API
   useEffect(() => {
@@ -27,25 +28,25 @@ export default function PetInfo() {
         setLoading(true);
         // Buscar informações do pet
         const response = await fetch(`https://centerpet-api.onrender.com/api/pets/${petId}`);
-        
+
         if (!response.ok) {
           throw new Error(`Erro ao buscar informações do pet (${response.status})`);
         }
-        
+
         const data = await response.json();
         console.log("Dados do pet:", data);
         setPet(data);
-        
+
         // Buscar informações da ONG
         if (data.ongId) {
           try {
             // Usar a rota correta para API de produção
             const ongResponse = await fetch(`https://centerpet-api.onrender.com/api/ongs/${data.ongId}`);
-            
+
             if (ongResponse.ok) {
               const ongResponseData = await ongResponse.json();
               console.log("Resposta completa da API de ONGs:", ongResponseData);
-              
+
               // A estrutura da API retorna o objeto da ONG em data.data
               if (ongResponseData.success && ongResponseData.data) {
                 setOngData(ongResponseData.data);
@@ -59,7 +60,7 @@ export default function PetInfo() {
             console.error("Erro ao buscar dados da ONG:", err);
           }
         }
-        
+
         // Após carregar o pet, buscar pets similares (mesma espécie)
         if (data.type) {
           try {
@@ -80,7 +81,7 @@ export default function PetInfo() {
             console.error("Erro ao buscar pets similares:", err);
           }
         }
-        
+
       } catch (err) {
         console.error("Erro ao carregar pet:", err);
         setError(err.message);
@@ -100,7 +101,72 @@ export default function PetInfo() {
   };
 
   const handleAdoptPet = () => {
-    navigate(`/adopt/${petId}`);
+    // Verificar se o usuário está autenticado
+    if (!isAuthenticated) {
+      // Se não estiver autenticado, redirecionar para login
+      Swal.fire({
+        title: 'Login Necessário',
+        text: 'Para adotar um pet, você precisa estar logado como adotante.',
+        icon: 'info',
+        confirmButtonColor: '#FF8BA7',
+      }).then(() => {
+        navigate('/login');
+      });
+      return;
+    }
+
+    // Verificar se o usuário é um adotante
+    if (userType !== 'Adopter') {
+      Swal.fire({
+        title: 'Erro',
+        text: 'Apenas adotantes podem solicitar adoção de pets.',
+        icon: 'error',
+        confirmButtonColor: '#FF8BA7',
+      });
+      return;
+    }
+
+    // Verificar se o usuário é um Safe Adopter
+    if (!user.safeAdopter) {
+      Swal.fire({
+        title: 'Formulário de Adoção Pendente',
+        text: 'Para adotar um pet, você precisa preencher o formulário de adotante seguro primeiro.',
+        icon: 'warning',
+        confirmButtonColor: '#FF8BA7',
+        showCancelButton: true,
+        cancelButtonText: 'Mais tarde',
+        confirmButtonText: 'Preencher agora'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirecionar para o formulário de Safe Adopter
+          navigate('/form-safe-adopter');
+        }
+      });
+      return;
+    }
+
+    // Se chegou aqui, o usuário é um Safe Adopter e pode prosseguir com a adoção
+    // Enviar solicitação para a ONG (você pode implementar essa lógica de API)
+    Swal.fire({
+      title: 'Solicitação Enviada!',
+      html: `
+        <p>Sua solicitação para adotar <strong>${pet.name}</strong> foi enviada com sucesso para a ONG <strong>${ongData ? ongData.name : ''}</strong>.</p>
+        <p>Agora é necessário aguardar a análise da ONG, que irá verificar as informações fornecidas no seu formulário de adotante seguro.</p>
+        <p>Você receberá uma notificação assim que houver uma resposta.</p>
+      `,
+      icon: 'success',
+      confirmButtonColor: '#FF8BA7',
+      confirmButtonText: 'Entendi'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Marcar a adoção como solicitada
+        setAdoptionRequested(true);
+        // Removido o redirecionamento para adoption-requests
+      }
+    });
+
+    // Comentei a linha abaixo para substituir pelo SweetAlert acima
+    // navigate(`/adopt/${petId}`);
   };
 
   // Adicione a função para lidar com a remoção do pet
@@ -234,9 +300,8 @@ export default function PetInfo() {
                       key={index}
                       src={image || "https://i.imgur.com/WanR0b3.png"}
                       alt={`${pet.name} thumbnail ${index + 1}`}
-                      className={`pet-thumbnail ${
-                        currentImage === index ? "active" : ""
-                      }`}
+                      className={`pet-thumbnail ${currentImage === index ? "active" : ""
+                        }`}
                       onClick={() => handleThumbnailClick(index)}
                     />
                   ))}
@@ -279,7 +344,7 @@ export default function PetInfo() {
                   </div>
                 ))}
               </div>
-              
+
               {/* Lógica para mostrar botões baseados no tipo de usuário */}
               <div className="pet-action-buttons">
                 {/* Se for ONG proprietária, mostrar botões de editar e deletar lado a lado */}
@@ -294,7 +359,7 @@ export default function PetInfo() {
                     >
                       <PencilSimple size={20} /> Editar Pet
                     </ButtonType>
-                     <ButtonType
+                    <ButtonType
                       onClick={handleDeletePet}
                       bgColor="#FF4D4D"
                       color="#FFFFFF"
@@ -305,14 +370,18 @@ export default function PetInfo() {
                     </ButtonType>
                   </div>
                 )}
-                
+
                 {/* Se não for ONG ou for adotante, mostrar botão de adotar */}
                 {canAdopt && (
-                  <button className="adopt-button" onClick={handleAdoptPet}>
-                    Adotar!
+                  <button
+                    className={`adopt-button ${adoptionRequested ? 'requested' : ''}`}
+                    onClick={handleAdoptPet}
+                    disabled={adoptionRequested}
+                  >
+                    {adoptionRequested ? 'Solicitado' : 'Adotar!'}
                   </button>
                 )}
-                
+
                 {/* Se for ONG mas não for a proprietária, não mostrar botões */}
                 {isOngButNotOwner && (
                   <p className="info-message">
