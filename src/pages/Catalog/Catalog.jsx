@@ -190,8 +190,8 @@ const Catalog = () => {
       </div>
 
       {loading ? (
-        <div className="loading-spinner">
-          <div className="spinner" />
+        <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
         </div>
       ) : (
         <>

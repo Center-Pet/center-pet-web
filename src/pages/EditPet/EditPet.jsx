@@ -576,9 +576,9 @@ export default function EditPet() {
 
   if (loading) {
     return (
-      <div className="pet-info-container">
-        <div className="loading-container">
-          <p>Carregando informações do pet...</p>
+      <div className="edit-pet-container">
+        <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
         </div>
       </div>
     );

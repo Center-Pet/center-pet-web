@@ -232,8 +232,8 @@ const CatalogFilter = () => {
       </div>
 
       {isLoading ? (
-        <div className="loading-spinner">
-          <div className="spinner" />
+        <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
         </div>
       ) : (
         <>

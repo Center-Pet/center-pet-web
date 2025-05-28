@@ -1,4 +1,11 @@
-p, h1, h2, h3, h4, h5, h6, li {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li {
   font-family: 'Alexandria', sans-serif;
 }
 
@@ -52,7 +59,7 @@ p, h1, h2, h3, h4, h5, h6, li {
   width: 10rem;
   height: 10rem;
   border-radius: 100%;
-  border: #D14D72  solid 8px;
+  border: #D14D72 solid 8px;
 }
 
 .ong-profile-header-main {
@@ -70,7 +77,7 @@ p, h1, h2, h3, h4, h5, h6, li {
   color: #D14D72;
 }
 
-.info-ong h3{
+.info-ong h3 {
   font-weight: 100;
 }
 
@@ -84,7 +91,7 @@ p, h1, h2, h3, h4, h5, h6, li {
 
   border: #D14D72 solid 8px;
   border-top: none;
-  color:#D14D72;
+  color: #D14D72;
   background-color: #FCC8D1;
   border-bottom-right-radius: 16px;
   border-bottom-left-radius: 16px;
@@ -137,7 +144,7 @@ p, h1, h2, h3, h4, h5, h6, li {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .name-ong-buttons {
     margin-top: 10px;
     margin-left: 0;
@@ -147,5 +154,35 @@ p, h1, h2, h3, h4, h5, h6, li {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+  }
+}
+
+/* Loading Spinner */
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  width: 100%;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(209, 77, 114, 0.2);
+  /* Cor rosa claro - corresponde ao tema */
+  border-radius: 50%;
+  border-top: 5px solid #D14D72;
+  /* Rosa do tema */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }

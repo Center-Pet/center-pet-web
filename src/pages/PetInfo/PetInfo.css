@@ -3,6 +3,8 @@
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
+  min-height: 70vh;
+  /* Adicionando altura mínima para o container principal */
 }
 
 .pet-profile-card {
@@ -582,5 +584,39 @@
     width: 32px;
     height: 32px;
     font-size: 22px;
+  }
+}
+
+/* Loading Spinner */
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  /* Mudança principal: altura de 70% da viewport */
+  min-height: 500px;
+  /* Altura mínima para garantir espaço suficiente */
+  width: 100%;
+  margin: 20px 0;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(209, 77, 114, 0.2);
+  /* Cor rosa claro - corresponde ao tema */
+  border-radius: 50%;
+  border-top: 5px solid #D14D72;
+  /* Rosa do tema */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }

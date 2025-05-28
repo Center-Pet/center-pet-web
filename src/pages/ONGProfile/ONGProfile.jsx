@@ -133,7 +133,9 @@ const ONGProfile = () => {
     return (
       <div className="ong-profile-container">
         <div className="ong-profile-content">
-          <div className="loading">Carregando dados da ONG...</div>
+          <div className="loading-spinner-container">
+            <div className="loading-spinner"></div>
+          </div>
         </div>
       </div>
     );

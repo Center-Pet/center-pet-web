@@ -365,7 +365,7 @@
   flex-direction: column;
   /* Mudado para column */
   width: 100%;
-  
+
 }
 
 /* Ajustes para o grid de informações editáveis */
@@ -508,5 +508,37 @@
   .pet-details {
     max-width: 100%;
     width: 100%;
+  }
+}
+
+/* Loading Spinner */
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  /* Altura adequada para o conteúdo */
+  width: 100%;
+  margin: 20px 0;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(209, 77, 114, 0.2);
+  /* Cor rosa claro - corresponde ao tema */
+  border-radius: 50%;
+  border-top: 5px solid #D14D72;
+  /* Rosa do tema */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }

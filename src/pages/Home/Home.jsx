@@ -65,8 +65,8 @@ const Home = () => {
 
       <section className="showcase-section">
         {loading ? (
-          <div className="loading-spinner">
-            <div className="spinner" />
+          <div className="loading-spinner-container">
+            <div className="loading-spinner"></div>
           </div>
         ) : (
           <PetShowcase title={"Pets Disponíveis"} pets={pets} limit={10} />

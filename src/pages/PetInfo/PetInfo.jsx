@@ -180,32 +180,39 @@ export default function PetInfo() {
 
     // Cria a adoção no banco de dados
     try {
-      const response = await fetch("https://centerpet-api.onrender.com/api/adoptions/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          userId: user._id,
-          petId: pet._id,
-          ongId: pet.ongId,
-          status: status || 'requestReceived', // Defina o status inicial como 'requestReceived'
-          requestDate: new Date() // Data da solicitação
-        }),
-      });
+      const response = await fetch(
+        "https://centerpet-api.onrender.com/api/adoptions/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            userId: user._id,
+            petId: pet._id,
+            ongId: pet.ongId,
+            status: status || "requestReceived", // Defina o status inicial como 'requestReceived'
+            requestDate: new Date(), // Data da solicitação
+          }),
+        }
+      );
 
       // Verifica se a resposta foi bem-sucedida
       if (!response.ok) {
         const errorData = await response.json();
-        console.log("Erro detalhado da API:",errorData);
+        console.log("Erro detalhado da API:", errorData);
         throw new Error("Erro ao criar solicitação de adoção.");
       }
 
       Swal.fire({
         title: "Solicitação Enviada!",
         html: `
-          <p>Sua solicitação para adotar <strong>${pet.name}</strong> foi enviada com sucesso para a ONG <strong>${ongData ? ongData.name : ""}</strong>.</p>
+          <p>Sua solicitação para adotar <strong>${
+            pet.name
+          }</strong> foi enviada com sucesso para a ONG <strong>${
+          ongData ? ongData.name : ""
+        }</strong>.</p>
           <p>Agora é necessário aguardar a análise da ONG, que irá verificar as informações fornecidas no seu formulário de adotante seguro.</p>
           <p>Você receberá uma notificação assim que houver uma resposta.</p>
         `,
@@ -227,7 +234,8 @@ export default function PetInfo() {
     } catch (error) {
       Swal.fire({
         title: "Erro",
-        text: error.message || "Não foi possível criar a solicitação de adoção.",
+        text:
+          error.message || "Não foi possível criar a solicitação de adoção.",
         icon: "error",
         confirmButtonColor: "#FF8BA7",
       });
@@ -374,8 +382,8 @@ export default function PetInfo() {
   if (loading) {
     return (
       <div className="pet-info-container">
-        <div className="loading-container">
-          <p>Carregando informações do pet...</p>
+        <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
         </div>
       </div>
     );
@@ -533,9 +541,7 @@ export default function PetInfo() {
                   </a>
                 </strong>
               </h4>
-              <h4>
-                
-              </h4>
+              <h4></h4>
               <p className="pet-bio">
                 {pet.description || "Sem descrição disponível."}
               </p>
