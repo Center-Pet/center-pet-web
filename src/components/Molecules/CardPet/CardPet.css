@@ -1,89 +1,170 @@
 @import url("https://fonts.googleapis.com/css?family=Alexandria");
 
 .card_pet {
-    background-color: #FFABAB;
-    margin: 10px;
-    border-radius: 10px;
+    background-color: white;
+    margin: 15px;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px;
-    width: 150px; /* Largura fixa */
+    padding: 20px;
+    width: 220px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    aspect-ratio: 3 / 4; /* Proporção fixa */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+    /* Sombra mais fraca e menor */
 }
 
 .card_pet:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px var(--pink);
+    /* Sombra mais suave no hover com cor personalizada */
 }
 
 .card_img_placeholder {
     width: 100%;
-    height: 60%; /* A imagem ocupa 60% do card */
-    border-radius: 10px;
-    margin-bottom: 10px;
+    aspect-ratio: 1 / 1;
+    /* Sempre quadrado, acompanha a largura do card */
+    height: auto;
+    /* Remove altura fixa */
+    border-radius: 5px;
+    margin-bottom: 12px;
     overflow: hidden;
+    padding: 0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.card_img_placeholder > img {
+.card_img_placeholder>img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    /* Agora a imagem preenche e é cortada se necessário */
+    border-radius: 5px;
+    display: block;
+    background: white;
 }
 
 .card_pet_info {
-    text-align: center;
+    text-align: left;
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.card_pet_details {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: nowrap;
+    /* Não quebra linha */
+    justify-content: flex-start;
+    /* Alinha à esquerda */
+    align-items: center;
+    /* Centraliza verticalmente */
+    overflow: visible;
+    /* Remove rolagem */
+}
+
+.pet_type,
+.pet_gender,
+.pet_age {
+    font-size: 14px;
+    font-weight: 500;
+    color: #D14D72;
+    text-transform: capitalize;
 }
 
 .card_pet_name {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 5px 0;
+    font-size: 16px;
+    /* Diminuído */
+    font-weight: 600;
+    margin: 0;
+    color: #000000;
+    line-height: 1.2;
+}
+
+/* Legacy class for compatibility */
+.card_pet_detail {
+    font-size: 14px;
+    margin: 4px 0;
     color: #D14D72;
 }
 
-.card_pet_detail {
-    font-size: 14px;
-    margin: 3px 0;
-    color: #242B33;
+.pet_tag {
+    background-color: #fbe9ee;
+    color: #D14D72;
+    font-weight: 600;
+    padding: 2px 8px;
+    /* Diminuído */
+    border-radius: 20px;
+    /* Ajustado para acompanhar o tamanho */
+    font-size: 12px;
+    /* Diminuído */
+    margin-right: 4px;
+    /* Diminuído */
+    margin-bottom: 4px;
+    /* Diminuído */
+    display: inline-block;
 }
 
 /* Responsividade */
 @media (max-width: 1024px) {
     .card_pet {
-        width: 130px; /* Ajusta a largura em telas médias */
-        padding: 8px;
+        width: 220px;
+        height: 220px;
+        padding: 16px;
     }
 }
 
 @media (max-width: 768px) {
     .card_pet {
-        width: 110px; /* Ajusta a largura em tablets */
+        width: 200px;
+        height: 200px;
+        padding: 14px;
     }
 
     .card_pet_name {
-        font-size: 16px;
+        font-size: 15px;
     }
 
+    .pet_type,
+    .pet_gender,
+    .pet_age,
     .card_pet_detail {
-        font-size: 13px;
+        font-size: 11px;
+    }
+
+    .pet_tag {
+        font-size: 11px;
+        padding: 5px 10px;
     }
 }
 
 @media (max-width: 480px) {
     .card_pet {
-        width: 90px; /* Ajusta a largura em dispositivos móveis */
+        width: 110px;
+        height: 110px;
+        padding: 6px;
     }
 
     .card_pet_name {
-        font-size: 14px;
+        font-size: 10px;
     }
 
+    .pet_type,
+    .pet_gender,
+    .pet_age,
     .card_pet_detail {
-        font-size: 12px;
+        font-size: 8px;
+    }
+
+    .pet_tag {
+        padding: 2px 5px;
+        font-size: 7px;
     }
 }

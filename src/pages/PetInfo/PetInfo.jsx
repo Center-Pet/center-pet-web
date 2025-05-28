@@ -8,6 +8,19 @@ import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import { PencilSimple, Trash } from "phosphor-react";
 import Swal from "sweetalert2";
 import "./PetInfo.css";
+import {
+  Dog,
+  Scissors,
+  CalendarBlank,
+  MapPin,
+  GenderMale,
+  PawPrint,
+  Ruler,
+  Syringe,
+  ShieldCheck,
+  Heartbeat,
+  Clock,
+} from "phosphor-react";
 
 export default function PetInfo() {
   const { petId } = useParams(); // Obtém o ID do pet da URL
@@ -21,16 +34,27 @@ export default function PetInfo() {
   const [similarPets, setSimilarPets] = useState([]);
   const [adoptionRequested, setAdoptionRequested] = useState(false); // Novo estado para controlar a solicitação de adoção
 
+  // Atualize os estados para o zoom dinâmico
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
   // Buscar dados do pet da API
   useEffect(() => {
     const fetchPetData = async () => {
       try {
         setLoading(true);
         // Buscar informações do pet
-        const response = await fetch(`https://centerpet-api.onrender.com/api/pets/${petId}`);
+        const response = await fetch(
+          `https://centerpet-api.onrender.com/api/pets/${petId}`
+        );
 
         if (!response.ok) {
-          throw new Error(`Erro ao buscar informações do pet (${response.status})`);
+          throw new Error(
+            `Erro ao buscar informações do pet (${response.status})`
+          );
         }
 
         const data = await response.json();
@@ -41,7 +65,9 @@ export default function PetInfo() {
         if (data.ongId) {
           try {
             // Usar a rota correta para API de produção
-            const ongResponse = await fetch(`https://centerpet-api.onrender.com/api/ongs/${data.ongId}`);
+            const ongResponse = await fetch(
+              `https://centerpet-api.onrender.com/api/ongs/${data.ongId}`
+            );
 
             if (ongResponse.ok) {
               const ongResponseData = await ongResponse.json();
@@ -51,10 +77,15 @@ export default function PetInfo() {
               if (ongResponseData.success && ongResponseData.data) {
                 setOngData(ongResponseData.data);
               } else {
-                console.error("Formato de resposta da API de ONGs inesperado:", ongResponseData);
+                console.error(
+                  "Formato de resposta da API de ONGs inesperado:",
+                  ongResponseData
+                );
               }
             } else {
-              console.error(`Erro ao buscar dados da ONG: ${ongResponse.status}`);
+              console.error(
+                `Erro ao buscar dados da ONG: ${ongResponse.status}`
+              );
             }
           } catch (err) {
             console.error("Erro ao buscar dados da ONG:", err);
@@ -64,24 +95,28 @@ export default function PetInfo() {
         // Após carregar o pet, buscar pets similares (mesma espécie)
         if (data.type) {
           try {
-            const similarResponse = await fetch(`https://centerpet-api.onrender.com/api/pets?type=${data.type}&limit=12&exclude=${petId}`);
+            const similarResponse = await fetch(
+              `https://centerpet-api.onrender.com/api/pets?type=${data.type}&limit=12&exclude=${petId}`
+            );
             if (similarResponse.ok) {
               const similarData = await similarResponse.json();
               // Formatar os dados para o PetShowcase
-              const formattedPets = (similarData.data || similarData).map(pet => ({
-                id: pet._id,
-                image: pet.image?.[0] || "https://i.imgur.com/WanR0b3.png",
-                name: pet.name,
-                gender: pet.gender,
-                age: pet.age
-              }));
+              const formattedPets = (similarData.data || similarData).map(
+                (pet) => ({
+                  id: pet._id,
+                  image: pet.image?.[0] || "https://i.imgur.com/WanR0b3.png",
+                  name: pet.name,
+                  gender: pet.gender,
+                  age: pet.age,
+                  type: pet.type,
+                })
+              );
               setSimilarPets(formattedPets);
             }
           } catch (err) {
             console.error("Erro ao buscar pets similares:", err);
           }
         }
-
       } catch (err) {
         console.error("Erro ao carregar pet:", err);
         setError(err.message);
@@ -105,23 +140,23 @@ export default function PetInfo() {
     if (!isAuthenticated) {
       // Se não estiver autenticado, redirecionar para login
       Swal.fire({
-        title: 'Login Necessário',
-        text: 'Para adotar um pet, você precisa estar logado como adotante.',
-        icon: 'info',
-        confirmButtonColor: '#FF8BA7',
+        title: "Login Necessário",
+        text: "Para adotar um pet, você precisa estar logado como adotante.",
+        icon: "info",
+        confirmButtonColor: "#FF8BA7",
       }).then(() => {
-        navigate('/login');
+        navigate("/login");
       });
       return;
     }
 
     // Verificar se o usuário é um adotante
-    if (userType !== 'Adopter') {
+    if (userType !== "Adopter") {
       Swal.fire({
-        title: 'Erro',
-        text: 'Apenas adotantes podem solicitar adoção de pets.',
-        icon: 'error',
-        confirmButtonColor: '#FF8BA7',
+        title: "Erro",
+        text: "Apenas adotantes podem solicitar adoção de pets.",
+        icon: "error",
+        confirmButtonColor: "#FF8BA7",
       });
       return;
     }
@@ -129,17 +164,17 @@ export default function PetInfo() {
     // Verificar se o usuário é um Safe Adopter
     if (!user.safeAdopter) {
       Swal.fire({
-        title: 'Formulário de Adoção Pendente',
-        text: 'Para adotar um pet, você precisa preencher o formulário de adotante seguro primeiro.',
-        icon: 'warning',
-        confirmButtonColor: '#FF8BA7',
+        title: "Formulário de Adoção Pendente",
+        text: "Para adotar um pet, você precisa preencher o formulário de adotante seguro primeiro.",
+        icon: "warning",
+        confirmButtonColor: "#FF8BA7",
         showCancelButton: true,
-        cancelButtonText: 'Mais tarde',
-        confirmButtonText: 'Preencher agora'
+        cancelButtonText: "Mais tarde",
+        confirmButtonText: "Preencher agora",
       }).then((result) => {
         if (result.isConfirmed) {
           // Redirecionar para o formulário de Safe Adopter
-          navigate('/form-safe-adopter');
+          navigate("/form-safe-adopter");
         }
       });
       return;
@@ -148,15 +183,19 @@ export default function PetInfo() {
     // Se chegou aqui, o usuário é um Safe Adopter e pode prosseguir com a adoção
     // Enviar solicitação para a ONG (você pode implementar essa lógica de API)
     Swal.fire({
-      title: 'Solicitação Enviada!',
+      title: "Solicitação Enviada!",
       html: `
-        <p>Sua solicitação para adotar <strong>${pet.name}</strong> foi enviada com sucesso para a ONG <strong>${ongData ? ongData.name : ''}</strong>.</p>
+        <p>Sua solicitação para adotar <strong>${
+          pet.name
+        }</strong> foi enviada com sucesso para a ONG <strong>${
+        ongData ? ongData.name : ""
+      }</strong>.</p>
         <p>Agora é necessário aguardar a análise da ONG, que irá verificar as informações fornecidas no seu formulário de adotante seguro.</p>
         <p>Você receberá uma notificação assim que houver uma resposta.</p>
       `,
-      icon: 'success',
-      confirmButtonColor: '#FF8BA7',
-      confirmButtonText: 'Entendi'
+      icon: "success",
+      confirmButtonColor: "#FF8BA7",
+      confirmButtonText: "Entendi",
     }).then((result) => {
       if (result.isConfirmed) {
         // Marcar a adoção como solicitada
@@ -179,7 +218,7 @@ export default function PetInfo() {
       confirmButtonColor: "#FF4D4D",
       cancelButtonColor: "#6c757d",
       confirmButtonText: "Sim, deletar pet",
-      cancelButtonText: "Cancelar"
+      cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -189,16 +228,19 @@ export default function PetInfo() {
             allowOutsideClick: false,
             didOpen: () => {
               Swal.showLoading();
-            }
+            },
           });
 
           // Fazer requisição para deletar o pet
-          const response = await fetch(`https://centerpet-api.onrender.com/api/pets/delete/${petId}`, {
-            method: "DELETE",
-            headers: {
-              "Authorization": `Bearer ${localStorage.getItem("token")}`
+          const response = await fetch(
+            `https://centerpet-api.onrender.com/api/pets/delete/${petId}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
             }
-          });
+          );
 
           if (!response.ok) {
             throw new Error("Erro ao deletar pet");
@@ -224,6 +266,83 @@ export default function PetInfo() {
         }
       }
     });
+  };
+
+  // Funções para controle do modal de imagem
+  const openImageModal = () => {
+    setIsImageModalOpen(true);
+    setZoomLevel(1);
+    setZoomPosition({ x: 0, y: 0 });
+  };
+
+  const closeImageModal = () => {
+    setIsImageModalOpen(false);
+  };
+
+  // Função para lidar com cliques na imagem para zoom
+  const handleImageClick = (e) => {
+    e.stopPropagation(); // Impede que o clique feche o modal
+
+    // Se já estiver no zoom máximo, volta ao normal
+    if (zoomLevel >= 2.5) {
+      setZoomLevel(1);
+      setZoomPosition({ x: 0, y: 0 });
+      return;
+    }
+
+    // Caso contrário, faz zoom no ponto clicado
+    const imageElement = e.target;
+    const { left, top, width, height } = imageElement.getBoundingClientRect();
+
+    // Calcula a posição relativa do clique dentro da imagem (0 a 1)
+    const relativeX = (e.clientX - left) / width;
+    const relativeY = (e.clientY - top) / height;
+
+    // Aumenta o zoom
+    const newZoomLevel = zoomLevel === 1 ? 2.5 : 1;
+
+    // Calcula o deslocamento para centralizar o zoom no ponto clicado
+    const offsetX = (0.5 - relativeX) * 100;
+    const offsetY = (0.5 - relativeY) * 100;
+
+    setZoomLevel(newZoomLevel);
+
+    if (newZoomLevel > 1) {
+      setZoomPosition({ x: offsetX, y: offsetY });
+    } else {
+      setZoomPosition({ x: 0, y: 0 });
+    }
+  };
+
+  // Funções para arrastar a imagem quando ampliada
+  const handleMouseDown = (e) => {
+    if (zoomLevel > 1) {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - zoomPosition.x,
+        y: e.clientY - zoomPosition.y,
+      });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging && zoomLevel > 1) {
+      e.preventDefault();
+      setZoomPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
   };
 
   if (loading) {
@@ -264,9 +383,75 @@ export default function PetInfo() {
   };
 
   // Verificar permissões com base no tipo de usuário
-  const isOngOwner = isAuthenticated && user && userType === "Ong" && pet.ongId === user._id;
-  const isOngButNotOwner = isAuthenticated && user && userType === "Ong" && pet.ongId !== user._id;
-  const canAdopt = !isAuthenticated || (isAuthenticated && userType === "Adopter"); // Usuários não logados ou adotantes podem adotar
+  const isOngOwner =
+    isAuthenticated && user && userType === "Ong" && pet.ongId === user._id;
+  const isOngButNotOwner =
+    isAuthenticated && user && userType === "Ong" && pet.ongId !== user._id;
+  const canAdopt =
+    !isAuthenticated || (isAuthenticated && userType === "Adopter"); // Usuários não logados ou adotantes podem adotar
+
+  const petFields = [
+    {
+      label: "Espécie",
+      value: pet.type,
+      icon: <Dog size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Pelagem",
+      value: pet.coat,
+      icon: <Scissors size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Idade",
+      value: pet.age,
+      icon: <CalendarBlank size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Local",
+      value: pet.location,
+      icon: <MapPin size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Gênero",
+      value: pet.gender,
+      icon: <GenderMale size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Raça",
+      value: pet.breed,
+      icon: <PawPrint size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Porte",
+      value: pet.size,
+      icon: <Ruler size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Vacinado",
+      value: pet.health?.vaccinated ? "Sim" : "Não",
+      icon: <Syringe size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Castrado",
+      value: pet.health?.castrated ? "Sim" : "Não",
+      icon: <ShieldCheck size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Vermifugado",
+      value: pet.health?.dewormed ? "Sim" : "Não",
+      icon: <ShieldCheck size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Condição Especial",
+      value: pet.health?.specialCondition || "Nenhuma",
+      icon: <Heartbeat size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Esperando um amigo há",
+      value: pet.waitingTime ? `${pet.waitingTime} meses` : "Não informado",
+      icon: <Clock size={20} style={{ marginRight: 6 }} />,
+    },
+  ];
 
   return (
     <>
@@ -282,9 +467,13 @@ export default function PetInfo() {
                 &#8249;
               </button>
               <img
-                src={petImages[currentImage] || "https://i.imgur.com/WanR0b3.png"}
+                src={
+                  petImages[currentImage] || "https://i.imgur.com/WanR0b3.png"
+                }
                 alt={pet.name}
                 className="pet-main-image"
+                onClick={openImageModal}
+                style={{ cursor: "zoom-in" }}
               />
               <button
                 className="nav-button next-button"
@@ -300,8 +489,9 @@ export default function PetInfo() {
                       key={index}
                       src={image || "https://i.imgur.com/WanR0b3.png"}
                       alt={`${pet.name} thumbnail ${index + 1}`}
-                      className={`pet-thumbnail ${currentImage === index ? "active" : ""
-                        }`}
+                      className={`pet-thumbnail ${
+                        currentImage === index ? "active" : ""
+                      }`}
                       onClick={() => handleThumbnailClick(index)}
                     />
                   ))}
@@ -322,24 +512,16 @@ export default function PetInfo() {
                   </a>
                 </strong>
               </h4>
-              <p className="pet-bio">{pet.description || "Sem descrição disponível."}</p>
+              <p className="pet-bio">
+                {pet.description || "Sem descrição disponível."}
+              </p>
               <div className="pet-info-grid two-columns">
-                {Object.entries({
-                  "Espécie": pet.type,
-                  "Pelagem": pet.coat,
-                  "Idade": pet.age,
-                  "Local": pet.location,
-                  "Gênero": pet.gender,
-                  "Raça": pet.breed,
-                  "Porte": pet.size,
-                  "Vacinado": pet.health?.vaccinated ? "Sim" : "Não",
-                  "Castrado": pet.health?.castrated ? "Sim" : "Não",
-                  "Vermifugado": pet.health?.dewormed ? "Sim" : "Não",
-                  "Condição Especial": pet.health?.specialCondition || "Nenhuma",
-                  "Esperando um amigo há": pet.waitingTime || "Não informado",
-                }).map(([label, value]) => (
+                {petFields.map(({ label, value, icon }) => (
                   <div className="info-row" key={label}>
-                    <span className="info-label">{label}:</span>
+                    <span className="info-label">
+                      {icon}
+                      {label}:
+                    </span>
                     <span className="info-value">{value}</span>
                   </div>
                 ))}
@@ -374,11 +556,13 @@ export default function PetInfo() {
                 {/* Se não for ONG ou for adotante, mostrar botão de adotar */}
                 {canAdopt && (
                   <button
-                    className={`adopt-button ${adoptionRequested ? 'requested' : ''}`}
+                    className={`adopt-button ${
+                      adoptionRequested ? "requested" : ""
+                    }`}
                     onClick={handleAdoptPet}
                     disabled={adoptionRequested}
                   >
-                    {adoptionRequested ? 'Solicitado' : 'Adotar!'}
+                    {adoptionRequested ? "Solicitado" : "Adotar!"}
                   </button>
                 )}
 
@@ -399,6 +583,86 @@ export default function PetInfo() {
           </div>
         )}
       </div>
+
+      {/* Modal para exibir imagem em tamanho real */}
+      {isImageModalOpen && (
+        <div className="image-modal-overlay" onClick={closeImageModal}>
+          <div
+            className="image-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="image-container"
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
+            >
+              <img
+                src={
+                  petImages[currentImage] || "https://i.imgur.com/WanR0b3.png"
+                }
+                alt={pet.name}
+                onClick={handleImageClick}
+                style={{
+                  transform: `scale(${zoomLevel}) translate(${
+                    zoomPosition.x / zoomLevel
+                  }px, ${zoomPosition.y / zoomLevel}px)`,
+                  cursor:
+                    zoomLevel > 1
+                      ? isDragging
+                        ? "grabbing"
+                        : "grab"
+                      : "zoom-in",
+                  transition: isDragging ? "none" : "transform 0.3s ease-out",
+                }}
+              />
+            </div>
+            <div className="image-navigation">
+              <button
+                className="nav-button prev-modal-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (currentImage > 0) {
+                    setCurrentImage(currentImage - 1);
+                    setZoomLevel(1);
+                    setZoomPosition({ x: 0, y: 0 });
+                  }
+                }}
+                disabled={currentImage === 0 || petImages.length <= 1}
+              >
+                <span>&#8249;</span>
+              </button>
+              <span>
+                {currentImage + 1} / {petImages.length}
+              </span>
+              <button
+                className="nav-button next-modal-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (currentImage < petImages.length - 1) {
+                    setCurrentImage(currentImage + 1);
+                    setZoomLevel(1);
+                    setZoomPosition({ x: 0, y: 0 });
+                  }
+                }}
+                disabled={
+                  currentImage === petImages.length - 1 || petImages.length <= 1
+                }
+              >
+                <span>&#8250;</span>
+              </button>
+            </div>
+            <button
+              className="close-modal-button"
+              onClick={closeImageModal}
+              aria-label="Fechar"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

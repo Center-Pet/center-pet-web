@@ -275,6 +275,18 @@ input[disabled] {
   cursor: not-allowed;
 }
 
+.last-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.last-row .info-row {
+  max-width: 350px;
+  width: 100%;
+}
+
+
 /* Responsividade */
 @media (max-width: 1128px) {
   .pet-main-info {
@@ -328,3 +340,9 @@ input[disabled] {
 @media (max-width: 900px) {}
 
 @media (max-width: 600px) {}
+
+svg {
+
+  margin-bottom: -4px;
+}
+

@@ -60,7 +60,7 @@
   /* Ajuste nos cards */
   .pet-showcase-carousel > * {
     flex: 0 0 auto; /* Garante que os itens não se juntem */
-    width: 170px; /* Largura fixa dos cards */
+  
   }
 
   .pet-showcase-carousel > *:last-child {

@@ -4,8 +4,16 @@ body {
 
 .catalog-header {
     display: flex;
-    justify-content: left;
-    margin-left: 100px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+.catalog-title {
+    font-size: 28px;
+    color: #555;
+    margin: 0;
 }
 
 .filter-container {
@@ -24,6 +32,48 @@ body {
 
 .error {
     color: #e74c3c;
+}
+
+/* Estilo para o contador de filtros ativos */
+.filter-count {
+    background-color: #FF8BA7;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    margin-left: 8px;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+/* Estilo para o botão de limpar filtros */
+.filtro-acoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    padding: 10px;
+    border-top: 1px solid #eee;
+}
+
+.limpar-filtros {
+    background-color: transparent;
+    color: #FF8BA7;
+    border: 1px solid #FF8BA7;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.limpar-filtros:hover {
+    background-color: #FF8BA7;
+    color: white;
 }
 
 @media (max-width: 780px) {

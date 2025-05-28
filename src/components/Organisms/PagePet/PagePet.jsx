@@ -5,22 +5,18 @@ import "./PagePet.css";
 const PagePet = ({ title, pets }) => {
   const navigate = useNavigate();
 
-  const handleCardClick = (petId) => {
-    navigate(`/pet-info/${petId}`);
-  };
-
   return (
     <div className="page-pet-container">
       <h2 className="page-pet-title">{title}</h2>
       <div className="page-pet-grid">
-        {pets.map((pet, index) => (
+        {pets.map((pet) => (
           <CardPet
-            key={index}
+            key={pet.id}
             image={pet.image}
             name={pet.name}
             gender={pet.gender}
             age={pet.age}
-            onClick={() => handleCardClick(pet.id)}
+            onClick={() => navigate(`/pet-info/${pet.id}`)}
           />
         ))}
       </div>

@@ -1,514 +1,294 @@
-import { useState, useEffect } from 'react';
-import { CaretLeft, CaretRight } from 'phosphor-react';
-import { useSearchParams } from 'react-router-dom';
-import PagePet from "../../components/Organisms/PagePet/PagePet";
-import './CatalogFilter.css';
+import { useState, useEffect } from "react";
+import { CaretLeft, CaretRight } from "phosphor-react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import CardPet from "../../components/Molecules/CardPet/CardPet";
+import Filter from "../../components/Atoms/Filter/Filter";
+import Title from "../../components/Atoms/TitleType/TitleType";
+import "./CatalogFilter.css";
 
 const CatalogFilter = () => {
-    const [searchParams] = useSearchParams();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isLoading, setIsLoading] = useState(true); // Começa como true para mostrar loading inicial
-    const petsPerPage = 20;
+  const [searchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [pets, setPets] = useState([]);
+  const [filteredPets, setFilteredPets] = useState([]);
+  const petsPerPage = 15;
+  const navigate = useNavigate();
 
-    // Pega o título da URL ou usa o título padrão
-    const pageTitle = searchParams.get('title') || "Pets mais Pacientes";
+  // Pega parâmetros da URL
+  const pageTitle = searchParams.get("title") || "Catálogo de Pets";
+  const ongId = searchParams.get("ongId");
+  const category = searchParams.get("category");
 
-    const petsMaisPacientes = [
-        // Página 1 (1-20)
-        {
-            id: 1,
-            image: "/assets/teste.jpg",
-            name: "Rex",
-            gender: "Macho",
-            age: "3 meses",
-        },
-        {
-            id: 2,
-            image: "/assets/teste2.jpg",
-            name: "Luna",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        {
-            id: 3,
-            image: "/assets/teste.jpg",
-            name: "Thor",
-            gender: "Macho",
-            age: "1 ano",
-        },
-        {
-            id: 4,
-            image: "/assets/teste2.jpg",
-            name: "Bella",
-            gender: "Fêmea",
-            age: "4 anos",
-        },
-        {
-            id: 5,
-            image: "/assets/teste.jpg",
-            name: "Max",
-            gender: "Macho",
-            age: "6 meses",
-        },
-        {
-            id: 6,
-            image: "/assets/teste2.jpg",
-            name: "Nina",
-            gender: "Fêmea",
-            age: "3 anos",
-        },
-        {
-            id: 7,
-            image: "/assets/teste.jpg",
-            name: "Bob",
-            gender: "Macho",
-            age: "5 anos",
-        },
-        {
-            id: 8,
-            image: "/assets/teste2.jpg",
-            name: "Mel",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        {
-            id: 9,
-            image: "/assets/teste.jpg",
-            name: "Buddy",
-            gender: "Macho",
-            age: "5 anos",
-        },
-        {
-            id: 10,
-            image: "/assets/teste2.jpg",
-            name: "Lola",
-            gender: "Fêmea",
-            age: "1 ano",
-        },
-        {
-            id: 11,
-            image: "/assets/teste.jpg",
-            name: "Rocky",
-            gender: "Macho",
-            age: "7 anos",
-        },
-        {
-            id: 12,
-            image: "/assets/teste2.jpg",
-            name: "Lucy",
-            gender: "Fêmea",
-            age: "8 meses",
-        },
-        {
-            id: 13,
-            image: "/assets/teste.jpg",
-            name: "Zeus",
-            gender: "Macho",
-            age: "4 anos",
-        },
-        {
-            id: 14,
-            image: "/assets/teste2.jpg",
-            name: "Maya",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        {
-            id: 15,
-            image: "/assets/teste.jpg",
-            name: "Toby",
-            gender: "Macho",
-            age: "3 anos",
-        },
-        {
-            id: 16,
-            image: "/assets/teste2.jpg",
-            name: "Sophie",
-            gender: "Fêmea",
-            age: "1 ano",
-        },
-        {
-            id: 17,
-            image: "/assets/teste.jpg",
-            name: "Duke",
-            gender: "Macho",
-            age: "5 anos",
-        },
-        {
-            id: 18,
-            image: "/assets/teste2.jpg",
-            name: "Mia",
-            gender: "Fêmea",
-            age: "9 meses",
-        },
-        {
-            id: 19,
-            image: "/assets/teste.jpg",
-            name: "Charlie",
-            gender: "Macho",
-            age: "2 anos",
-        },
-        {
-            id: 20,
-            image: "/assets/teste2.jpg",
-            name: "Lily",
-            gender: "Fêmea",
-            age: "4 anos",
-        },
-        // Página 2 (21-40)
-        {
-            id: 21,
-            image: "/assets/teste.jpg",
-            name: "Cooper",
-            gender: "Macho",
-            age: "3 anos",
-        },
-        {
-            id: 22,
-            image: "/assets/teste2.jpg",
-            name: "Stella",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        {
-            id: 23,
-            image: "/assets/teste.jpg",
-            name: "Oliver",
-            gender: "Macho",
-            age: "1 ano",
-        },
-        {
-            id: 24,
-            image: "/assets/teste2.jpg",
-            name: "Daisy",
-            gender: "Fêmea",
-            age: "5 anos",
-        },
-        {
-            id: 25,
-            image: "/assets/teste.jpg",
-            name: "Tucker",
-            gender: "Macho",
-            age: "4 anos",
-        },
-        {
-            id: 26,
-            image: "/assets/teste2.jpg",
-            name: "Molly",
-            gender: "Fêmea",
-            age: "6 anos",
-        },
-        {
-            id: 27,
-            image: "/assets/teste.jpg",
-            name: "Bear",
-            gender: "Macho",
-            age: "3 anos",
-        },
-        {
-            id: 28,
-            image: "/assets/teste2.jpg",
-            name: "Coco",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        {
-            id: 29,
-            image: "/assets/teste.jpg",
-            name: "Winston",
-            gender: "Macho",
-            age: "5 anos",
-        },
-        {
-            id: 30,
-            image: "/assets/teste2.jpg",
-            name: "Penny",
-            gender: "Fêmea",
-            age: "1 ano",
-        },
-        {
-            id: 31,
-            image: "/assets/teste.jpg",
-            name: "Milo",
-            gender: "Macho",
-            age: "2 anos",
-        },
-        {
-            id: 32,
-            image: "/assets/teste2.jpg",
-            name: "Zoe",
-            gender: "Fêmea",
-            age: "4 anos",
-        },
-        {
-            id: 33,
-            image: "/assets/teste.jpg",
-            name: "Jake",
-            gender: "Macho",
-            age: "3 anos",
-        },
-        {
-            id: 34,
-            image: "/assets/teste2.jpg",
-            name: "Ruby",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        {
-            id: 35,
-            image: "/assets/teste.jpg",
-            name: "Leo",
-            gender: "Macho",
-            age: "5 anos",
-        },
-        {
-            id: 36,
-            image: "/assets/teste2.jpg",
-            name: "Sadie",
-            gender: "Fêmea",
-            age: "3 anos",
-        },
-        {
-            id: 37,
-            image: "/assets/teste.jpg",
-            name: "Oscar",
-            gender: "Macho",
-            age: "4 anos",
-        },
-        {
-            id: 38,
-            image: "/assets/teste2.jpg",
-            name: "Maggie",
-            gender: "Fêmea",
-            age: "6 anos",
-        },
-        {
-            id: 39,
-            image: "/assets/teste.jpg",
-            name: "Teddy",
-            gender: "Macho",
-            age: "1 ano",
-        },
-        {
-            id: 40,
-            image: "/assets/teste2.jpg",
-            name: "Bailey",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        // Página 3 (41-60)
-        {
-            id: 41,
-            image: "/assets/teste.jpg",
-            name: "Bentley",
-            gender: "Macho",
-            age: "3 anos",
-        },
-        {
-            id: 42,
-            image: "/assets/teste2.jpg",
-            name: "Roxy",
-            gender: "Fêmea",
-            age: "4 anos",
-        },
-        {
-            id: 43,
-            image: "/assets/teste.jpg",
-            name: "Murphy",
-            gender: "Macho",
-            age: "2 anos",
-        },
-        {
-            id: 44,
-            image: "/assets/teste2.jpg",
-            name: "Willow",
-            gender: "Fêmea",
-            age: "1 ano",
-        },
-        {
-            id: 45,
-            image: "/assets/teste.jpg",
-            name: "Sam",
-            gender: "Macho",
-            age: "5 anos",
-        },
-        {
-            id: 46,
-            image: "/assets/teste2.jpg",
-            name: "Pepper",
-            gender: "Fêmea",
-            age: "3 anos",
-        },
-        {
-            id: 47,
-            image: "/assets/teste.jpg",
-            name: "Bruno",
-            gender: "Macho",
-            age: "4 anos",
-        },
-        {
-            id: 48,
-            image: "/assets/teste2.jpg",
-            name: "Rosie",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        {
-            id: 49,
-            image: "/assets/teste.jpg",
-            name: "Diesel",
-            gender: "Macho",
-            age: "6 anos",
-        },
-        {
-            id: 50,
-            image: "/assets/teste2.jpg",
-            name: "Gracie",
-            gender: "Fêmea",
-            age: "3 anos",
-        },
-        {
-            id: 51,
-            image: "/assets/teste.jpg",
-            name: "Luke",
-            gender: "Macho",
-            age: "4 anos",
-        },
-        {
-            id: 52,
-            image: "/assets/teste2.jpg",
-            name: "Chloe",
-            gender: "Fêmea",
-            age: "2 anos",
-        },
-        {
-            id: 53,
-            image: "/assets/teste.jpg",
-            name: "Gunner",
-            gender: "Macho",
-            age: "5 anos",
-        },
-        {
-            id: 54,
-            image: "/assets/teste2.jpg",
-            name: "Emma",
-            gender: "Fêmea",
-            age: "1 ano",
-        },
-        {
-            id: 55,
-            image: "/assets/teste.jpg",
-            name: "Finn",
-            gender: "Macho",
-            age: "3 anos",
-        },
-        {
-            id: 56,
-            image: "/assets/teste2.jpg",
-            name: "Abby",
-            gender: "Fêmea",
-            age: "4 anos",
-        },
-        {
-            id: 57,
-            image: "/assets/teste.jpg",
-            name: "Jack",
-            gender: "Macho",
-            age: "2 anos",
-        },
-        {
-            id: 58,
-            image: "/assets/teste2.jpg",
-            name: "Nala",
-            gender: "Fêmea",
-            age: "5 anos",
-        },
-        {
-            id: 59,
-            image: "/assets/teste.jpg",
-            name: "Atlas",
-            gender: "Macho",
-            age: "1 ano",
-        },
-        {
-            id: 60,
-            image: "/assets/teste2.jpg",
-            name: "Hazel",
-            gender: "Fêmea",
-            age: "3 anos",
+  // Estado para os filtros ativos
+  const [activeFilters, setActiveFilters] = useState({
+    gender: [],
+    size: [],
+    age: [],
+    health: [],
+  });
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      setIsLoading(true);
+      try {
+        // Definir o endpoint da API
+        let apiUrl = "https://centerpet-api.onrender.com/api/pets";
+
+        if (ongId) {
+          // Se tiver ongId, busca pets da ONG específica
+          apiUrl = `https://centerpet-api.onrender.com/api/pets/by-ong/${ongId}`;
         }
-    ];
 
+        // Fazer a requisição para a API
+        const response = await fetch(apiUrl);
 
-    // Calcula o índice inicial e final dos pets para a página atual
-    const indexOfLastPet = currentPage * petsPerPage;
-    const indexOfFirstPet = indexOfLastPet - petsPerPage;
-    const currentPets = petsMaisPacientes.slice(indexOfFirstPet, indexOfLastPet);
-
-    // Carregamento inicial dos dados
-    useEffect(() => {
-        // Simula um carregamento inicial
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 500);
-    }, []);
-
-    const goToPreviousPage = () => {
-        if (currentPage > 1) {
-            setIsLoading(true);
-            setCurrentPage(prev => prev - 1);
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 300);
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar pets (${response.status})`);
         }
+
+        // Processar os dados da resposta
+        const data = await response.json();
+        const petsArray = Array.isArray(data.data) ? data.data : data;
+
+        // Processar os pets para garantir formato consistente
+        const processedPets = petsArray.map((pet) => ({
+          ...pet,
+          id: pet._id,
+          image:
+            pet.image?.[0] ||
+            pet.photos?.[0] ||
+            pet.imagens?.[0] ||
+            (Array.isArray(pet.image) && pet.image.length > 0
+              ? pet.image[0]
+              : null) ||
+            "https://i.imgur.com/WanR0b3.png",
+          // Processar atributos de saúde para filtragem
+          hasSpecialCondition:
+            pet.health?.specialCondition &&
+            pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
+          specialCondition: pet.health?.specialCondition || "Nenhuma",
+          vaccinated: pet.health?.vaccinated || false,
+          castrated: pet.health?.castrated || false,
+          dewormed: pet.health?.dewormed || false,
+        }));
+
+        // Aplicar filtro com base na categoria da URL
+        let filteredByCategory = processedPets;
+
+        if (category) {
+          switch (category) {
+            case "special":
+              // Filtrar pets com condição especial
+              filteredByCategory = processedPets.filter(
+                (pet) => pet.hasSpecialCondition
+              );
+              break;
+
+            case "more-patient":
+              // Filtrar e ordenar pets por tempo de espera (maior para menor)
+              filteredByCategory = [...processedPets]
+                .filter((pet) => !isNaN(Number(pet.waitingTime)))
+                .sort((a, b) => Number(b.waitingTime) - Number(a.waitingTime));
+              break;
+
+            case "new":
+              // Filtrar e ordenar pets por data de registro (mais recente primeiro)
+              filteredByCategory = [...processedPets]
+                .filter((pet) => pet.registerDate)
+                .sort(
+                  (a, b) => new Date(b.registerDate) - new Date(a.registerDate)
+                );
+              break;
+
+            default:
+              // Sem filtro especial
+              break;
+          }
+        }
+
+        setPets(filteredByCategory);
+        setFilteredPets(filteredByCategory);
+      } catch (error) {
+        console.error("Erro ao buscar pets:", error);
+        setPets([]);
+        setFilteredPets([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    const goToNextPage = () => {
-        if (indexOfLastPet < petsMaisPacientes.length) {
-            setIsLoading(true);
-            setCurrentPage(prev => prev + 1);
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 300);
-        }
+    fetchPets();
+  }, [ongId, category]);
+
+  // Efeito para aplicar filtros do componente Filter
+  useEffect(() => {
+    // Se não há filtros ativos, mostra todos os pets da categoria
+    if (Object.values(activeFilters).every((arr) => arr.length === 0)) {
+      setFilteredPets(pets);
+      setCurrentPage(1);
+      return;
+    }
+
+    // Função para verificar se um pet passa pelos filtros ativos
+    const matchesFilters = (pet) => {
+      // Verificar filtro de gênero
+      if (
+        activeFilters.gender.length > 0 &&
+        !activeFilters.gender.includes(pet.gender)
+      ) {
+        return false;
+      }
+
+      // Verificar filtro de porte
+      if (activeFilters.size.length > 0) {
+        const petSize = pet.size || "";
+        const matches = activeFilters.size.some((filter) => {
+          if (filter === "Pequeno Porte")
+            return petSize.toLowerCase().includes("pequeno");
+          if (filter === "Médio Porte")
+            return (
+              petSize.toLowerCase().includes("médio") ||
+              petSize.toLowerCase().includes("medio")
+            );
+          if (filter === "Grande Porte")
+            return petSize.toLowerCase().includes("grande");
+          return false;
+        });
+        if (!matches) return false;
+      }
+
+      // Verificar filtro de idade
+      if (activeFilters.age.length > 0) {
+        const petAge = pet.age || "";
+        const matches = activeFilters.age.some((filter) => {
+          if (filter === "Filhote")
+            return petAge.toLowerCase().includes("filhote");
+          if (filter === "Jovem") return petAge.toLowerCase().includes("jovem");
+          if (filter === "Adulto")
+            return petAge.toLowerCase().includes("adulto");
+          if (filter === "Idoso") return petAge.toLowerCase().includes("idoso");
+          return false;
+        });
+        if (!matches) return false;
+      }
+
+      // Verificar filtros de saúde
+      if (activeFilters.health.length > 0) {
+        const matches = activeFilters.health.every((filter) => {
+          if (filter === "Vacinado") return pet.vaccinated;
+          if (filter === "Não Vacinado") return !pet.vaccinated;
+          if (filter === "Vermifugado") return pet.dewormed;
+          if (filter === "Não Vermifugado") return !pet.dewormed;
+          if (filter === "Castrado") return pet.castrated;
+          if (filter === "Não Castrado") return !pet.castrated;
+          if (filter === "Condição Especial") return pet.hasSpecialCondition;
+          return true;
+        });
+        if (!matches) return false;
+      }
+
+      return true;
     };
 
-    const totalPages = Math.ceil(petsMaisPacientes.length / petsPerPage);
+    // Aplicar filtros
+    setFilteredPets(pets.filter(matchesFilters));
+    setCurrentPage(1); // Resetar para primeira página ao aplicar filtros
+  }, [activeFilters, pets]);
 
-    return (
-        <div className="conjunt-catalog">
-            {isLoading ? (
-                <div className="loading-spinner">
-                    <div className="spinner" />
-                </div>
-            ) : (
-                <>
-                    <PagePet title={pageTitle} pets={currentPets} />
-                    <div className="pagination-controls">
-                        <button 
-                            onClick={goToPreviousPage} 
-                            disabled={currentPage === 1}
-                            className="pagination-button"
-                            aria-label="Página anterior"
-                        >
-                            <CaretLeft size={24} weight="bold" />
-                        </button>
-                        <span className="page-info">
-                            Página {currentPage} de {totalPages}
-                        </span>
-                        <button 
-                            onClick={goToNextPage} 
-                            disabled={currentPage === totalPages}
-                            className="pagination-button"
-                            aria-label="Próxima página"
-                        >
-                            <CaretRight size={24} weight="bold" />
-                        </button>
-                    </div>
-                </>
-            )}
+  // Paginação
+  const indexOfLastPet = currentPage * petsPerPage;
+  const indexOfFirstPet = indexOfLastPet - petsPerPage;
+  const currentPets = filteredPets.slice(indexOfFirstPet, indexOfLastPet);
+  const totalPages = Math.ceil(filteredPets.length / petsPerPage);
+
+  // Handlers para navegação de página
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  // Handler para aplicação de filtros
+  const handleFilterChange = (filters) => {
+    setActiveFilters(filters);
+  };
+
+  return (
+    <div className="conjunt-catalog">
+      <div className="catalog-header">
+        <div className="catalog-title-container">
+          <Title>{pageTitle}</Title>
         </div>
-    );
+        <div className="filter-container">
+          <Filter onFilterChange={handleFilterChange} />
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="loading-spinner">
+          <div className="spinner" />
+        </div>
+      ) : (
+        <>
+          <div className="page-pet-grid">
+            {currentPets.length > 0 ? (
+              currentPets.map((pet, index) => (
+                <CardPet
+                  key={index}
+                  image={pet.image}
+                  name={pet.name}
+                  gender={pet.gender}
+                  age={pet.age}
+                  type={pet.type}
+                  hasSpecialCondition={pet.hasSpecialCondition}
+                  specialCondition={pet.specialCondition}
+                  vaccinated={pet.vaccinated}
+                  castrated={pet.castrated}
+                  dewormed={pet.dewormed}
+                  onClick={() => navigate(`/pet-info/${pet.id}`)}
+                />
+              ))
+            ) : (
+              <p className="no-pets-message">
+                Nenhum pet encontrado com os filtros selecionados.
+              </p>
+            )}
+          </div>
+
+          {filteredPets.length > 0 && (
+            <div className="pagination-controls">
+              <button
+                onClick={goToPreviousPage}
+                disabled={currentPage === 1}
+                className="pagination-button"
+                aria-label="Página anterior"
+              >
+                <CaretLeft size={24} weight="bold" />
+              </button>
+              <span className="page-info">
+                Página {currentPage} de {totalPages}
+              </span>
+              <button
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+                className="pagination-button"
+                aria-label="Próxima página"
+              >
+                <CaretRight size={24} weight="bold" />
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 };
 
 export default CatalogFilter;

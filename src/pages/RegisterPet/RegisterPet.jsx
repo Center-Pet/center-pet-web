@@ -1,11 +1,28 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { BiErrorCircle } from "react-icons/bi";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import ImageUploadGrid from "../../components/Molecules/ImageUploadGrid/ImageUploadGrid";
 import OngCard from "../../components/Molecules/OngCard/OngCard";
+import {
+  Dog,
+  Cat,
+  IdentificationCard,
+  TextAlignLeft,
+  GenderMale,
+  GenderFemale,
+  CalendarBlank,
+  PawPrint,
+  Ruler,
+  Scissors,
+  Syringe,
+  ShieldCheck,
+  MapPin,
+  Heartbeat,
+  Clock,
+} from "phosphor-react";
 import "./RegisterPet.css";
 
 const dogBreeds = [
@@ -85,6 +102,28 @@ const catBreeds = [
   "Sem Raça Definida (SRD)",
 ];
 
+const specialConditions = [
+  "Nenhuma",
+  "Cego",
+  "Surdo",
+  "Amputado",
+  "Deficiência Motora",
+  "Doença Renal",
+  "Doença Cardíaca",
+  "Diabetes",
+  "Epilepsia",
+  "Alergia Alimentar",
+  "Alergia de Pele",
+  "Leishmaniose",
+  "Cinomose",
+  "Parvovirose",
+  "FIV (Imunodeficiência Felina)",
+  "FeLV (Leucemia Felina)",
+  "Obesidade",
+  "Idoso",
+  "Outro",
+];
+
 export default function RegisterPet() {
   const { user } = useAuth(); // Obtenha o usuário autenticado
   const navigate = useNavigate();
@@ -94,7 +133,8 @@ export default function RegisterPet() {
     name: "",
     type: "",
     coat: "",
-    local: "",
+    state: "",
+    city: "",
     bio: "",
     gender: "",
     age: "",
@@ -107,43 +147,14 @@ export default function RegisterPet() {
     waitingTime: "",
   });
 
-  const [showBreedSuggestions, setShowBreedSuggestions] = useState(false);
-  const [filteredBreeds, setFilteredBreeds] = useState([]);
-  const autoCompleteRef = useRef(null);
-
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Adicione um novo estado para armazenar os detalhes da ONG
   const [ongDetails, setOngDetails] = useState({
     name: "",
-    profileImage: ""
+    profileImage: "",
   });
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        autoCompleteRef.current &&
-        !autoCompleteRef.current.contains(event.target)
-      ) {
-        setShowBreedSuggestions(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (petInfo.breed && petInfo.type) {
-      const breeds = petInfo.type === "Cachorro" ? dogBreeds : catBreeds;
-      const filtered = breeds.filter((breed) =>
-        breed.toLowerCase().includes(petInfo.breed.toLowerCase())
-      );
-      setFilteredBreeds(filtered);
-    }
-  }, [petInfo.breed, petInfo.type]);
 
   // Ajuste o useEffect que busca os detalhes da ONG
   useEffect(() => {
@@ -151,10 +162,10 @@ export default function RegisterPet() {
       if (user && user._id) {
         try {
           console.log("Buscando dados da ONG:", user._id);
-          
+
           const url = `https://centerpet-api.onrender.com/api/ongs/${user._id}`;
           console.log("URL da requisição:", url);
-          
+
           const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -169,38 +180,40 @@ export default function RegisterPet() {
 
           const responseData = await response.json();
           console.log("ONG details fetched:", responseData);
-          
+
           // A resposta tem um formato { success: true, data: {...} }
           // onde os dados da ONG estão dentro do objeto data
           const data = responseData.data;
-          
+
           // O campo correto é profileImg, não profileImage
           const imgUrl = data?.profileImg;
           const ongName = data?.name;
-          
+
           console.log("URL da imagem encontrada:", imgUrl);
           console.log("Nome da ONG encontrado:", ongName);
-          
-          const placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABLSURBVHhe7cExAQAAAMKg9U9tDQ8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AUJsAAHAchrDAAAAAElFTkSuQmCC";
+
+          const placeholderImage =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABLSURBVHhe7cExAQAAAMKg9U9tDQ8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AUJsAAHAchrDAAAAAElFTkSuQmCC";
 
           setOngDetails({
             name: ongName || user.name || "ONG",
-            profileImage: imgUrl || placeholderImage
+            profileImage: imgUrl || placeholderImage,
           });
-          
+
           console.log("ongDetails após atualização:", {
             name: ongName || user.name || "ONG",
-            profileImage: imgUrl || placeholderImage
+            profileImage: imgUrl || placeholderImage,
           });
         } catch (error) {
           console.error("Error fetching ONG details:", error);
-          
+
           // Em caso de falha na API, use os dados do objeto user como fallback
-          const placeholderImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABLSURBVHhe7cExAQAAAMKg9U9tDQ8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AUJsAAHAchrDAAAAAElFTkSuQmCC";
-      
+          const placeholderImage =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABLSURBVHhe7cExAQAAAMKg9U9tDQ8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AUJsAAHAchrDAAAAAElFTkSuQmCC";
+
           setOngDetails({
             name: user.name || "ONG",
-            profileImage: user.profileImg || placeholderImage
+            profileImage: user.profileImg || placeholderImage,
           });
         }
       }
@@ -259,37 +272,6 @@ export default function RegisterPet() {
         [name]: undefined,
       }));
     }
-  };
-
-  const handleBreedChange = (e) => {
-    const { value } = e.target;
-    setPetInfo((prev) => ({
-      ...prev,
-      breed: value,
-    }));
-
-    if (petInfo.type) {
-      setShowBreedSuggestions(true);
-    }
-
-    if (value.trim() !== "") {
-      setFormErrors((prev) => ({
-        ...prev,
-        breed: undefined,
-      }));
-    }
-  };
-
-  const handleSelectBreed = (breed) => {
-    setPetInfo((prev) => ({
-      ...prev,
-      breed: breed,
-    }));
-    setShowBreedSuggestions(false);
-    setFormErrors((prev) => ({
-      ...prev,
-      breed: undefined,
-    }));
   };
 
   const ErrorMessage = ({ message }) => (
@@ -494,6 +476,19 @@ export default function RegisterPet() {
     }
   }, [user]);
 
+  // Estados para cidades e estados
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    // Carregar estados do Brasil ao montar o componente
+    fetch(
+      "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome"
+    )
+      .then((res) => res.json())
+      .then((data) => setStates(data));
+  }, []);
+
   return (
     <form onSubmit={handleSubmit} className="pet-info-container">
       <div className="pet-profile-card">
@@ -516,28 +511,45 @@ export default function RegisterPet() {
 
           <div className="pet-details">
             <h2>Registrar novo Pet</h2>
-            <input
-              type="text"
-              name="name"
-              placeholder="Nome do Pet"
-              value={petInfo.name}
-              onChange={handleInputChange}
-              className={`input-field ${formErrors.name ? "error" : ""}`}
-            />
-            {formErrors.name && <ErrorMessage message={formErrors.name} />}
-            <textarea
-              name="bio"
-              placeholder="Biografia do Pet"
-              value={petInfo.bio}
-              onChange={handleInputChange}
-              className={`input-field bio-field ${
-                formErrors.bio ? "error" : ""
-              }`}
-            />
-            {formErrors.bio && <ErrorMessage message={formErrors.bio} />}
+            <div className="info-row">
+              <label className="info-label">
+                <IdentificationCard size={20} style={{ marginRight: 6 }} />
+                Nome do Pet:
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Nome do Pet"
+                value={petInfo.name}
+                onChange={handleInputChange}
+                className={`input-field ${formErrors.name ? "error" : ""}`}
+              />
+              {formErrors.name && <ErrorMessage message={formErrors.name} />}
+            </div>
+
+            <div className="info-row">
+              <label className="info-label">
+                <TextAlignLeft size={20} style={{ marginRight: 6 }} />
+                Biografia:
+              </label>
+              <textarea
+                name="bio"
+                placeholder="Conte sobre a personalidade, rotina, preferências, histórico, necessidades especiais e curiosidades do pet."
+                value={petInfo.bio}
+                onChange={handleInputChange}
+                className={`input-field bio-field ${
+                  formErrors.bio ? "error" : ""
+                }`}
+              />
+              {formErrors.bio && <ErrorMessage message={formErrors.bio} />}
+            </div>
+
             <div className="pet-info-grid two-columns">
               <div className="info-row">
-                <label className="info-label">Espécie:</label>
+                <label className="info-label">
+                  <Dog size={20} style={{ marginRight: 6 }} />
+                  Espécie:
+                </label>
                 <select
                   name="type"
                   value={petInfo.type}
@@ -552,7 +564,10 @@ export default function RegisterPet() {
               </div>
 
               <div className="info-row">
-                <label className="info-label">Gênero:</label>
+                <label className="info-label">
+                  <GenderMale size={20} style={{ marginRight: 6 }} />
+                  Gênero:
+                </label>
                 <select
                   name="gender"
                   value={petInfo.gender}
@@ -569,7 +584,10 @@ export default function RegisterPet() {
               </div>
 
               <div className="info-row">
-                <label className="info-label">Idade:</label>
+                <label className="info-label">
+                  <CalendarBlank size={20} style={{ marginRight: 6 }} />
+                  Idade:
+                </label>
                 <select
                   name="age"
                   value={petInfo.age}
@@ -586,46 +604,39 @@ export default function RegisterPet() {
               </div>
 
               <div className="info-row">
-                <label className="info-label">Raça:</label>
-                <div className="autocomplete-container" ref={autoCompleteRef}>
-                  <input
-                    type="text"
-                    name="breed"
-                    placeholder={
-                      petInfo.type
-                        ? `Raças de ${petInfo.type}`
-                        : "Selecione uma espécie primeiro"
-                    }
-                    value={petInfo.breed}
-                    onChange={handleBreedChange}
-                    onFocus={() => {
-                      if (petInfo.type && petInfo.breed)
-                        setShowBreedSuggestions(true);
-                    }}
-                    className={`input-field ${formErrors.breed ? "error" : ""}`}
-                    disabled={!petInfo.type}
-                  />
-                  {showBreedSuggestions && filteredBreeds.length > 0 && (
-                    <ul className="suggestions-list">
-                      {filteredBreeds.map((breed, index) => (
-                        <li
-                          key={index}
-                          onClick={() => handleSelectBreed(breed)}
-                          className="suggestion-item"
-                        >
-                          {breed}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                <label className="info-label">
+                  <PawPrint size={20} style={{ marginRight: 6 }} />
+                  Raça:
+                </label>
+                <select
+                  name="breed"
+                  value={petInfo.breed}
+                  onChange={handleInputChange}
+                  className={`input-field ${formErrors.breed ? "error" : ""}`}
+                  disabled={!petInfo.type}
+                >
+                  {!petInfo.breed && <option value="">Selecione</option>}
+                  {(petInfo.type === "Cachorro"
+                    ? dogBreeds
+                    : petInfo.type === "Gato"
+                    ? catBreeds
+                    : []
+                  ).map((breed, idx) => (
+                    <option key={idx} value={breed}>
+                      {breed}
+                    </option>
+                  ))}
+                </select>
                 {formErrors.breed && (
                   <ErrorMessage message={formErrors.breed} />
                 )}
               </div>
 
               <div className="info-row">
-                <label className="info-label">Porte:</label>
+                <label className="info-label">
+                  <Ruler size={20} style={{ marginRight: 6 }} />
+                  Porte:
+                </label>
                 <select
                   name="size"
                   value={petInfo.size}
@@ -641,7 +652,10 @@ export default function RegisterPet() {
               </div>
 
               <div className="info-row">
-                <label className="info-label">Pelagem:</label>
+                <label className="info-label">
+                  <Scissors size={20} style={{ marginRight: 6 }} />
+                  Pelagem:
+                </label>
                 <select
                   name="coat"
                   value={petInfo.coat}
@@ -657,7 +671,10 @@ export default function RegisterPet() {
               </div>
 
               <div className="info-row">
-                <label className="info-label">Vacinado:</label>
+                <label className="info-label">
+                  <Syringe size={20} style={{ marginRight: 6 }} />
+                  Vacinado:
+                </label>
                 <select
                   name="vaccinated"
                   value={petInfo.vaccinated}
@@ -676,7 +693,10 @@ export default function RegisterPet() {
               </div>
 
               <div className="info-row">
-                <label className="info-label">Castrado:</label>
+                <label className="info-label">
+                  <ShieldCheck size={20} style={{ marginRight: 6 }} />
+                  Castrado:
+                </label>
                 <select
                   name="castrated"
                   value={petInfo.castrated}
@@ -695,7 +715,10 @@ export default function RegisterPet() {
               </div>
 
               <div className="info-row">
-                <label className="info-label">Vermifugado:</label>
+                <label className="info-label">
+                  <ShieldCheck size={20} style={{ marginRight: 6 }} />
+                  Vermifugado:
+                </label>
                 <select
                   name="dewormed"
                   value={petInfo.dewormed}
@@ -714,52 +737,117 @@ export default function RegisterPet() {
               </div>
 
               <div className="info-row">
-                <label className="info-label">Localização:</label>
-                <input
-                  type="text"
-                  name="local"
-                  placeholder="Ex: São Paulo, SP"
-                  value={petInfo.local}
-                  onChange={handleInputChange}
-                  className={`input-field ${formErrors.local ? "error" : ""}`}
-                />
-                {formErrors.local && (
-                  <ErrorMessage message={formErrors.local} />
-                )}
-              </div>
-
-              <div className="info-row">
-                <label className="info-label">Condição Especial:</label>
-                <input
-                  type="text"
+                <label className="info-label">
+                  <Heartbeat size={20} style={{ marginRight: 6 }} />
+                  Condição Especial:
+                </label>
+                <select
                   name="specialCondition"
-                  placeholder="Ex: Nenhuma"
                   value={petInfo.specialCondition}
                   onChange={handleInputChange}
                   className={`input-field ${
                     formErrors.specialCondition ? "error" : ""
                   }`}
-                />
+                >
+                  {!petInfo.specialCondition && (
+                    <option value="">Selecione</option>
+                  )}
+                  {specialConditions.map((cond, idx) => (
+                    <option key={idx} value={cond}>
+                      {cond}
+                    </option>
+                  ))}
+                </select>
                 {formErrors.specialCondition && (
                   <ErrorMessage message={formErrors.specialCondition} />
                 )}
               </div>
-
               <div className="info-row">
-                <label className="info-label">Tempo de Espera:</label>
-                <input
-                  type="text"
-                  name="waitingTime"
-                  placeholder="Ex: 2 meses"
-                  value={petInfo.waitingTime}
-                  onChange={handleInputChange}
-                  className={`input-field ${
-                    formErrors.waitingTime ? "error" : ""
-                  }`}
-                />
-                {formErrors.waitingTime && (
-                  <ErrorMessage message={formErrors.waitingTime} />
+                <label className="info-label">
+                  <MapPin size={20} style={{ marginRight: 6 }} />
+                  Estado:
+                </label>
+                <select
+                  name="state"
+                  value={petInfo.state || ""}
+                  onChange={async (e) => {
+                    handleInputChange(e);
+                    // Buscar cidades ao selecionar o estado
+                    const uf = e.target.value;
+                    if (uf) {
+                      try {
+                        const res = await fetch(
+                          `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`
+                        );
+                        const data = await res.json();
+                        setCities(data.map((city) => city.nome));
+                      } catch {
+                        setCities([]);
+                      }
+                    } else {
+                      setCities([]);
+                    }
+                    setPetInfo((prev) => ({ ...prev, city: "" }));
+                  }}
+                  className={`input-field ${formErrors.state ? "error" : ""}`}
+                >
+                  <option value="">Selecione o estado</option>
+                  {states.map((uf) => (
+                    <option key={uf.id} value={uf.sigla}>
+                      {uf.nome}
+                    </option>
+                  ))}
+                </select>
+                {formErrors.state && (
+                  <ErrorMessage message={formErrors.state} />
                 )}
+              </div>
+              <div className="info-row">
+                <label className="info-label">
+                  <MapPin size={20} style={{ marginRight: 6 }} />
+                  Cidade:
+                </label>
+                <select
+                  name="city"
+                  value={petInfo.city || ""}
+                  onChange={handleInputChange}
+                  className={`input-field ${formErrors.city ? "error" : ""}`}
+                  disabled={!petInfo.state}
+                >
+                  <option value="">Selecione a cidade</option>
+                  {cities.map((city, idx) => (
+                    <option key={idx} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+                {formErrors.city && <ErrorMessage message={formErrors.city} />}
+              </div>
+              <div className="last-row">
+                <div className="info-row">
+                  <label className="info-label">
+                    <Clock size={20} style={{ marginRight: 6 }} />
+                    Tempo de Espera:
+                  </label>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <input
+                      type="number"
+                      name="waitingTime"
+                      placeholder="Ex: 2"
+                      min={0}
+                      value={petInfo.waitingTime}
+                      onChange={handleInputChange}
+                      className={`input-field ${
+                        formErrors.waitingTime ? "error" : ""
+                      }`}
+                      style={{ marginRight: "8px" }}
+                    />
+                    <span>meses</span>
+                  </div>
+                  {formErrors.waitingTime && (
+                    <ErrorMessage message={formErrors.waitingTime} />
+                  )}
+                </div>
               </div>
             </div>
             <div className="action-buttons">

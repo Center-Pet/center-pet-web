@@ -1,124 +1,76 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Hero from "../../components/Molecules/Banner/Banner";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import ScrollToTop from "../../components/Atoms/ScrollToTop/ScrollToTop";
-import './Home.css';
+import Title from "../../components/Atoms/TitleType/TitleType";
+import "./Home.css";
 
 const Home = () => {
-  const petData = [
-    {
-      id: 1,
-      image: "/assets/teste.jpg",
-      name: "Rex",
-      gender: "Macho",
-      age: "3 meses",
-    },
-    {
-      id: 2,
-      image: "/assets/teste2.jpg",
-      name: "Luna",
-      gender: "Fêmea",
-      age: "2 anos",
-    },
-    {
-      id: 1,
-      image: "/assets/teste.jpg",
-      name: "Rex",
-      gender: "Macho",
-      age: "3 meses",
-    },
-    {
-      id: 2,
-      image: "/assets/teste2.jpg",
-      name: "Luna",
-      gender: "Fêmea",
-      age: "2 anos",
-    },
-    {
-      id: 1,
-      image: "/assets/teste.jpg",
-      name: "Rex",
-      gender: "Macho",
-      age: "3 meses",
-    },
-    {
-      id: 2,
-      image: "/assets/teste2.jpg",
-      name: "Luna",
-      gender: "Fêmea",
-      age: "2 anos",
-    },
-    {
-      id: 1,
-      image: "/assets/teste.jpg",
-      name: "Rex",
-      gender: "Macho",
-      age: "3 meses",
-    },
-    {
-      id: 2,
-      image: "/assets/teste2.jpg",
-      name: "Luna",
-      gender: "Fêmea",
-      age: "2 anos",
-    },
-    {
-      id: 1,
-      image: "/assets/teste.jpg",
-      name: "Rex",
-      gender: "Macho",
-      age: "3 meses",
-    },
-    {
-      id: 2,
-      image: "/assets/teste2.jpg",
-      name: "Luna",
-      gender: "Fêmea",
-      age: "2 anos",
-    },
-    {
-      id: 1,
-      image: "/assets/teste.jpg",
-      name: "Rex",
-      gender: "Macho",
-      age: "3 meses",
-    },
-    {
-      id: 2,
-      image: "/assets/teste2.jpg",
-      name: "Luna",
-      gender: "Fêmea",
-      age: "2 anos",
-    },
-    {
-      id: 1,
-      image: "/assets/teste.jpg",
-      name: "Rex",
-      gender: "Macho",
-      age: "3 meses",
-    },
-    {
-      id: 2,
-      image: "/assets/teste2.jpg",
-      name: "Luna",
-      gender: "Fêmea",
-      age: "2 anos",
-    },
-  ];
+  const [pets, setPets] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      setLoading(true);
+      try {
+        // Buscar todos os pets disponíveis
+        const response = await fetch(
+          "https://centerpet-api.onrender.com/api/pets"
+        );
+        const data = await response.json();
+
+        // Mapear os dados recebidos para o formato esperado pelo PetShowcase
+        const petsArray = Array.isArray(data.data) ? data.data : data;
+        const formattedPets = petsArray.map((pet) => ({
+          id: pet._id,
+          image:
+            pet.image?.[0] ||
+            pet.photos?.[0] ||
+            pet.imagens?.[0] ||
+            (Array.isArray(pet.image) && pet.image.length > 0
+              ? pet.image[0]
+              : null) ||
+            "https://i.imgur.com/WanR0b3.png",
+          name: pet.name,
+          gender: pet.gender,
+          age: pet.age,
+          type: pet.type || "Não especificado",
+        }));
+
+        setPets(formattedPets);
+      } catch (error) {
+        console.error("Erro ao buscar os pets:", error);
+        setPets([]); // Em caso de erro, define uma lista vazia
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPets();
+  }, []);
 
   return (
     <main className="home-container">
       <Hero />
 
       <section className="pet-section-intro">
-        <h2 className="section-title">Conheça nossos pets disponíveis para adoção</h2>
+        <h2 className="section-title">
+          Conheça nossos pets disponíveis para adoção
+        </h2>
         <p className="section-subtitle">
-          Eles estão esperando por um lar cheio de amor e cuidado. Veja abaixo os pets disponíveis e agende uma visita!
+          Eles estão esperando por um lar cheio de amor e cuidado. Veja abaixo
+          os pets disponíveis e agende uma visita!
         </p>
       </section>
 
       <section className="showcase-section">
-        <PetShowcase pets={petData} />
+        {loading ? (
+          <div className="loading-spinner">
+            <div className="spinner" />
+          </div>
+        ) : (
+          <PetShowcase title={"Pets Disponíveis"} pets={pets} limit={10} />
+        )}
       </section>
 
       {/* COMO FUNCIONA */}
@@ -155,22 +107,34 @@ const Home = () => {
           <div className="curiosity-card">
             <i className="fas fa-paw"></i>
             <h3>Mais de 30 milhões</h3>
-            <p>No Brasil, há mais de 30 milhões de animais abandonados esperando por um lar.</p>
+            <p>
+              No Brasil, há mais de 30 milhões de animais abandonados esperando
+              por um lar.
+            </p>
           </div>
           <div className="curiosity-card">
             <i className="fas fa-heartbeat"></i>
             <h3>Benefícios à saúde</h3>
-            <p>Adotar um pet pode reduzir o estresse, a solidão e até a pressão arterial.</p>
+            <p>
+              Adotar um pet pode reduzir o estresse, a solidão e até a pressão
+              arterial.
+            </p>
           </div>
           <div className="curiosity-card">
             <i className="fas fa-gavel"></i>
             <h3>É lei!</h3>
-            <p>O abandono de animais é crime no Brasil, com pena de detenção e multa.</p>
+            <p>
+              O abandono de animais é crime no Brasil, com pena de detenção e
+              multa.
+            </p>
           </div>
           <div className="curiosity-card">
             <i className="fas fa-hands-helping"></i>
             <h3>ONGs parceiras</h3>
-            <p>ONGs são fundamentais para o resgate, cuidado e adoção responsável dos pets.</p>
+            <p>
+              ONGs são fundamentais para o resgate, cuidado e adoção responsável
+              dos pets.
+            </p>
           </div>
         </div>
       </section>
@@ -183,14 +147,20 @@ const Home = () => {
             <img src="/assets/feira-adocao.png" alt="Feira de Adoção" />
             <div className="event-info">
               <h3>Feira de Adoção - Maio</h3>
-              <p>Participe da nossa feira presencial e encontre seu novo melhor amigo! 25/05, das 10h às 16h, Parque Central.</p>
+              <p>
+                Participe da nossa feira presencial e encontre seu novo melhor
+                amigo! 25/05, das 10h às 16h, Parque Central.
+              </p>
             </div>
           </div>
           <div className="event-banner">
             <img src="/assets/castracao.jpeg" alt="Campanha de Castração" />
             <div className="event-info">
               <h3>Campanha de Castração Solidária</h3>
-              <p>Vagas limitadas para castração gratuita de cães e gatos. Inscreva-se até 10/06!</p>
+              <p>
+                Vagas limitadas para castração gratuita de cães e gatos.
+                Inscreva-se até 10/06!
+              </p>
             </div>
           </div>
         </div>
@@ -202,29 +172,45 @@ const Home = () => {
           {/* Primeira linha: texto à esquerda, imagem à direita */}
           <div className="about-row-custom">
             <div className="about-text about-text-left">
-              <h2 className="section-title">
-                Sobre nós
-                <span className="section-underline"></span>
-              </h2>
+              <Title>Sobre a Center Pet</Title>
               <p>
-                Aqui na Center Pet, acreditamos que todo animal merece um lar cheio de amor e cuidado. Nossa missão é conectar ONGs e protetores de animais a pessoas dispostas a adotar, tornando o processo mais acessível, transparente e eficiente.
+                Aqui na Center Pet, acreditamos que todo animal merece um lar
+                cheio de amor e cuidado. Nossa missão é conectar ONGs e
+                protetores de animais a pessoas dispostas a adotar, tornando o
+                processo mais acessível, transparente e eficiente.
               </p>
               <p>
-                Desenvolvemos uma plataforma intuitiva, onde as ONGs podem cadastrar e manter um catálogo atualizado de animais disponíveis para adoção. Cada pet tem seu próprio perfil, com informações como nome, idade, peso, condição de saúde e fotos.
+                Desenvolvemos uma plataforma intuitiva, onde as ONGs podem
+                cadastrar e manter um catálogo atualizado de animais disponíveis
+                para adoção. Cada pet tem seu próprio perfil, com informações
+                como nome, idade, peso, condição de saúde e fotos.
               </p>
             </div>
             <div className="about-img-wrapper about-img-wrapper-right">
-              <img src="./assets/logo/CP.jpg" alt="Sobre a Center Pet" className="about-img" />
+              <img
+                src="./assets/logo/CP.jpg"
+                alt="Sobre a Center Pet"
+                className="about-img"
+              />
             </div>
           </div>
           {/* Segunda linha: imagem à esquerda, texto à direita */}
           <div className="about-row-custom about-row-custom-reverse">
             <div className="about-img-wrapper about-img-wrapper-left">
-              <img src="https://www.vereadorafernandamoreno.com.br/wp-content/uploads/2020/12/Protetor-de-animais.jpg" alt="Adoção responsável" className="about-img" />
+              <img
+                src="https://www.vereadorafernandamoreno.com.br/wp-content/uploads/2020/12/Protetor-de-animais.jpg"
+                alt="Adoção responsável"
+                className="about-img"
+              />
             </div>
             <div className="about-text about-text-right">
               <p>
-                Se você está em busca de um novo companheiro, pode navegar facilmente pela plataforma, filtrar os animais conforme suas preferências e entrar em contato diretamente com a ONG responsável. Queremos tornar o ato de adotar mais simples e significativo, ajudando a criar laços duradouros entre humanos e seus novos amigos de quatro patas.
+                Se você está em busca de um novo companheiro, pode navegar
+                facilmente pela plataforma, filtrar os animais conforme suas
+                preferências e entrar em contato diretamente com a ONG
+                responsável. Queremos tornar o ato de adotar mais simples e
+                significativo, ajudando a criar laços duradouros entre humanos e
+                seus novos amigos de quatro patas.
               </p>
             </div>
           </div>
@@ -235,17 +221,23 @@ const Home = () => {
       <section className="proud-ongs-section">
         <div className="proud-ongs-header">
           <div>
-            <h2 className="proud-ongs-title">
-              Temos orgulho em apoiar essas ONGs incríveis
-            </h2>
-            <div className="proud-ongs-underline"></div>
+            <Title>Temos orgulho em apoiar essas ONGs incríveis</Title>
           </div>
         </div>
         <div className="proud-ongs-cards">
           <div className="ong-card">
-            <img src="https://pbs.twimg.com/profile_images/1758521731545780224/KjQzo0Sr_400x400.jpg" alt="Resgatiticos" className="ong-logo" />
+            <img
+              src="https://pbs.twimg.com/profile_images/1758521731545780224/KjQzo0Sr_400x400.jpg"
+              alt="Resgatiticos"
+              className="ong-logo"
+            />
             <h3 className="ong-name">Resgatiticos</h3>
-            <a href="https://www.instagram.com/resgatiticos/" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
+            <a
+              href="https://www.instagram.com/resgatiticos/"
+              className="ong-details-btn"
+            >
+              Veja mais detalhes <span>&#8594;</span>
+            </a>
           </div>
           {/* <div className="ong-card">
             <img src="/assets/ong2-logo.png" alt="Amigos de Patas" className="ong-logo" />
@@ -269,33 +261,66 @@ const Home = () => {
         <div className="testimonials-cards">
           <div className="testimonial-card">
             <div className="testimonial-photos">
-              <img src="/assets/pet1.jpeg" alt="Pet adotado" className="testimonial-pet" />
-              <img src="/assets/person1.jpg" alt="Adotante" className="testimonial-person" />
+              <img
+                src="/assets/pet1.jpeg"
+                alt="Pet adotado"
+                className="testimonial-pet"
+              />
+              <img
+                src="/assets/person1.jpg"
+                alt="Adotante"
+                className="testimonial-person"
+              />
             </div>
             <p className="testimonial-text">
-              “A adoção mudou minha vida! Ganhei um amigo fiel e muito amor em casa. Recomendo para todos!”
+              “A adoção mudou minha vida! Ganhei um amigo fiel e muito amor em
+              casa. Recomendo para todos!”
             </p>
-            <span className="testimonial-author">— Marcos Henrique, São Paulo/SP</span>
+            <span className="testimonial-author">
+              — Marcos Henrique, São Paulo/SP
+            </span>
           </div>
           <div className="testimonial-card">
             <div className="testimonial-photos">
-              <img src="/assets/pet2.jpg" alt="Pet adotado" className="testimonial-pet" />
-              <img src="/assets/person2.jpg" alt="Adotante" className="testimonial-person" />
+              <img
+                src="/assets/pet2.jpg"
+                alt="Pet adotado"
+                className="testimonial-pet"
+              />
+              <img
+                src="/assets/person2.jpg"
+                alt="Adotante"
+                className="testimonial-person"
+              />
             </div>
             <p className="testimonial-text">
-              “O processo foi simples e seguro. Hoje não me imagino sem a Mel. Obrigado, Center Pet!”
+              “O processo foi simples e seguro. Hoje não me imagino sem a Mel.
+              Obrigado, Center Pet!”
             </p>
-            <span className="testimonial-author">— Carlos Henrique, Belo Horizonte/MG</span>
+            <span className="testimonial-author">
+              — Carlos Henrique, Belo Horizonte/MG
+            </span>
           </div>
           <div className="testimonial-card">
             <div className="testimonial-photos">
-              <img src="/assets/pet3.png" alt="Pet adotado" className="testimonial-pet" />
-              <img src="/assets/person3.jpeg" alt="Adotante" className="testimonial-person" />
+              <img
+                src="/assets/pet3.png"
+                alt="Pet adotado"
+                className="testimonial-pet"
+              />
+              <img
+                src="/assets/person3.jpeg"
+                alt="Adotante"
+                className="testimonial-person"
+              />
             </div>
             <p className="testimonial-text">
-              “Adotar é um ato de amor. Fui muito bem orientada e encontrei o pet perfeito para minha família.”
+              “Adotar é um ato de amor. Fui muito bem orientada e encontrei o
+              pet perfeito para minha família.”
             </p>
-            <span className="testimonial-author">— Juliana Souza, Curitiba/PR</span>
+            <span className="testimonial-author">
+              — Juliana Souza, Curitiba/PR
+            </span>
           </div>
         </div>
       </section>
@@ -304,18 +329,26 @@ const Home = () => {
       <section className="partners-section">
         <h2 className="section-title">Parcerias que transformam vidas</h2>
         <p className="section-subtitle">
-          Amplie o alcance do seu trabalho e ajude mais pets a encontrarem um lar amoroso.
+          Amplie o alcance do seu trabalho e ajude mais pets a encontrarem um
+          lar amoroso.
         </p>
         <div className="partners-content">
           <div className="partners-text">
             <h3>Você representa uma ONG ou algum projeto?</h3>
             <p>
-              Faça parte do nosso time de parceiros e tenha seus pets disponíveis para adoção divulgados gratuitamente na nossa plataforma.
+              Faça parte do nosso time de parceiros e tenha seus pets
+              disponíveis para adoção divulgados gratuitamente na nossa
+              plataforma.
             </p>
-            <a href="/register-ong" className="partner-button">Quero ser parceiro</a>
+            <a href="/register-ong" className="partner-button">
+              Quero ser parceiro
+            </a>
           </div>
           <div className="partners-image">
-            <img src="/assets/logo/Center-Pet.jpg" alt="Imagem de parceria com ONG" />
+            <img
+              src="/assets/logo/Center-Pet.jpg"
+              alt="Imagem de parceria com ONG"
+            />
           </div>
         </div>
       </section>
@@ -326,12 +359,12 @@ const Home = () => {
           {/* Sem href por enquanto */}
           <a className="cta-secondary donate">Doar para um projeto</a>
         </div>
-      </section>  
+      </section>
 
       <button
         className="floating-help"
         aria-label="Ajuda ou Chat"
-        onClick={() => alert('Em breve você poderá falar com a gente!')}
+        onClick={() => alert("Em breve você poderá falar com a gente!")}
       >
         <i className="fas fa-comments"></i>
       </button>

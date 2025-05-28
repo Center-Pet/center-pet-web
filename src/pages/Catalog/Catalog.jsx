@@ -1,513 +1,227 @@
+import React, { useEffect, useState } from "react";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
-import TitleType from "../../components/Atoms/TitleType/TitleType";
 import Filter from "../../components/Atoms/Filter/Filter";
-import './Catalog.css';
+import "./Catalog.css";
 
 const Catalog = () => {
-    const petsMaisPacientes = [
-      {
-        id: 1,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 2,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 3,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 4,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 1,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 2,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 3,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 4,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 1,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 2,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 3,
-        image: "/assets/teste.jpg",
-        name: "Rex",
-        gender: "Macho",
-        age: "3 meses",
-      },
-      {
-        id: 4,
-        image: "/assets/teste2.jpg",
-        name: "Luna",
-        gender: "Fêmea",
-        age: "2 anos",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-    ];
+  const [petsMaisPacientes, setPetsMaisPacientes] = useState([]);
+  const [petsEspeciais, setPetsEspeciais] = useState([]);
+  const [novosPets, setNovosPets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filteredPets, setFilteredPets] = useState({
+    special: [],
+    patient: [],
+    new: [],
+  });
+  const [activeFilters, setActiveFilters] = useState({
+    gender: [],
+    size: [],
+    age: [],
+    health: [],
+  });
 
-    const novosPets = [
-      {
-        id: 5,
-        image: "/assets/teste.jpg",
-        name: "Max",
-        gender: "Macho",
-        age: "1 ano",
-      },
-      {
-        id: 6,
-        image: "/assets/teste2.jpg",
-        name: "Bella",
-        gender: "Fêmea",
-        age: "6 meses",
-      },
-      {
-        id: 7,
-        image: "/assets/teste.jpg",
-        name: "Charlie",
-        gender: "Macho",
-        age: "2 anos",
-      },
-      {
-        id: 8,
-        image: "/assets/teste2.jpg",
-        name: "Molly",
-        gender: "Fêmea",
-        age: "4 meses",
-      },
-      {
-        id: 5,
-        image: "/assets/teste.jpg",
-        name: "Max",
-        gender: "Macho",
-        age: "1 ano",
-      },
-      {
-        id: 6,
-        image: "/assets/teste2.jpg",
-        name: "Bella",
-        gender: "Fêmea",
-        age: "6 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 7,
-        image: "/assets/teste.jpg",
-        name: "Charlie",
-        gender: "Macho",
-        age: "2 anos",
-      },
-      {
-        id: 8,
-        image: "/assets/teste2.jpg",
-        name: "Molly",
-        gender: "Fêmea",
-        age: "4 meses",
-      },
-      {
-        id: 5,
-        image: "/assets/teste.jpg",
-        name: "Max",
-        gender: "Macho",
-        age: "1 ano",
-      },
-      {
-        id: 6,
-        image: "/assets/teste2.jpg",
-        name: "Bella",
-        gender: "Fêmea",
-        age: "6 meses",
-      },
-      {
-        id: 7,
-        image: "/assets/teste.jpg",
-        name: "Charlie",
-        gender: "Macho",
-        age: "2 anos",
-      },
-      {
-        id: 8,
-        image: "/assets/teste2.jpg",
-        name: "Molly",
-        gender: "Fêmea",
-        age: "4 meses",
-      },
-      {
-        id: 5,
-        image: "/assets/teste.jpg",
-        name: "Max",
-        gender: "Macho",
-        age: "1 ano",
-      },
-      {
-        id: 6,
-        image: "/assets/teste2.jpg",
-        name: "Bella",
-        gender: "Fêmea",
-        age: "6 meses",
-      },
-      {
-        id: 7,
-        image: "/assets/teste.jpg",
-        name: "Charlie",
-        gender: "Macho",
-        age: "2 anos",
-      },
-      {
-        id: 8,
-        image: "/assets/teste2.jpg",
-        name: "Molly",
-        gender: "Fêmea",
-        age: "4 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-    ];
+  useEffect(() => {
+    const fetchPets = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          "https://centerpet-api.onrender.com/api/pets"
+        );
+        const data = await response.json();
 
-    const petsEspeciais = [
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-      {
-        id: 9,
-        image: "/assets/teste.jpg",
-        name: "Buddy",
-        gender: "Macho",
-        age: "5 anos",
-      },
-      {
-        id: 10,
-        image: "/assets/teste2.jpg",
-        name: "Daisy",
-        gender: "Fêmea",
-        age: "3 anos",
-      },
-      {
-        id: 11,
-        image: "/assets/teste.jpg",
-        name: "Rocky",
-        gender: "Macho",
-        age: "7 anos",
-      },
-      {
-        id: 12,
-        image: "/assets/teste2.jpg",
-        name: "Lucy",
-        gender: "Fêmea",
-        age: "8 meses",
-      },
-    ];
+        // Processando todos os pets para garantir formato consistente
+        const processedPets = data.map((pet) => ({
+          ...pet,
+          id: pet._id,
+          // Processando as imagens
+          image:
+            pet.image?.[0] ||
+            pet.photos?.[0] ||
+            pet.imagens?.[0] ||
+            (Array.isArray(pet.image) && pet.image.length > 0
+              ? pet.image[0]
+              : null) ||
+            "https://i.imgur.com/WanR0b3.png",
+          // Processando as informações de saúde
+          hasSpecialCondition:
+            pet.health?.specialCondition &&
+            pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
+          specialCondition: pet.health?.specialCondition || "Nenhuma",
+          vaccinated: pet.health?.vaccinated || false,
+          castrated: pet.health?.castrated || false,
+          dewormed: pet.health?.dewormed || false,
+        }));
 
-    return (
-        <div className="catalog-container">
-            <PetShowcase 
-                title="Cachorros" 
-                pets={petsMaisPacientes} 
-                category="dogs" 
-            />
-            <PetShowcase 
-                title="Gatos" 
-                pets={novosPets} 
-                category="cats" 
-            />
-            <PetShowcase 
-                title="Pets Especiais" 
-                pets={petsEspeciais} 
-                category="special" 
-            />
+        // Pets Especiais: filtra os que têm condições especiais
+        const especiais = processedPets.filter(
+          (pet) => pet.hasSpecialCondition
+        );
+        setPetsEspeciais(especiais);
+
+        // Pets Mais Pacientes: maiores waitingTime
+        const pacientes = [...processedPets]
+          .filter((pet) => !isNaN(Number(pet.waitingTime)))
+          .sort((a, b) => Number(b.waitingTime) - Number(a.waitingTime))
+          .slice(0, 10);
+        setPetsMaisPacientes(pacientes);
+
+        // Novos Pets: ordena por registerDate
+        const novos = [...processedPets]
+          .filter((pet) => pet.registerDate)
+          .sort((a, b) => new Date(b.registerDate) - new Date(a.registerDate))
+          .slice(0, 10);
+        setNovosPets(novos);
+
+        // Inicializa filteredPets com todos os pets iniciais
+        setFilteredPets({
+          special: especiais,
+          patient: pacientes,
+          new: novos,
+        });
+      } catch (error) {
+        console.error("Erro ao buscar pets:", error);
+        setPetsEspeciais([]);
+        setPetsMaisPacientes([]);
+        setNovosPets([]);
+        setFilteredPets({
+          special: [],
+          patient: [],
+          new: [],
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPets();
+  }, []);
+
+  // Efeito para aplicar filtros quando activeFilters mudar
+  useEffect(() => {
+    // Se não há filtros ativos, mostramos todos os pets originais
+    if (Object.values(activeFilters).every((arr) => arr.length === 0)) {
+      setFilteredPets({
+        special: petsEspeciais,
+        patient: petsMaisPacientes,
+        new: novosPets,
+      });
+      return;
+    }
+
+    // Função para verificar se um pet passa pelos filtros ativos
+    const matchesFilters = (pet) => {
+      // Verificar filtro de gênero
+      if (
+        activeFilters.gender.length > 0 &&
+        !activeFilters.gender.includes(pet.gender)
+      ) {
+        return false;
+      }
+
+      // Verificar filtro de porte
+      if (activeFilters.size.length > 0) {
+        const petSize = pet.size || "";
+        const matches = activeFilters.size.some((filter) => {
+          if (filter === "Pequeno Porte")
+            return petSize.toLowerCase().includes("pequeno");
+          if (filter === "Médio Porte")
+            return (
+              petSize.toLowerCase().includes("médio") ||
+              petSize.toLowerCase().includes("medio")
+            );
+          if (filter === "Grande Porte")
+            return petSize.toLowerCase().includes("grande");
+          return false;
+        });
+        if (!matches) return false;
+      }
+
+      // Verificar filtro de idade
+      if (activeFilters.age.length > 0) {
+        const petAge = pet.age || "";
+        const matches = activeFilters.age.some((filter) => {
+          if (filter === "Filhote")
+            return petAge.toLowerCase().includes("filhote");
+          if (filter === "Jovem") return petAge.toLowerCase().includes("jovem");
+          if (filter === "Adulto")
+            return petAge.toLowerCase().includes("adulto");
+          if (filter === "Idoso") return petAge.toLowerCase().includes("idoso");
+          return false;
+        });
+        if (!matches) return false;
+      }
+
+      // Verificar filtros de saúde
+      if (activeFilters.health.length > 0) {
+        const matches = activeFilters.health.every((filter) => {
+          if (filter === "Vacinado") return pet.vaccinated;
+          if (filter === "Não Vacinado") return !pet.vaccinated;
+          if (filter === "Vermifugado") return pet.dewormed;
+          if (filter === "Não Vermifugado") return !pet.dewormed;
+          if (filter === "Castrado") return pet.castrated;
+          if (filter === "Não Castrado") return !pet.castrated;
+          if (filter === "Condição Especial") return pet.hasSpecialCondition;
+          return true;
+        });
+        if (!matches) return false;
+      }
+
+      return true;
+    };
+
+    // Aplicar filtros a cada categoria de pets
+    setFilteredPets({
+      special: petsEspeciais.filter(matchesFilters),
+      patient: petsMaisPacientes.filter(matchesFilters),
+      new: novosPets.filter(matchesFilters),
+    });
+  }, [activeFilters, petsEspeciais, petsMaisPacientes, novosPets]);
+
+  // Handler para atualizar os filtros ativos
+  const handleFilterChange = (filters) => {
+    setActiveFilters(filters);
+  };
+
+  return (
+    <div className="catalog-container">
+      {/* Componente de filtro no início da página */}
+      <div className="catalog-header">
+        <Filter onFilterChange={handleFilterChange} />
+      </div>
+
+      {loading ? (
+        <div className="loading-spinner">
+          <div className="spinner" />
         </div>
-    );
+      ) : (
+        <>
+          {/* PetShowcase para pets especiais */}
+          <PetShowcase
+            title="Pets Especiais"
+            pets={filteredPets.special}
+            category="special"
+            limit={8} // Limitando para mostrar apenas 8 pets inicialmente
+          />
+
+          {/* PetShowcase para pets mais pacientes */}
+          <PetShowcase
+            title="Pets Mais Pacientes"
+            pets={filteredPets.patient}
+            category="more-patient"
+            limit={8}
+          />
+
+          {/* PetShowcase para novos pets */}
+          <PetShowcase
+            title="Novos Pets"
+            pets={filteredPets.new}
+            category="new"
+            limit={8}
+          />
+        </>
+      )}
+    </div>
+  );
 };
 
 export default Catalog;
