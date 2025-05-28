@@ -119,8 +119,30 @@
   width: 100%;
   min-height: 120px;
   max-height: 200px;
+}
+
+/* Contador de caracteres para o campo de bio */
+.character-counter {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  margin-top: 5px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.char-count.limit-warning {
+  color: #d14d72;
+  font-weight: bold;
   resize: vertical;
-  padding: 12px;
+  padding: 0.9rem;
   font-size: 16px;
   line-height: 1.5;
   margin-bottom: 0;
@@ -350,7 +372,7 @@
 
 .editable-field textarea {
   min-height: 100px;
-  resize: vertical;
+  resize: none;
 }
 
 .editable-field label {
@@ -491,7 +513,7 @@
   width: 100%;
   min-height: 120px;
   max-height: 200px;
-  resize: vertical;
+  resize: none;
   padding: 12px;
   font-size: 16px;
   line-height: 1.5;

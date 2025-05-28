@@ -532,8 +532,7 @@ export default function PetInfo() {
               <h2>
                 Conheça {pet.name}
                 <SocialShare />
-              </h2>
-              <h4 className="ong-subtitle">
+              </h2>              <h4 className="ong-subtitle">
                 De{" "}
                 <strong>
                   <a href={`/ong-profile/${pet.ongId}`}>
@@ -541,7 +540,11 @@ export default function PetInfo() {
                   </a>
                 </strong>
               </h4>
-              <h4></h4>
+              <h4 className="location-subtitle">
+                <MapPin size={16} style={{ marginRight: 4 }} />
+                {pet.city && pet.state ? `${pet.city}, ${pet.state}` : 
+                 pet.location ? pet.location : "Localização não informada"}
+              </h4>
               <p className="pet-bio">
                 {pet.description || "Sem descrição disponível."}
               </p>
@@ -609,7 +612,11 @@ export default function PetInfo() {
 
         {similarPets.length > 0 && (
           <div className="carousel-section">
-            <PetShowcase title="Outros Pets" pets={similarPets} />
+            <PetShowcase 
+            title="Outros Pets" 
+            pets={similarPets} 
+            limit={15}
+            />
           </div>
         )}
       </div>

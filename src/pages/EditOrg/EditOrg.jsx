@@ -338,7 +338,7 @@ const EditOrg = () => {
       <div id="edit-form-container">
         <form id="edit-form" onSubmit={handleSubmit}>
           <div id="edit-org-title">
-            <TitleType>Editar Perfil da Organização</TitleType>
+            <h1>Editar Perfil da Organização</h1>
           </div>
           <div id="org-img-profile">
             <h2>Sua foto de perfil</h2>
@@ -386,18 +386,24 @@ const EditOrg = () => {
                 onChange={(e) => setCollaborators(e.target.value)}
               />
             </>
-          )}
-
-          <div id="edit-input-textarea">
+          )}          <div id="edit-input-textarea">
             <label>Descrição</label>
             <textarea
               name="edit-form-input"
               id="edit-org-input-description"
               rows={6}
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= 500) {
+                  setDescription(e.target.value);
+                }
+              }}
               placeholder="Descreva sua organização..."
+              maxLength={500}
             ></textarea>
+            <div className="character-counter">
+              {description ? description.length : 0}/500 caracteres
+            </div>
           </div>
 
           <div className="endereco-section">
@@ -593,13 +599,27 @@ const EditOrg = () => {
           <div id="edit-buttons-options">
             <ButtonType type="submit" width="250px">
               Salvar Alterações
-            </ButtonType>
-            <ButtonType
+            </ButtonType>            <ButtonType
               type="button"
               width="250px"
+              bgColor="#FF4D4D"
               onClick={(e) => {
                 e.preventDefault(); // Previne o comportamento padrão
-                navigate(`/ong-profile/${user._id}`);
+                Swal.fire({
+                  title: "Tem certeza?",
+                  text: "Todas as alterações feitas serão perdidas.",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#D14D72",
+                  cancelButtonColor: "#6c757d",
+                  confirmButtonText: "Sim, cancelar",
+                  cancelButtonText: "Continuar editando",
+                  showCloseButton: true,
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    navigate(`/ong-profile/${user._id}`);
+                  }
+                });
               }}
             >
               Cancelar

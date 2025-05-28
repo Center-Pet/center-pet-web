@@ -121,12 +121,21 @@
 
 .bio-field {
   min-height: 100px;
-  resize: vertical;
+  resize: none;
 }
 
 select.input-field {
   background-color: white;
   cursor: pointer;
+}
+
+/* Contador de caracteres para o campo de bio */
+.character-counter {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 /* Garante que as mensagens de erro não quebrem o layout */

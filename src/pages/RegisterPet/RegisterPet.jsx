@@ -249,9 +249,13 @@ export default function RegisterPet() {
       return currentPreviews.filter((_, index) => index !== indexToDelete);
     });
   };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Limitar biografia a 500 caracteres
+    if (name === "bio" && value.length > 500) {
+      return;
+    }
 
     if (name === "type") {
       setPetInfo((prev) => ({
@@ -531,16 +535,19 @@ export default function RegisterPet() {
               <label className="info-label">
                 <TextAlignLeft size={20} style={{ marginRight: 6 }} />
                 Biografia:
-              </label>
-              <textarea
+              </label>              <textarea
                 name="bio"
                 placeholder="Conte sobre a personalidade, rotina, preferências, histórico, necessidades especiais e curiosidades do pet."
                 value={petInfo.bio}
                 onChange={handleInputChange}
+                maxLength={500}
                 className={`input-field bio-field ${
                   formErrors.bio ? "error" : ""
                 }`}
               />
+              <div className="character-counter">
+                {petInfo.bio ? petInfo.bio.length : 0}/500 caracteres
+              </div>
               {formErrors.bio && <ErrorMessage message={formErrors.bio} />}
             </div>
 

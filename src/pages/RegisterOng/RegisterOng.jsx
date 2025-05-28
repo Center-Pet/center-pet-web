@@ -531,10 +531,24 @@ const RegisterOng = () => {
                     <label>Telefone: </label>
                     <InputField type="tel" placeholder="(00)00000-0000" value={phone} onChange={(e) => { setPhone(e.target.value) }} width='30rem' required />
                     <label>Email: </label>
-                    <InputField type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} width='30rem' required />
-                    <div className='input-textarea'>
+                    <InputField type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} width='30rem' required />                    <div className='input-textarea'>
                         <label>Descrição (opcional)</label>
-                        <textarea name="form-input" id="input-description" rows={6} value={description} onChange={(e) => { setDescription(e.target.value) }}></textarea>
+                        <textarea 
+                            name="form-input" 
+                            id="input-description" 
+                            rows={6} 
+                            value={description} 
+                            onChange={(e) => { 
+                                if (e.target.value.length <= 500) {
+                                    setDescription(e.target.value);
+                                }
+                            }}
+                            maxLength={500}
+                            placeholder="Descreva sua organização..."
+                        ></textarea>
+                        <div className="character-counter">
+                            {description ? description.length : 0}/500 caracteres
+                        </div>
                     </div>
 
                     {/* Localização */}

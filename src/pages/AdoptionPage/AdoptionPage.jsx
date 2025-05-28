@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import  useAuth from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import "./AdoptionPage.css";
 
 export default function AdoptionPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { user, userType } = useAuth();
+  const { userType } = useAuth();
 
   const [pet, setPet] = useState(null);
   const [adopter, setAdopter] = useState(null);
@@ -22,24 +22,28 @@ export default function AdoptionPage() {
       try {
         // Buscar informações do pet
         const petRes = await fetch(`https://centerpet-api.onrender.com/api/pets/${petId}`);
+        if (!petRes.ok) throw new Error("Erro ao buscar informações do pet.");
         const petData = await petRes.json();
         setPet(petData);
 
         // Buscar informações do adotante
         const adopterRes = await fetch(`https://centerpet-api.onrender.com/api/users/${userId}`);
+        if (!adopterRes.ok) throw new Error("Erro ao buscar informações do adotante.");
         const adopterData = await adopterRes.json();
         setAdopter(adopterData);
 
         // Buscar informações da ONG
         const ongRes = await fetch(`https://centerpet-api.onrender.com/api/ongs/${ongId}`);
+        if (!ongRes.ok) throw new Error("Erro ao buscar informações da ONG.");
         const ongData = await ongRes.json();
         setOng(ongData);
 
         setLoading(false);
       } catch (err) {
+        console.error(err);
         Swal.fire({
           title: "Erro",
-          text: "Erro ao carregar informações da adoção.",
+          text: "Erro ao carregar informações da adoção. Por favor, tente novamente.",
           icon: "error",
         });
         setLoading(false);
@@ -48,12 +52,17 @@ export default function AdoptionPage() {
 
     if (petId && userId && ongId) {
       fetchData();
+    } else {
+      Swal.fire({
+        title: "Erro",
+        text: "IDs necessários para carregar a página estão ausentes.",
+        icon: "error",
+      }).then(() => navigate(-1));
     }
-  }, [petId, userId, ongId]);
+  }, [petId, userId, ongId, navigate]);
 
   const handleAccept = async () => {
     try {
-      // Chame a API para aceitar a adoção (ajuste a rota conforme seu backend)
       const res = await fetch(`https://centerpet-api.onrender.com/api/adoptions/accept`, {
         method: "POST",
         headers: {
@@ -69,9 +78,10 @@ export default function AdoptionPage() {
         confirmButtonColor: "#FF8BA7",
       }).then(() => navigate(-1));
     } catch (err) {
+      console.error(err);
       Swal.fire({
         title: "Erro",
-        text: err.message,
+        text: err.message || "Erro ao aceitar solicitação.",
         icon: "error",
       });
     }
@@ -79,7 +89,6 @@ export default function AdoptionPage() {
 
   const handleReject = async () => {
     try {
-      // Chame a API para recusar a adoção (ajuste a rota conforme seu backend)
       const res = await fetch(`https://centerpet-api.onrender.com/api/adoptions/reject`, {
         method: "POST",
         headers: {
@@ -95,9 +104,10 @@ export default function AdoptionPage() {
         confirmButtonColor: "#FF8BA7",
       }).then(() => navigate(-1));
     } catch (err) {
+      console.error(err);
       Swal.fire({
         title: "Erro",
-        text: err.message,
+        text: err.message || "Erro ao recusar solicitação.",
         icon: "error",
       });
     }
@@ -115,10 +125,14 @@ export default function AdoptionPage() {
           <h3>Pet</h3>
           {pet ? (
             <div>
-              <img src={pet.images?.[0] || "https://i.imgur.com/WanR0b3.png"} alt={pet.name} className="adoption-pet-img" />
-              <p><strong>Nome:</strong> {pet.name}</p>
-              <p><strong>Espécie:</strong> {pet.species}</p>
-              <p><strong>Idade:</strong> {pet.age}</p>
+              <img
+                src={pet.images?.[0] || "https://i.imgur.com/WanR0b3.png"}
+                alt={pet.name || "Imagem do pet"}
+                className="adoption-pet-img"
+              />
+              <p><strong>Nome:</strong> {pet.name || "Não informado"}</p>
+              <p><strong>Espécie:</strong> {pet.species || "Não informado"}</p>
+              <p><strong>Idade:</strong> {pet.age || "Não informado"}</p>
             </div>
           ) : (
             <p>Informações do pet não encontradas.</p>
@@ -128,9 +142,9 @@ export default function AdoptionPage() {
           <h3>Adotante</h3>
           {adopter ? (
             <div>
-              <p><strong>Nome:</strong> {adopter.name}</p>
-              <p><strong>Email:</strong> {adopter.email}</p>
-              <p><strong>Telefone:</strong> {adopter.phone}</p>
+              <p><strong>Nome:</strong> {adopter.name || "Não informado"}</p>
+              <p><strong>Email:</strong> {adopter.email || "Não informado"}</p>
+              <p><strong>Telefone:</strong> {adopter.phone || "Não informado"}</p>
             </div>
           ) : (
             <p>Informações do adotante não encontradas.</p>
@@ -140,9 +154,9 @@ export default function AdoptionPage() {
           <h3>ONG Responsável</h3>
           {ong ? (
             <div>
-              <p><strong>Nome:</strong> {ong.name}</p>
-              <p><strong>Email:</strong> {ong.email}</p>
-              <p><strong>Telefone:</strong> {ong.phone}</p>
+              <p><strong>Nome:</strong> {ong.name || "Não informado"}</p>
+              <p><strong>Email:</strong> {ong.email || "Não informado"}</p>
+              <p><strong>Telefone:</strong> {ong.phone || "Não informado"}</p>
             </div>
           ) : (
             <p>Informações da ONG não encontradas.</p>

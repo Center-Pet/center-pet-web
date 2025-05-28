@@ -143,7 +143,6 @@ export default function EditPet() {
     name: "",
     type: "",
     coat: "",
-    location: "",
     state: "",
     city: "",
     description: "",
@@ -195,18 +194,23 @@ export default function EditPet() {
           waitingTimeValue = numericPart ? numericPart[0] : "";
         }
 
-        // Extrair estado e cidade da localização, se disponíveis
-        let state = "";
-        let city = "";
-        if (data.location) {
+        // Verificar se os campos city e state existem diretamente no objeto
+        // Se não existirem, extrair da localização como fallback
+        let state = data.state || "";
+        let city = data.city || "";
+        
+        // Se os campos city e state não existirem diretamente, tenta extrair da localização
+        if ((!city || !state) && data.location) {
           const locationParts = data.location.split(", ");
           if (locationParts.length >= 2) {
-            city = locationParts[0];
-            state = locationParts[1];
-          } else {
+            if (!city) city = locationParts[0];
+            if (!state) state = locationParts[1];
+          } else if (!city) {
             city = data.location;
           }
         }
+
+        console.log("Cidade e estado do pet:", { city, state });
 
         // Preencher o estado com os dados recebidos
         setPetInfo({
@@ -303,9 +307,13 @@ export default function EditPet() {
       currentImages.filter((_, index) => index !== indexToDelete)
     );
   };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    // Limitar descrição a 500 caracteres
+    if (name === "description" && value.length > 500) {
+      return;
+    }
 
     if (name === "type") {
       setPetInfo((prev) => ({
@@ -477,6 +485,8 @@ export default function EditPet() {
             type: petInfo.type,
             coat: petInfo.coat,
             location: location,
+            city: petInfo.city,  // Adicionando cidade
+            state: petInfo.state, // Adicionando estado
             description: petInfo.description,
             gender: petInfo.gender,
             age: petInfo.age,
@@ -493,6 +503,7 @@ export default function EditPet() {
           };
 
           // Enviar para a API
+          console.log("Enviando dados do pet para a API:", updatedPetInfo);
           const response = await fetch(
             `https://centerpet-api.onrender.com/api/pets/update/${petId}`,
             {
@@ -632,9 +643,7 @@ export default function EditPet() {
                 className={`input-field ${formErrors.name ? "error" : ""}`}
               />
               {formErrors.name && <ErrorMessage message={formErrors.name} />}
-            </div>
-
-            <div className="info-row">
+            </div>            <div className="info-row">
               <label className="info-label">
                 <TextAlignLeft size={20} style={{ marginRight: 6 }} />
                 Biografia:
@@ -644,10 +653,14 @@ export default function EditPet() {
                 value={petInfo.description}
                 onChange={handleInputChange}
                 placeholder="Conte um pouco sobre o pet..."
+                maxLength={500}
                 className={`input-field bio-field ${
                   formErrors.description ? "error" : ""
                 }`}
               />
+              <div className="character-counter">
+                {petInfo.description ? petInfo.description.length : 0}/500 caracteres
+              </div>
               {formErrors.description && (
                 <ErrorMessage message={formErrors.description} />
               )}

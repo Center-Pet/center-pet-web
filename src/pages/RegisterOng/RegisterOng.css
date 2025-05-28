@@ -395,8 +395,7 @@ label {
     padding-right: 8px;
     height: 36px;
     font-size: 1rem;
-  }
-  #register-form textarea {
+  }  #register-form textarea {
     box-sizing: border-box;
     width: 100%;
     min-width: 100px;
@@ -404,6 +403,7 @@ label {
     margin-bottom: 0.7rem;
     margin-left: 0;
     margin-right: 0;
+    resize: none;
     padding-left: 8px;
     padding-right: 8px;
     font-size: 1rem;
@@ -523,4 +523,12 @@ label {
   .password-toggle-button {
     right: 6px;
   }
+}
+
+.character-counter {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }

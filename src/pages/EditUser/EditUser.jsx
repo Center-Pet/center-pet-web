@@ -28,6 +28,8 @@ const EditUser = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [loadingCep, setLoadingCep] = useState(false);
+  const [noNumber, setNoNumber] = useState(false);
 
   useEffect(() => {
     const fetchAdopterData = async () => {
@@ -108,7 +110,6 @@ const EditUser = () => {
       [field]: value,
     }));
   };
-
   const uploadImageToCloudinary = async (file) => {
     const data = new FormData();
     data.append("file", file);
@@ -131,64 +132,150 @@ const EditUser = () => {
     return result.secure_url;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Função para buscar endereço pelo CEP
+  const buscarEnderecoPorCep = async (cep) => {
+    // Remover caracteres não numéricos do CEP
+    const cepLimpo = cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) {
+      return;
+    }
+
+    setLoadingCep(true);
     try {
-      const token = localStorage.getItem("token");
-      const idToUpdate = adopterId || user?._id;
-
-      let profileImgUrl = adopterData.profileImg;
-      if (adopterData.profileImg instanceof File) {
-        profileImgUrl = await uploadImageToCloudinary(adopterData.profileImg);
-      }
-
-      // Monta o objeto com os dados a serem enviados
-      const updateData = {
-        fullName: adopterData.fullName,
-        description: adopterData.description,
-        phone: adopterData.phone,
-        cep: adopterData.cep,
-        street: adopterData.street,
-        number: adopterData.number,
-        neighborhood: adopterData.neighborhood,
-        complement: adopterData.complement,
-        city: adopterData.city,
-        profession: adopterData.profession,
-        profileImg: profileImgUrl,
-      };
-
+      // Usar o serviço ViaCEP para buscar o endereço
       const response = await fetch(
-        `https://centerpet-api.onrender.com/api/adopters/editProfile/${idToUpdate}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
-          body: JSON.stringify(updateData),
-        }
+        `https://viacep.com.br/ws/${cepLimpo}/json/`
       );
 
       if (!response.ok) {
-        throw new Error("Erro ao atualizar os dados do adotante.");
+        throw new Error("Erro ao buscar CEP");
       }
 
-      Swal.fire("Sucesso!", "Dados atualizados com sucesso.", "success");
-      navigate(`/adopter-profile/${idToUpdate}`);
+      const data = await response.json();
+
+      // Verificar se o CEP existe e não tem erro
+      if (!data.erro) {
+        // Atualizar os campos de endereço com os dados retornados
+        setAdopterData(prevData => ({
+          ...prevData,
+          street: data.logradouro || "",
+          neighborhood: data.bairro || "",
+          city: data.localidade || "",
+          cep: cepLimpo.replace(/(\d{5})(\d{3})/, "$1-$2") // Formata o CEP
+        }));
+      } else {
+        Swal.fire({
+          title: "CEP Inválido",
+          text: "O CEP informado não existe. Por favor, verifique e tente novamente.",
+          icon: "error",
+          confirmButtonColor: "#D14D72",
+        });
+      }
     } catch (error) {
-      console.error("Erro ao atualizar os dados do adotante:", error);
-      Swal.fire("Erro!", "Não foi possível atualizar os dados.", "error");
+      console.error("Erro ao buscar CEP:", error);
+      Swal.fire({
+        title: "Erro",
+        text: "Ocorreu um erro ao buscar o CEP. Por favor, tente novamente mais tarde.",
+        icon: "error",
+        confirmButtonColor: "#D14D72",
+      });
+    } finally {
+      setLoadingCep(false);
     }
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
+    Swal.fire({
+      title: "Confirmar alterações",
+      text: "Tem certeza que deseja salvar as alterações no perfil?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#D14D72",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Sim, salvar alterações",
+      cancelButtonText: "Revisar dados",
+      showCloseButton: true,
+    }).then(async (result) => {
+      if (!result.isConfirmed) return;
+      
+      try {
+        // Mostrar loading
+        Swal.fire({
+          title: "Salvando alterações...",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+        
+        const token = localStorage.getItem("token");
+        const idToUpdate = adopterId || user?._id;
+
+        let profileImgUrl = adopterData.profileImg;
+        if (adopterData.profileImg instanceof File) {
+          profileImgUrl = await uploadImageToCloudinary(adopterData.profileImg);
+        }
+
+        // Monta o objeto com os dados a serem enviados
+        const updateData = {
+          fullName: adopterData.fullName,
+          description: adopterData.description,
+          phone: adopterData.phone,
+          cep: adopterData.cep,
+          street: adopterData.street,
+          number: adopterData.number,
+          neighborhood: adopterData.neighborhood,
+          complement: adopterData.complement,
+          city: adopterData.city,
+          profession: adopterData.profession,
+          profileImg: profileImgUrl,
+        };
+
+        const response = await fetch(
+          `https://centerpet-api.onrender.com/api/adopters/editProfile/${idToUpdate}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+            body: JSON.stringify(updateData),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Erro ao atualizar os dados do adotante.");
+        }
+
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Dados atualizados com sucesso.",
+          icon: "success",
+          confirmButtonColor: "#D14D72"
+        }).then(() => {
+          navigate(`/adopter-profile/${idToUpdate}`);
+        });
+      } catch (error) {
+        console.error("Erro ao atualizar os dados do adotante:", error);
+        Swal.fire({
+          title: "Erro!",
+          text: "Não foi possível atualizar os dados.",
+          icon: "error",
+          confirmButtonColor: "#D14D72"
+        });
+      }
+    });
+  };
   return (
     <div id="edit_user">
       <div id="edit-form-container">
         <form id="edit-form" onSubmit={handleSubmit}>
           <div id="edit-user-title">
-            <TitleType>Editar Perfil</TitleType>
+            <h1>Editar Perfil</h1>
           </div>
-
+          
           <div id="user-img-profile">
             <h2>Sua foto de perfil</h2>
             <div className="image-input-container">
@@ -198,31 +285,22 @@ const EditUser = () => {
                 size={200}
               />
             </div>
-          </div>
-
-          <label>Nome completo:</label>
+          </div>          <label>Nome completo:</label>
           <InputField
             type="text"
             value={adopterData.fullName}
             onChange={(e) => handleInputChange("fullName", e.target.value)}
+            width="70rem"
             required
           />
-
-          <label htmlFor="description">Descrição:</label>
-          <textarea
-            id="description"
-            className="edit-user-description"
-            value={adopterData.description}
-            onChange={(e) => handleInputChange("description", e.target.value)}
-            rows={4}
-            placeholder="Descreva-se brevemente..."
-          ></textarea>
 
           <label>Telefone:</label>
           <InputField
             type="tel"
             value={adopterData.phone}
             onChange={(e) => handleInputChange("phone", e.target.value)}
+            placeholder="(XX) XXXXX-XXXX"
+            width="70rem"
             required
           />
 
@@ -232,63 +310,184 @@ const EditUser = () => {
             value={adopterData.profession}
             onChange={(e) => handleInputChange("profession", e.target.value)}
             placeholder="Digite sua profissão"
+            width="70rem"
           />
-
-          <div className="address-section">
+            <div id="edit-input-textarea">
+            <label>Descrição</label>
+            <textarea
+              name="edit-form-input"
+              id="edit-user-input-description"
+              rows={6}
+              value={adopterData.description}
+              onChange={(e) => {
+                if (e.target.value.length <= 500) {
+                  handleInputChange("description", e.target.value);
+                }
+              }}
+              placeholder="Descreva-se brevemente..."
+              maxLength={500}
+            ></textarea>
+            <div className="character-counter">
+              {adopterData.description ? adopterData.description.length : 0}/500 caracteres
+            </div>
+          </div><div className="endereco-section">
             <h3>Endereço</h3>
-            <label>CEP:</label>
-            <InputField
-              type="text"
-              value={adopterData.cep}
-              onChange={(e) => handleInputChange("cep", e.target.value)}
-            />
-
-            <label>Rua:</label>
-            <InputField
-              type="text"
-              value={adopterData.street}
-              onChange={(e) => handleInputChange("street", e.target.value)}
-            />
-
-            <label>Número:</label>
-            <InputField
-              type="text"
-              value={adopterData.number}
-              onChange={(e) => handleInputChange("number", e.target.value)}
-            />
-
-            <label>Bairro:</label>
-            <InputField
-              type="text"
-              value={adopterData.neighborhood}
-              onChange={(e) =>
-                handleInputChange("neighborhood", e.target.value)
-              }
-            />
-
-            <label>Complemento:</label>
-            <InputField
-              type="text"
-              value={adopterData.complement}
-              onChange={(e) => handleInputChange("complement", e.target.value)}
-            />
-
-            <label>Cidade:</label>
-            <InputField
-              type="text"
-              value={adopterData.city}
-              onChange={(e) => handleInputChange("city", e.target.value)}
-            />
-          </div>
-
-          <div id="edit-buttons-options">
+            <div className="row_user_form">              <div className="col_user_form">
+                <label>CEP:</label>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "0.5rem",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <InputField
+                    type="text"
+                    placeholder="CEP"
+                    value={adopterData.cep}
+                    onChange={(e) => {
+                      const newCep = e.target.value;
+                      handleInputChange("cep", newCep);
+                      // Verificar se o CEP tem 8 dígitos (sem formatação) para buscar automaticamente
+                      if (newCep.replace(/\D/g, "").length === 8) {
+                        buscarEnderecoPorCep(newCep);
+                      }
+                    }}
+                    width="11.4rem"
+                    maxLength={9}
+                    disabled={loadingCep}
+                  />
+                  {loadingCep ? (
+                    <span>Buscando CEP...</span>
+                  ) : (
+                    <button
+                      type="button"
+                      className="cep-helper-btn"
+                      onClick={() =>
+                        window.open(
+                          "https://buscacepinter.correios.com.br/app/endereco/index.php",
+                          "_blank"
+                        )
+                      }
+                    >
+                      Não sei meu CEP
+                    </button>
+                  )}
+                </div>
+              </div>              <div className="col_user_form">
+                <label>Rua:</label>
+                <InputField
+                  type="text"
+                  placeholder="Rua"
+                  value={adopterData.street}
+                  width="20rem"
+                  readOnly
+                />
+              </div>
+                <div className="col_user_form">
+                <label>Número:</label>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.7rem",
+                  }}
+                >
+                  <InputField
+                    type="text"
+                    placeholder="Número"
+                    value={noNumber ? "S/N" : adopterData.number}
+                    onChange={(e) => handleInputChange("number", e.target.value)}
+                    width="10rem"
+                    disabled={noNumber}
+                  />
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      fontSize: "0.97rem",
+                      color: "#d14d72",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={noNumber}
+                      onChange={(e) => {
+                        setNoNumber(e.target.checked);
+                        if (e.target.checked) {
+                          handleInputChange("number", "S/N");
+                        } else {
+                          handleInputChange("number", "");
+                        }
+                      }}
+                      style={{ marginRight: "0.4rem" }}
+                    />
+                    Sem número
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div className="row_user_form">              <div className="col_user_form">
+                <label>Bairro:</label>
+                <InputField
+                  type="text"
+                  placeholder="Bairro"
+                  value={adopterData.neighborhood}
+                  width="21rem"
+                  readOnly
+                />
+              </div>
+                <div className="col_user_form">
+                <label>Cidade:</label>
+                <InputField
+                  type="text"
+                  placeholder="Cidade"
+                  value={adopterData.city}
+                  width="20rem"
+                  readOnly
+                />
+              </div>
+            </div>
+            
+            <div className="row_user_form">
+              <div className="col_user_form">
+                <label>Complemento:</label>
+                <InputField
+                  type="text"
+                  placeholder="Complemento"
+                  value={adopterData.complement}
+                  onChange={(e) => handleInputChange("complement", e.target.value)}
+                  width="100%"
+                />
+              </div>
+            </div>
+          </div>        <div id="edit-buttons-options">
             <ButtonType type="submit" width="250px">
               Salvar Alterações
-            </ButtonType>
-            <ButtonType
+            </ButtonType>            <ButtonType
               type="button"
               width="250px"
-              onClick={() => navigate(-1)}
+              bgColor="#FF4D4D"
+              onClick={() => {
+                Swal.fire({
+                  title: "Tem certeza?",
+                  text: "Todas as alterações feitas serão perdidas.",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#D14D72",
+                  cancelButtonColor: "#6c757d",
+                  confirmButtonText: "Sim, cancelar",
+                  cancelButtonText: "Continuar editando",
+                  showCloseButton: true,
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    navigate(-1);
+                  }
+                });
+              }}
             >
               Cancelar
             </ButtonType>
