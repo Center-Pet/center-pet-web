@@ -215,7 +215,7 @@ export default function PetInfo() {
       }).then((result) => {
         if (result.isConfirmed) {
           setAdoptionRequested(true);
-          navigate("../adoption/create", {
+          navigate("../", {
             state: {
               adopterId: user._id,
               petId: pet._id,
@@ -433,11 +433,6 @@ export default function PetInfo() {
       icon: <CalendarBlank size={20} style={{ marginRight: 6 }} />,
     },
     {
-      label: "Local",
-      value: pet.location,
-      icon: <MapPin size={20} style={{ marginRight: 6 }} />,
-    },
-    {
       label: "Gênero",
       value: pet.gender,
       icon: <GenderMale size={20} style={{ marginRight: 6 }} />,
@@ -537,6 +532,9 @@ export default function PetInfo() {
                     {ongData ? ongData.name : "Carregando..."}
                   </a>
                 </strong>
+              </h4>
+              <h4>
+                
               </h4>
               <p className="pet-bio">
                 {pet.description || "Sem descrição disponível."}

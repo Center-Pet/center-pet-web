@@ -326,6 +326,7 @@ const ONGProfile = () => {
           <div className="carousel-content">
             {ongPets && ongPets.length > 0 ? (
               <PetShowcase
+                limit={15}
                 title={`Pets disponíveis para adoção de ${ongData.name}`}
                 pets={ongPets.map((pet) => ({
                   id: pet._id,
