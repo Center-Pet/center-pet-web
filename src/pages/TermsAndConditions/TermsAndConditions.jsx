@@ -340,7 +340,7 @@ const TermsAndConditions = () => {
           <h2>11. Contato</h2>
           <p>
             Para esclarecer dúvidas, apresentar reclamações, solicitar informações ou para qualquer outro fim relacionado a estes Termos, você pode entrar
-            em contato conosco através do e-mail: <a href="mailto:contato@centerpet.com.br">contato@centerpet.com.br</a>
+            em contato conosco através do e-mail: <a href="mailto:contatosuporte.centerpet@gmail.com">contato@centerpet.com.br</a>
           </p>
           <p>
             Última atualização destes Termos: 26 de maio de 2025.

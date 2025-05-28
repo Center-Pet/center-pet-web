@@ -135,10 +135,9 @@ export default function PetInfo() {
     navigate(`/edit-pet/${petId}`);
   };
 
-  const handleAdoptPet = () => {
+  const handleAdoptPet = async () => {
     // Verificar se o usuário está autenticado
     if (!isAuthenticated) {
-      // Se não estiver autenticado, redirecionar para login
       Swal.fire({
         title: "Login Necessário",
         text: "Para adotar um pet, você precisa estar logado como adotante.",
@@ -173,39 +172,66 @@ export default function PetInfo() {
         confirmButtonText: "Preencher agora",
       }).then((result) => {
         if (result.isConfirmed) {
-          // Redirecionar para o formulário de Safe Adopter
           navigate("/form-safe-adopter");
         }
       });
       return;
     }
 
-    // Se chegou aqui, o usuário é um Safe Adopter e pode prosseguir com a adoção
-    // Enviar solicitação para a ONG (você pode implementar essa lógica de API)
-    Swal.fire({
-      title: "Solicitação Enviada!",
-      html: `
-        <p>Sua solicitação para adotar <strong>${
-          pet.name
-        }</strong> foi enviada com sucesso para a ONG <strong>${
-        ongData ? ongData.name : ""
-      }</strong>.</p>
-        <p>Agora é necessário aguardar a análise da ONG, que irá verificar as informações fornecidas no seu formulário de adotante seguro.</p>
-        <p>Você receberá uma notificação assim que houver uma resposta.</p>
-      `,
-      icon: "success",
-      confirmButtonColor: "#FF8BA7",
-      confirmButtonText: "Entendi",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Marcar a adoção como solicitada
-        setAdoptionRequested(true);
-        // Removido o redirecionamento para adoption-requests
-      }
-    });
+    // Cria a adoção no banco de dados
+    try {
+      const response = await fetch("https://centerpet-api.onrender.com/api/adoptions/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          petId: pet._id,
+          ongId: pet.ongId,
+          status: status || 'requestReceived', // Defina o status inicial como 'requestReceived'
+          requestDate: new Date() // Data da solicitação
+        }),
+      });
 
-    // Comentei a linha abaixo para substituir pelo SweetAlert acima
-    // navigate(`/adopt/${petId}`);
+      // Verifica se a resposta foi bem-sucedida
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log("Erro detalhado da API:",errorData);
+        throw new Error("Erro ao criar solicitação de adoção.");
+      }
+
+      Swal.fire({
+        title: "Solicitação Enviada!",
+        html: `
+          <p>Sua solicitação para adotar <strong>${pet.name}</strong> foi enviada com sucesso para a ONG <strong>${ongData ? ongData.name : ""}</strong>.</p>
+          <p>Agora é necessário aguardar a análise da ONG, que irá verificar as informações fornecidas no seu formulário de adotante seguro.</p>
+          <p>Você receberá uma notificação assim que houver uma resposta.</p>
+        `,
+        icon: "success",
+        confirmButtonColor: "#FF8BA7",
+        confirmButtonText: "Entendi",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setAdoptionRequested(true);
+          navigate("../adoption/create", {
+            state: {
+              adopterId: user._id,
+              petId: pet._id,
+              ongId: pet.ongId,
+            },
+          });
+        }
+      });
+    } catch (error) {
+      Swal.fire({
+        title: "Erro",
+        text: error.message || "Não foi possível criar a solicitação de adoção.",
+        icon: "error",
+        confirmButtonColor: "#FF8BA7",
+      });
+    }
   };
 
   // Adicione a função para lidar com a remoção do pet

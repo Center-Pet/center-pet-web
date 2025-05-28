@@ -16,6 +16,7 @@ import EditOrg from '../pages/EditOrg/EditOrg'
 import Dashboard from "../pages/Dashboard/Dashboard";
 import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
 import CatalogFilter from "../pages/CatalogFilter/CatalogFilter"
+import AdoptionPage from "../pages/AdoptionPage/AdoptionPage";
 
 
 const AppRoutes = () => {
@@ -40,7 +41,7 @@ const AppRoutes = () => {
       <Route path="/edit-org" element={<EditOrg />} />
       <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
       <Route path="/catalog-filter" element={<CatalogFilter />} />
-      
+      <Route path="/adoption-page" element={<AdoptionPage />} />
     </Routes>
   );
 };
