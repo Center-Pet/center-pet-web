@@ -41,7 +41,7 @@ const AppRoutes = () => {
       <Route path="/edit-org" element={<EditOrg />} />
       <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
       <Route path="/catalog-filter" element={<CatalogFilter />} />
-      <Route path="/adoption-page" element={<AdoptionPage />} />
+      <Route path="/adoption/:petId/:userId/:ongId" element={<AdoptionPage />} />
     </Routes>
   );
 };

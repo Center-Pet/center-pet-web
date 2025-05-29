@@ -101,33 +101,7 @@
 
   /* Responsivo */
   @media (max-width: 760px) {
-    .footer-container {
-      flex-direction: column;
-      gap: 12px;
-      text-align: center;
-      padding: 0px;
-    }
-  
-    .footer-logo {
-      justify-content: center;
-    }
-  
-    .footer-nav {
-      justify-content: center;
-    }
-    .mobile-social-links{
-      display: block;
-    }
-    .footer-container>.social-links,
-    .footer-container>.footer-logo{
+    .footer {
       display: none;
-    }
-
-    .footer-nav{
-      display: none
-    }
-
-    .footer-bottom{
-      margin-bottom: 100px;
     }
   }

@@ -104,6 +104,9 @@ export default function CustomAvatar({ imageSrc }) {
             <button className="custom-avatar-menu-item" onClick={handleLogout}>
               Sair
             </button>
+            <button className="custom-avatar-menu-item" onClick={() => navigate("/register-pet")}>
+              Cadastrar Pet
+            </button>
           </div>
         )}
       </div>
