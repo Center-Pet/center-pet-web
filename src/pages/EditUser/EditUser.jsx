@@ -12,7 +12,6 @@ const EditUser = () => {
   const { adopterId } = useParams(); // Obtém o ID da URL, se disponível
   const { user } = useAuth(); // Obtém o usuário autenticado
   const navigate = useNavigate();
-
   const [adopterData, setAdopterData] = useState({
     fullName: "",
     description: "",
@@ -23,6 +22,7 @@ const EditUser = () => {
     neighborhood: "",
     complement: "",
     city: "",
+    state: "",
     profileImg: "",
     profession: "", // Novo campo para profissão
   });
@@ -60,9 +60,7 @@ const EditUser = () => {
         }
 
         const data = await response.json();
-        console.log("Dados do adotante recebidos:", data);
-
-        setAdopterData({
+        console.log("Dados do adotante recebidos:", data);        setAdopterData({
           fullName: data.fullName || "",
           description: data.description || "",
           phone: data.phone || "",
@@ -72,6 +70,7 @@ const EditUser = () => {
           neighborhood: data.neighborhood || "",
           complement: data.complement || "",
           city: data.city || "",
+          state: data.state || "",
           profileImg: data.profileImg || "",
           profession: data.profession || "", // Inclua o campo profissão
         });
@@ -155,13 +154,13 @@ const EditUser = () => {
       const data = await response.json();
 
       // Verificar se o CEP existe e não tem erro
-      if (!data.erro) {
-        // Atualizar os campos de endereço com os dados retornados
+      if (!data.erro) {        // Atualizar os campos de endereço com os dados retornados
         setAdopterData(prevData => ({
           ...prevData,
           street: data.logradouro || "",
           neighborhood: data.bairro || "",
           city: data.localidade || "",
+          state: data.uf || "",
           cep: cepLimpo.replace(/(\d{5})(\d{3})/, "$1-$2") // Formata o CEP
         }));
       } else {
@@ -216,9 +215,7 @@ const EditUser = () => {
         let profileImgUrl = adopterData.profileImg;
         if (adopterData.profileImg instanceof File) {
           profileImgUrl = await uploadImageToCloudinary(adopterData.profileImg);
-        }
-
-        // Monta o objeto com os dados a serem enviados
+        }        // Monta o objeto com os dados a serem enviados
         const updateData = {
           fullName: adopterData.fullName,
           description: adopterData.description,
@@ -229,11 +226,10 @@ const EditUser = () => {
           neighborhood: adopterData.neighborhood,
           complement: adopterData.complement,
           city: adopterData.city,
+          state: adopterData.state,
           profession: adopterData.profession,
           profileImg: profileImgUrl,
-        };
-
-        const response = await fetch(
+        };        const response = await fetch(
           `https://centerpet-api.onrender.com/api/adopters/editProfile/${idToUpdate}`,
           {
             method: "PATCH",
@@ -439,14 +435,23 @@ const EditUser = () => {
                   width="21rem"
                   readOnly
                 />
-              </div>
-                <div className="col_user_form">
+              </div>                <div className="col_user_form">
                 <label>Cidade:</label>
                 <InputField
                   type="text"
                   placeholder="Cidade"
                   value={adopterData.city}
                   width="20rem"
+                  readOnly
+                />
+              </div>
+              <div className="col_user_form">
+                <label>Estado:</label>
+                <InputField
+                  type="text"
+                  placeholder="UF"
+                  value={adopterData.state}
+                  width="6rem"
                   readOnly
                 />
               </div>

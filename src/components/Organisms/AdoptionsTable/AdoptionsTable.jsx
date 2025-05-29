@@ -5,14 +5,13 @@ import "./AdoptionsTable.css";
 export default function AdoptionsTable({ ongId }) {
   const [adoptions, setAdoptions] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     if (!ongId) return;
     const fetchAdoptions = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await fetch(
-          `https://centerpet-api.onrender.com/api/adoptions/by-ong/${ongId}`,
+          `http://localhost:5000/api/adoptions/by-ong/${ongId}`,
           {
             headers: {
               Authorization: token ? `Bearer ${token}` : "",
@@ -20,8 +19,17 @@ export default function AdoptionsTable({ ongId }) {
           }
         );
         const data = await res.json();
-        setAdoptions(Array.isArray(data) ? data : data.data || []);
+        
+        // Verificamos se a resposta contém o formato esperado com o campo "adoptions"
+        if (data && data.adoptions) {
+          setAdoptions(data.adoptions);
+        } else if (Array.isArray(data)) {
+          setAdoptions(data);
+        } else {
+          setAdoptions([]);
+        }
       } catch (err) {
+        console.error("Erro ao buscar adoções:", err);
         setAdoptions([]);
       } finally {
         setLoading(false);
@@ -45,12 +53,11 @@ export default function AdoptionsTable({ ongId }) {
             <th>Status</th>
             <th>Ver Mais</th>
           </tr>
-        </thead>
-        <tbody>
+        </thead>        <tbody>
           {adoptions.map((adoption) => (
             <tr key={adoption._id}>
-              <td>{adoption.pet?.name || "Não informado"}</td>
-              <td>{adoption.adopter?.fullName || "Não informado"}</td>
+              <td>{adoption.petId?.name || "Não informado"}</td>
+              <td>{adoption.userId?.name || "Não informado"}</td>
               <td>
                 {adoption.createdAt
                   ? new Date(adoption.createdAt).toLocaleDateString("pt-BR")
@@ -64,7 +71,7 @@ export default function AdoptionsTable({ ongId }) {
               <td>
                 <Link
                   className="adoptions-table-link"
-                  to={`/adoption-page/${adoption.pet?._id}/${adoption.adopter?._id}/${adoption.ong?._id}`}
+                  to={`/adoption-page/${adoption.petId?._id}/${adoption.userId?._id}/${adoption.ongId}`}
                 >
                   Ver Mais
                 </Link>

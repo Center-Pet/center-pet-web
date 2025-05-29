@@ -353,55 +353,8 @@ const ONGProfile = () => {
                 Nenhum pet disponível para adoção no momento.
               </p>
             )}
-          </div>
-        </div>
+          </div>        </div>
         <AdoptionsTable ongId={ongData._id} />
-        <table className="adoptions-table">
-          <thead>
-            <tr>
-              <th>Nome do Pet</th>
-              <th>Nome do Adotante</th>
-              <th>Data de Solicitação</th>
-              <th>Status</th>
-              <th>Ver Mais</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Thor</td>
-              <td>Maria Silva</td>
-              <td>28/05/2025</td>
-              <td>
-                <span className="adoption-status adoption-status-aceita">Aceita</span>
-              </td>
-              <td>
-                <a className="adoptions-table-link" href="/adoption-page/1/101/501">Ver Mais</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Mel</td>
-              <td>João Souza</td>
-              <td>27/05/2025</td>
-              <td>
-                <span className="adoption-status adoption-status-pendente">Pendente</span>
-              </td>
-              <td>
-                <a className="adoptions-table-link" href="/adoption-page/2/102/501">Ver Mais</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Caboclo Nordestino</td>
-              <td>Ana Oliveira</td>
-              <td>25/05/2025</td>
-              <td>
-                <span className="adoption-status adoption-status-recusada">Recusada</span>
-              </td>
-              <td>
-                <a className="adoptions-table-link" href="/adoption-page/3/103/501">Ver Mais</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   );
