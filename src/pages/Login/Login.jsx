@@ -7,6 +7,7 @@ import useAuth from "../../hooks/useAuth";
 import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
 import { Check, Eye, EyeSlash } from "phosphor-react"; // Importando ícones do Phosphor
+import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
 
 import "./Login.css";
 
@@ -538,31 +539,26 @@ const Login = () => {
           <form className={`login-form ${isSwitching ? "switching" : ""}`} onSubmit={handleSubmit}>
             {isLogin ? (
               <>
-                <InputField
+                <CustomInput
                   type="email"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  name="email"
+                  id="email"
+                />  
+                <CustomInput
+                  isPassword={true}
+                  placeholder="Senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  showPassword={showPassword}
+                  toggleShowPassword={() => setShowPassword(!showPassword)}
+                  name="password"
+                  id="password"
                 />
-                <div className="password-input-container">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Senha"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="form-input"
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle-button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                  >
-                    {showPassword ? <EyeSlash size={20} weight="bold" /> : <Eye size={20} weight="bold" />}
-                  </button>
-                </div>
                 <div className="forgot-password-link">
                   <button
                     type="button"
@@ -577,14 +573,16 @@ const Login = () => {
               </>
             ) : (
               <>
-                <InputField
+                  <CustomInput
                   type="text"
                   placeholder="Nome Completo"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
+                  name="fullName"
+                  id="fullName"
                 />
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="CPF"
                   value={cpf}
@@ -593,56 +591,48 @@ const Login = () => {
                     setPasswordError("");
                   }}
                   required
+                  name="cpf"
+                  id="cpf"
+                  maxLength={14}
                 />
-                <InputField
+                <CustomInput
                   type="email"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  name="email"
+                  id="email"
                 />
                 <div className="password-group">
-                  <div className="password-input-container">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Senha"
-                      value={password}
-                      onChange={(e) => {
-                        const novaSenha = e.target.value;
-                        setPassword(novaSenha);
-                        setPasswordValidation(validarSenhaForte(novaSenha));
-                      }}
-                      className={`form-input ${password && !passwordValidation.valido ? "input-error" : ""}`}
-                      required
-                    />
-                    <button
-                      type="button"
-                      className="password-toggle-button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                    >
-                      {showPassword ? <EyeSlash size={20} weight="bold" /> : <Eye size={20} weight="bold" />}
-                    </button>
-                  </div>
+                  <CustomInput
+                    isPassword={true}
+                    placeholder="Senha"
+                    value={password}
+                    onChange={(e) => {
+                      const novaSenha = e.target.value;
+                      setPassword(novaSenha);
+                      setPasswordValidation(validarSenhaForte(novaSenha));
+                    }}
+                    className={password && !passwordValidation.valido ? "input-error" : ""}
+                    required
+                    showPassword={showPassword}
+                    toggleShowPassword={() => setShowPassword(!showPassword)}
+                    name="password"
+                    id="password"
+                  />
 
-                  <div className="password-input-container">
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirme sua Senha"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="form-input"
-                      required
-                    />
-                    <button
-                      type="button"
-                      className="password-toggle-button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      aria-label={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
-                    >
-                      {showConfirmPassword ? <EyeSlash size={20} weight="bold" /> : <Eye size={20} weight="bold" />}
-                    </button>
-                  </div>
+                  <CustomInput
+                    isPassword={true}
+                    placeholder="Confirme sua Senha"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    showPassword={showConfirmPassword}
+                    toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
+                    name="confirmPassword"
+                    id="confirmPassword"
+                  />
                 </div>
                 {password && password.length > 0 && (
                   <div className="password-strength-meter">

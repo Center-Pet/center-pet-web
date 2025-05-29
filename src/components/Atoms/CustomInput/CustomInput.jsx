@@ -1,18 +1,13 @@
 import React from "react";
 import { Eye, EyeSlash } from "phosphor-react";
-import "./InputField.css";
+import "./CustomInput.css";
 
-const InputField = ({
+const CustomInput = ({
   type = "text",
   placeholder,
   value,
   onChange,
   required = false,
-  width,
-  margin,
-  padding,
-  readOnly,
-  disabled,
   className = "",
   isPassword = false,
   showPassword,
@@ -22,30 +17,29 @@ const InputField = ({
   id,
   maxLength,
   minLength,
+  disabled = false,
   autoComplete = "on",
 }) => {
   return (
-    <div className="input-field">
+    <div className="custom-input-container">
       <input
         type={isPassword ? (showPassword ? "text" : "password") : type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        className={`custom-input ${className} ${error ? "input-error" : ""}`}
         required={required}
-        className={`form-input ${className} ${error ? "input-error" : ""}`}
-        style={{ width, margin, padding }}
-        readOnly={readOnly}
-        disabled={disabled}
         name={name}
         id={id}
         maxLength={maxLength}
         minLength={minLength}
+        disabled={disabled}
         autoComplete={autoComplete}
       />
       {isPassword && (
         <button
           type="button"
-          className="form-toggle-button"
+          className="custom-toggle-button"
           onClick={toggleShowPassword}
           aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
         >
@@ -60,4 +54,4 @@ const InputField = ({
   );
 };
 
-export default InputField;
+export default CustomInput;

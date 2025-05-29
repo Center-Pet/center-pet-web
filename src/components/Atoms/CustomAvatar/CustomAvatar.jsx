@@ -95,17 +95,18 @@ export default function CustomAvatar({ imageSrc }) {
           src={imageSrc}
           alt="Avatar"
           onClick={handleToggleMenu}
-        />
-        {isMenuOpen && (
+        />        {isMenuOpen && (
           <div className="custom-avatar-menu">
             <button className="custom-avatar-menu-item" onClick={handleProfile}>
               Meu Perfil
             </button>
+            {userType === "Ong" && (
+              <button className="custom-avatar-menu-item" onClick={() => navigate("/register-pet")}>
+                Cadastrar Pet
+              </button>
+            )}
             <button className="custom-avatar-menu-item" onClick={handleLogout}>
               Sair
-            </button>
-            <button className="custom-avatar-menu-item" onClick={() => navigate("/register-pet")}>
-              Cadastrar Pet
             </button>
           </div>
         )}

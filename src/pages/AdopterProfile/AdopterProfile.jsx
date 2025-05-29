@@ -206,6 +206,58 @@ const AdopterProfile = () => {
                   <p>{adopter.safeAdopter ? "Sim" : "Não"}</p>
                 </div>
               </div>
+              <div className="adopter-profile-buttons mobile">
+                <ButtonType
+                  onClick={() => navigate('/edit-user')}
+                  bgColor="#D14D72"
+                  color="#FFFFFF"
+                  margin="0"
+                >
+                  <PencilSimple/><span>Editar</span>
+                </ButtonType>
+                <ButtonType
+                  bgColor="#FF4D4D"
+                  color="#FFFFFF"
+                  margin="0"
+                  onClick={() => {
+                    Swal.fire({
+                      title: 'Tem certeza?',
+                      text: 'Esta ação é irreversível. Deseja realmente deletar sua conta?',
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#FF4D4D',
+                      cancelButtonColor: '#6c757d',
+                      confirmButtonText: 'Sim, deletar',
+                      cancelButtonText: 'Cancelar'
+                    }).then(async (result) => {
+                      if (result.isConfirmed) {
+                        try {
+                          const token = localStorage.getItem('token');
+                          const response = await fetch(`https://centerpet-api.onrender.com/api/adopters/delete/${adopterId}`, {
+                            method: 'DELETE',
+                            headers: {
+                              'Authorization': token ? `Bearer ${token}` : '',
+                              'Content-Type': 'application/json'
+                            }
+                          });
+                          if (!response.ok) {
+                            throw new Error('Erro ao deletar a conta. Tente novamente.');
+                          }
+                          localStorage.removeItem('token');
+                          logout();
+                          Swal.fire('Deletado!', 'Sua conta foi deletada com sucesso.', 'success');
+                          navigate('/home');
+                        } catch (error) {
+                          console.error(error);
+                          Swal.fire('Erro!', 'Não foi possível deletar a conta. Tente novamente mais tarde.', 'error');
+                        }
+                      }
+                    });
+                  }}
+                >
+                  <Trash/><span>Deletar conta</span>
+                </ButtonType>
+              </div>
             </div>
           </div>
         </div>

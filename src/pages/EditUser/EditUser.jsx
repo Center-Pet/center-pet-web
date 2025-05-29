@@ -467,7 +467,8 @@ const EditUser = () => {
           </div>        <div id="edit-buttons-options">
             <ButtonType type="submit" width="250px">
               Salvar Alterações
-            </ButtonType>            <ButtonType
+            </ButtonType>            
+            <ButtonType
               type="button"
               width="250px"
               bgColor="#FF4D4D"

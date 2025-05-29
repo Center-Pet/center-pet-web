@@ -602,7 +602,7 @@ export default function PetInfo() {
                 {/* Se for ONG mas não for a proprietária, não mostrar botões */}
                 {isOngButNotOwner && (
                   <p className="info-message">
-                    Como ONG, você não pode adotar este pet.
+                    Como organização, você não pode adotar este pet.
                   </p>
                 )}
               </div>

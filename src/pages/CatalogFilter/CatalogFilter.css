@@ -129,6 +129,9 @@ body {
     .catalog-header {
         margin-left: 80px;
     }
+    .catalog-title-container> .custom-title > h1 {
+        font-size: 10px;
+    }
 }
 
 @media (max-width: 480px) {
