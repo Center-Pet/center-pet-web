@@ -8,6 +8,7 @@ import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
 import { Check, Eye, EyeSlash } from "phosphor-react"; // Importando ícones do Phosphor
 import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
+import { sendWelcomeEmail } from "../../services/emailService";
 
 import "./Login.css";
 
@@ -244,16 +245,24 @@ const Login = () => {
         const result = await response.json();
 
         if (response.status === 201 || response.status === 200) {
+          // Enviar email de boas-vindas
+          try {
+            await sendWelcomeEmail(adopterData);
+            console.log("Solicitação de envio de email feita ao backend!");
+          } catch (error) {
+            console.error("Erro ao solicitar envio de email:", error);
+          }
+
           Swal.fire({
             title: 'Cadastro realizado!',
-            text: 'Sua conta foi criada com sucesso. Agora você pode fazer login.',
+            text: 'Sua conta foi criada com sucesso. Enviamos um email de boas-vindas para você!',
             icon: 'success',
             showConfirmButton: true,
             confirmButtonColor: '#D14D72',
             position: 'center'
           }).then(() => {
-            setIsLogin(true); // Voltar para a tela de login
-            setEmail(""); // Limpar campos
+            setIsLogin(true);
+            setEmail("");
             setPassword("");
           });
         } else {
@@ -547,7 +556,7 @@ const Login = () => {
                   required
                   name="email"
                   id="email"
-                />  
+                />
                 <CustomInput
                   isPassword={true}
                   placeholder="Senha"
@@ -573,7 +582,7 @@ const Login = () => {
               </>
             ) : (
               <>
-                  <CustomInput
+                <CustomInput
                   type="text"
                   placeholder="Nome Completo"
                   value={fullName}

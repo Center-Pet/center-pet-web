@@ -17,6 +17,8 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
 import CatalogFilter from "../pages/CatalogFilter/CatalogFilter"
 import AdoptionPage from "../pages/AdoptionPage/AdoptionPage";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
+
 
 
 const AppRoutes = () => {
@@ -27,6 +29,7 @@ const AppRoutes = () => {
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/pet-info/:petId" element={<PetInfo />} />
       {/* Rota dinâmica para o pet */}
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/adopter-profile/:adopterId" element={<AdopterProfile />} />
       <Route path="/ong-profile/:ongId" element={<ONGProfile />} />

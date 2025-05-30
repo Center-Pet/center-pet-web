@@ -1,0 +1,42 @@
+/**
+ * Envia email de boas-vindas para novos usuários
+ * @param {Object} user - { email: string, fullName: string }
+ * @returns {Promise<Object>} Resultado do envio
+ */
+export async function sendWelcomeEmail(user) {
+    try {
+        const response = await fetch("https://centerpet-api.onrender.com/api/emails/welcome/adopter", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: user.email,
+                name: user.fullName
+            })
+        });
+
+        if (response.ok) {
+            console.log("[FRONTEND] Email de boas-vindas requisitado com sucesso");
+            return { success: true };
+        } else {
+            const result = await response.json();
+            console.error("[FRONTEND] Falha ao requisitar email:", result);
+            return { success: false, error: result.message || "Erro ao enviar email" };
+        }
+    } catch (error) {
+        console.error("[FRONTEND] Erro ao conectar com API de email:", error);
+        return { success: false, error: error.message };
+    }
+}
+
+export async function sendForgotPassword(email) {
+    try {
+        const response = await fetch("https://centerpet-api.onrender.com/api/auth/forgot-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email })
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
