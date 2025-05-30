@@ -324,7 +324,7 @@
   flex-wrap: wrap;
 }
 
-.ong-card {
+/* .ong-card {
   background: #FEF2F4;
   border: 1.5px solid #fcc8d1;
   border-radius: 14px;
@@ -348,7 +348,6 @@
 .ong-logo {
   width: 90px;
   height: 90px;
-  object-fit: contain;
   border-radius: 12px;
   margin-bottom: 1.1rem;
   background: #fff;
@@ -412,7 +411,7 @@
     width: 100%;
     max-width: 320px;
   }
-}
+} */
 
 /* CTA Secundário e Redes Sociais */
 .cta-social-section {

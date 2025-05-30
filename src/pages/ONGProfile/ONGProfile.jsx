@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import AdoptionsTable from "../../components/Organisms/AdoptionsTable/AdoptionsTable";
+import AdoptionsList from "../../components/Organisms/AdoptionsList/AdoptionsList";
 import useAuth from "../../hooks/useAuth";
 import "./ONGProfile.css";
 import Swal from "sweetalert2";
@@ -219,8 +220,7 @@ const ONGProfile = () => {
                             cancelButtonText: "Cancelar",
                           }).then(async (result) => {
                             if (result.isConfirmed) {
-                              try {
-                                const token = localStorage.getItem("token"); // Obter o token de autenticação
+                              try {                                const token = localStorage.getItem("token"); // Obter o token de autenticação
                                 const response = await fetch(
                                   `https://centerpet-api.onrender.com/api/ongs/delete/${ongData._id}`,
                                   {
@@ -297,7 +297,7 @@ const ONGProfile = () => {
             </div>
           </div>
           <div className="ong-profile-header-statistics">
-            <div style={{ display: "flex", gap: "200px" }}>
+            <div>
               <div className="ong-profile-header-statistics-item">
                 <p>Pets cadastrados:</p>
                 <p style={{ color: "#000000" }}>{ongPets?.length || 0}</p>
@@ -307,7 +307,7 @@ const ONGProfile = () => {
                 <p style={{ color: "#000000" }}>{ongPets?.length || 0}</p>
               </div>
             </div>
-            <div style={{ marginLeft: "auto" }}>
+            <div>
               {user && user._id === ongData._id && (
                 <ButtonType
                   onClick={() => navigate("/register-pet")}
@@ -324,8 +324,7 @@ const ONGProfile = () => {
           </div>
         </div>
 
-        {/* Condicional para mostrar os pets ou mensagem */}
-        <div className="carousel-container">
+        {/* Condicional para mostrar os pets ou mensagem */}        <div className="carousel-container">
           <div className="carousel-content">
             {ongPets && ongPets.length > 0 ? (
               <PetShowcase
@@ -354,7 +353,15 @@ const ONGProfile = () => {
               </p>
             )}
           </div>        </div>
-        <AdoptionsTable ongId={ongData._id} />
+        {/* Console log para debug */}
+        {console.log("ONGProfile: Verificando se o usuário logado é a ONG:", user?._id, ongData._id)}
+        {/* Exibir AdoptionsTable apenas se o usuário logado for a ONG dona do perfil */}
+        {user && user._id === ongData._id && (
+          <>
+            <AdoptionsTable ongId={ongData._id} />
+            <AdoptionsList ongId={ongData._id} />
+          </>
+        )}
       </div>
     </div>
   );

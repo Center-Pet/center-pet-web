@@ -9,20 +9,36 @@ import "./AdoptionPage.css";
 export default function AdoptionPage() {
   const [showDetails, setShowDetails] = useState(false);
   const toggleDetails = () => setShowDetails((prev) => !prev);
-  const { petId, userId, ongId } = useParams();
+  const { adoptionId } = useParams();
   const navigate = useNavigate();
   const { userType } = useAuth();
 
+  const [adoption, setAdoption] = useState(null);
   const [pet, setPet] = useState(null);
   const [adopter, setAdopter] = useState(null);
-  const [ong, setOng] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Função para traduzir o status da adoção de acordo com o schema do MongoDB
+  const translateStatus = (status) => {
+    if (!status) return "Solicitação Recebida";
+    
+    const statusMap = {
+      'requestReceived': 'Solicitação Recebida',
+      'inProgress': 'Em Andamento',
+      'inAdjustment': 'Em Adaptação',
+      'rejected': 'Recusada',
+      'completed': 'Concluída',
+      'pendente': 'Solicitação Recebida'
+    };
+    
+    return statusMap[status] || status;
+  };
+
   useEffect(() => {
-    if (!petId || !userId || !ongId) {
+    if (!adoptionId) {
       Swal.fire({
         title: "Erro",
-        text: "IDs necessários estão ausentes na URL.",
+        text: "ID da adoção ausente na URL.",
         icon: "error",
       }).then(() => navigate("/", { replace: true }));
       return;
@@ -30,30 +46,62 @@ export default function AdoptionPage() {
 
     const fetchData = async () => {
       try {
-        const [petRes, adopterRes, ongRes] = await Promise.all([
-          fetch(`https://centerpet-api.onrender.com/api/pets/${petId}`),
-          fetch(`https://centerpet-api.onrender.com/api/users/${userId}`),
-          fetch(`https://centerpet-api.onrender.com/api/ongs/${ongId}`)
-        ]);
+        console.log("Buscando adoção com ID:", adoptionId);
+        const token = localStorage.getItem("token");
+        
+        // 1. Primeiro buscar os dados da adoção
+        const adoptionRes = await fetch(
+          `https://centerpet-api.onrender.com/api/adoptions/${adoptionId}`,
+          {
+            headers: {
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+          }
+        );
 
+        if (!adoptionRes.ok) {
+          throw new Error(`Erro ao buscar informações da adoção (${adoptionRes.status})`);
+        }
+
+        const adoptionData = await adoptionRes.json();
+        console.log("Dados da adoção:", adoptionData);
+        setAdoption(adoptionData);
+
+        // Extrair os IDs necessários dos dados da adoção
+        const { petId, userId } = adoptionData;
+
+        if (!petId || !userId) {
+          throw new Error("Dados da adoção incompletos. IDs necessários não encontrados.");
+        }        // 2. Agora buscar os dados relacionados
+        const [petRes, adopterRes] = await Promise.all([
+          fetch(`https://centerpet-api.onrender.com/api/pets/${petId._id || petId}`),
+          fetch(`https://centerpet-api.onrender.com/api/adopters/${userId._id || userId}`),
+        ].map(promise => promise.catch(err => {
+          console.error("Erro em uma das requisições:", err);
+          return { ok: false, error: err };
+        })));
+        
+        // Verificar se todas as requisições foram bem-sucedidas
         if (!petRes.ok) throw new Error("Erro ao buscar informações do pet.");
         if (!adopterRes.ok) throw new Error("Erro ao buscar informações do adotante.");
-        if (!ongRes.ok) throw new Error("Erro ao buscar informações da ONG.");
 
-        const [petData, adopterData, ongData] = await Promise.all([
+        // Processar as respostas
+        const [petData, adopterData] = await Promise.all([
           petRes.json(),
-          adopterRes.json(),
-          ongRes.json()
+          adopterRes.json()
         ]);
+
+        console.log("Dados do pet:", petData);
+        console.log("Dados do adotante:", adopterData);
+        console.log("Dados da ONG:");
 
         setPet(petData);
         setAdopter(adopterData);
-        setOng(ongData);
       } catch (err) {
-        console.error(err);
+        console.error("Erro ao buscar dados:", err);
         Swal.fire({
           title: "Erro",
-          text: "Erro ao carregar informações da adoção. Por favor, tente novamente.",
+          text: err.message || "Erro ao carregar informações da adoção. Por favor, tente novamente.",
           icon: "error",
         });
       } finally {
@@ -62,23 +110,27 @@ export default function AdoptionPage() {
     };
 
     fetchData();
-  }, [petId, userId, ongId, navigate]);
-
+  }, [adoptionId, navigate]);
   const handleAccept = async () => {
     try {
-      const res = await fetch(`https://centerpet-api.onrender.com/api/adoptions/accept`, {
-        method: "POST",
+      const token = localStorage.getItem("token");
+      const res = await fetch(`https://centerpet-api.onrender.com/api/adoptions/${adoptionId}/approve`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ petId, userId, ongId }),
+          Authorization: token ? `Bearer ${token}` : "",
+        }
       });
-      if (!res.ok) throw new Error("Erro ao aceitar solicitação.");
+      
+      if (!res.ok) throw new Error(`Erro ao aceitar solicitação (${res.status})`);
+      
+      await res.json(); // Process response but we don't need to use the data
+      
       Swal.fire({
         title: "Solicitação aceita!",
+        text: "A adoção foi aprovada com sucesso.",
         icon: "success",
-        confirmButtonColor: "#FF8BA7",
+        confirmButtonColor: "#4caf50",
       }).then(() => navigate(-1));
     } catch (err) {
       console.error(err);
@@ -89,22 +141,26 @@ export default function AdoptionPage() {
       });
     }
   };
-
   const handleReject = async () => {
     try {
-      const res = await fetch(`https://centerpet-api.onrender.com/api/adoptions/reject`, {
-        method: "POST",
+      const token = localStorage.getItem("token");
+      const res = await fetch(`https://centerpet-api.onrender.com/api/adoptions/${adoptionId}/reject`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ petId, userId, ongId }),
+          Authorization: token ? `Bearer ${token}` : "",
+        }
       });
-      if (!res.ok) throw new Error("Erro ao recusar solicitação.");
+      
+      if (!res.ok) throw new Error(`Erro ao recusar solicitação (${res.status})`);
+      
+      await res.json(); // Process response but we don't need to use the data
+      
       Swal.fire({
-        title: "Solicitação recusada!",
+        title: "Solicitação recusada",
+        text: "A adoção foi recusada.",
         icon: "info",
-        confirmButtonColor: "#FF8BA7",
+        confirmButtonColor: "#ff4d4d",
       }).then(() => navigate(-1));
     } catch (err) {
       console.error(err);
@@ -117,19 +173,39 @@ export default function AdoptionPage() {
   };
 
   if (loading) {
-    return <div className="adoption-page-container">Carregando...</div>;
+    return (
+      <div className="adoption-page-container">
+        <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="adoption-page-container">
-      <TitleType>Detalhes da Solicitação de Adoção</TitleType>
+      <TitleType>Detalhes da Solicitação de Adoção</TitleType>        {adoption && (
+        <div className="adoption-status-container">
+          <h3>Status da Adoção: 
+            <span className={`adoption-status adoption-status-${adoption.status || 'requestreceived'}`}>
+              {translateStatus(adoption.status)}
+            </span>
+          </h3>
+          <p>Data da solicitação: {
+            adoption.requestDate || adoption.createdAt 
+              ? new Date(adoption.requestDate || adoption.createdAt).toLocaleDateString('pt-BR') + ' às ' + new Date(adoption.requestDate || adoption.createdAt).toLocaleTimeString('pt-BR')
+              : "Não informada"
+          }</p>
+        </div>
+      )}
+      
       <div className="adoption-info-section">
         <div className="adoption-card">
           <h3>Pet</h3>
           <div>
             {pet ? (
               <img
-                src={pet.images?.[0] || "https://i.imgur.com/WanR0b3.png"}
+                src={pet.images?.[0] || pet.image?.[0] || "https://i.imgur.com/WanR0b3.png"}
                 alt={pet.name || "Imagem do pet"}
                 className="adoption-pet-img"
               />
@@ -152,24 +228,26 @@ export default function AdoptionPage() {
             <p><strong>Estado:</strong> {pet?.state || "Não informado"}</p>
             <p><strong>Tempo de espera:</strong> {pet?.waitingTime ? `${pet.waitingTime} dias` : "Não informado"}</p>
           </div>
-        </div>
-        <div className="adoption-card">
+        </div>        <div className="adoption-card">
           <h3>Adotante</h3>
           <div>
             <img
               src={adopter?.profileImg || "https://i.imgur.com/WanR0b3.png"}
               alt="Foto do adotante"
               className="adoption-pet-img"
-            />
-
-            <p><strong>Nome:</strong> {adopter?.fullName || "Não informado"}</p>
-            <p><strong>Email:</strong> {adopter?.email || "Não informado"}</p>
-            <p><strong>Telefone:</strong> {adopter?.phone || "Não informado"}</p>
+            />            
+            <p><strong>Nome:</strong> {adopter?.fullName || "Não informado"}</p>            {(['inProgress', 'inAdjustment', 'completed', 'approved'].includes(adoption?.status)) ? (
+              <>
+                <p><strong>Email:</strong> {adopter?.email || "Não informado"}</p>
+                <p><strong>Telefone:</strong> {adopter?.phone || "Não informado"}</p>
+              </>
+            ) : (
+              <p><em>As informações de contato serão disponibilizadas após aprovação da adoção.</em></p>
+            )}
             <p><strong>Profissão:</strong> {adopter?.profession || "Não informado"}</p>
             <p><strong>Descrição pessoal:</strong> {adopter?.description || "Não informada"}</p>
             <p><strong>Data de nascimento:</strong> {adopter?.birth ? new Date(adopter.birth).toLocaleDateString() : "Não informada"}</p>
-            <p><strong>CPF:</strong> {adopter?.cpf || "Não informado"}</p>
-            <p><strong>Endereço:</strong> {adopter?.street || "Rua não informada"}, Nº {adopter?.number || "s/n"} — {adopter?.neighborhood || "Bairro não informado"}, {adopter?.city || "Cidade não informada"} - {adopter?.cep || "CEP não informado"}</p>
+            <p><strong>Endereço:</strong>{adopter?.neighborhood || "Bairro não informado"} - {adopter?.city || "Rua não informada"}, {adopter?.state || "s/n"}</p>
 
             <ButtonType onClick={toggleDetails} className="toggle-details-btn">
               {showDetails ? "Ocultar detalhes" : "Mostrar mais detalhes"}
@@ -177,7 +255,6 @@ export default function AdoptionPage() {
 
             {showDetails && (
               <div className="adopter-details">
-
                 <p><strong>Tipo de moradia:</strong> {adopter?.housingType || "Não informado"}</p>
                 <p><strong>Possui casa própria:</strong> {adopter?.homeOwnership === "Own" ? "Sim" : adopter?.homeOwnership === "Rent" ? "Alugada" : "Não informado"}</p>
                 <p><strong>Animais são permitidos:</strong> {adopter?.petsAllowed === true ? "Sim" : adopter?.petsAllowed === false ? "Não" : "Não informado"}</p>
@@ -208,44 +285,11 @@ export default function AdoptionPage() {
             )}
           </div>
         </div>
-        <div className="adoption-card">
-          <h3>ONG Responsável</h3>
-          <div>
-            <img
-              src={ong?.profileImg || "https://i.imgur.com/WanR0b3.png"}
-              alt="Foto da ONG"
-              className="adoption-pet-img"
-            />
-
-            <p><strong>Nome:</strong> {ong?.name || "Não informado"}</p>
-            <p><strong>Email:</strong> {ong?.email || "Não informado"}</p>
-            <p><strong>Telefone:</strong> {ong?.phone || "Não informado"}</p>
-            <p><strong>Função:</strong> {ong?.role || "Não informada"}</p>
-            <p><strong>Pets registrados:</strong> {ong?.petsRegisters ?? "Não informado"}</p>
-            <p><strong>Pets adotados:</strong> {ong?.petsAdopted ?? "Não informado"}</p>
-            <p><strong>Verificada:</strong> {ong?.verified ? "Sim" : "Não"}</p>
-
-            <p><strong>Endereço:</strong></p>
-            <p>
-              {[
-                ong?.address?.street || "Rua não informada",
-                ong?.address?.number || "s/n",
-                ong?.address?.neighborhood || "Bairro não informado",
-                ong?.address?.city || "Cidade não informada",
-                ong?.address?.uf || "UF não informada",
-                ong?.address?.cep || "CEP não informado",
-                ong?.address?.complement && `(${ong.address.complement})`,
-              ]
-                .filter(Boolean)
-                .join(", ")}
-            </p>
-          </div>
-        </div>
       </div>
-      {userType === "Ong" && (
+        {userType === "Ong" && (adoption?.status === "requestReceived" || adoption?.status?.toLowerCase() === "pendente") && (
         <div className="adoption-actions">
-          <ButtonType className="accept-btn" onClick={handleAccept} bgColor="green">Aceitar Solicitação</ButtonType>
-          <ButtonType className="reject-btn" onClick={handleReject} bgColor="red">Recusar Solicitação</ButtonType>
+          <ButtonType className="accept-btn" onClick={handleAccept} bgColor="#4caf50">Aceitar Solicitação</ButtonType>
+          <ButtonType className="reject-btn" onClick={handleReject} bgColor="#ff4d4d">Recusar Solicitação</ButtonType>
         </div>
       )}
     </div>

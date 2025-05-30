@@ -3,7 +3,7 @@
   background: #fef2f4;
   border-radius: 12px;
   box-shadow: 0 1px 8px #0001;
-  padding: 24px;
+  padding: 15px;
 }
 
 .adoptions-table-title {
@@ -67,4 +67,15 @@
   color: #d14d72;
   padding: 24px;
   text-align: center;
+}
+@media (min-width: 1000px) and (max-width: 1200px){
+  .adoptions-table>tbody>tr>td{
+    width: 100px
+  }
+}
+
+@media (max-width: 1000px){
+  .adoptions-table-container{
+    display: none;
+  }
 }

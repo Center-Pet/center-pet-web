@@ -6,6 +6,7 @@ import useAuth from "../../../hooks/useAuth";
 import Swal from 'sweetalert2';
 import PawAnimation from "../../Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
+import { Gear } from "phosphor-react";
 
 export default function CustomAvatar({ imageSrc }) {
   const navigate = useNavigate();
@@ -95,16 +96,27 @@ export default function CustomAvatar({ imageSrc }) {
           src={imageSrc}
           alt="Avatar"
           onClick={handleToggleMenu}
-        />        {isMenuOpen && (
+        />
+        {isMenuOpen && (
           <div className="custom-avatar-menu">
             <button className="custom-avatar-menu-item" onClick={handleProfile}>
               Meu Perfil
             </button>
             {userType === "Ong" && (
-              <button className="custom-avatar-menu-item" onClick={() => navigate("/register-pet")}>
+              <button className="custom-avatar-menu-item" onClick={() => {
+                navigate("/register-pet");
+                handleCloseMenu();
+              }}>
                 Cadastrar Pet
               </button>
             )}
+            {/* Botão de configurações para todos os usuários */}
+            <button className="custom-avatar-menu-item" onClick={() => {
+              navigate("/configuracoes");
+              handleCloseMenu();
+            }}>
+              Configurações
+            </button>
             <button className="custom-avatar-menu-item" onClick={handleLogout}>
               Sair
             </button>

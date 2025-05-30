@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import InputField from "../../components/Atoms/InputField/InputField";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
@@ -342,6 +341,7 @@ const Login = () => {
 
         const response = await fetch(
           "https://centerpet-api.onrender.com/api/auth/login",
+          // https://centerpet-api.onrender.com/api/auth/login QUANDO VOLTAR PARA PRODUÇÃO, DESCOMENTAR ESSE E COMENTAR O DE CIMA
           {
             method: "POST",
             headers: {
@@ -429,6 +429,7 @@ const Login = () => {
       // Implemente a chamada à API de recuperação de senha
       const response = await fetch(
         "https://centerpet-api.onrender.com/api/auth/forgot-password",
+        // "https://centerpet-api.onrender.com/api/auth/forgot-password", QUANDO VOLTAR PARA PRODUÇÃO DESCOMENTAR ESSE E COMENTAR O DE CIMA
         {
           method: "POST",
           headers: {

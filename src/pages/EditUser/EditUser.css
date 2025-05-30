@@ -1,20 +1,31 @@
+/* Estilos principais */
 #edit_user {
-    justify-items: center;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
     padding: 25px;
+    box-sizing: border-box;
+}
+
+#edit-form-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-sizing: border-box;
 }
 
 #edit-form {
+    width: 100%;
+    box-sizing: border-box;
     box-shadow: 0px 9px 9px 2px rgba(0, 0, 0, 0.2);
     padding: 20px;
     border-radius: 10px;
     background-color: #FEF2F4;
     border: 2px solid #FFABAB;
-}
-
-#edit-form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    overflow: hidden; /* Evita que o conteúdo ultrapasse a borda */
 }
 
 #edit-user-title {
@@ -46,9 +57,11 @@
     border: 1px solid #fcc8d1;
     background-color: white;
     transition: all 0.3s ease;
-    width: 70rem;
+    width: 100% !important;
+    max-width: 100% !important;
     resize: none;
     font-family: 'Alexandria', sans-serif;
+    box-sizing: border-box;
 }
 
 #edit-user-input-description:focus {
@@ -66,7 +79,7 @@
 }
 
 .col_user_form {
-    flex: 1;
+      flex: 1;
 }
 
 .endereco-section {
@@ -75,6 +88,8 @@
     border-radius: 8px;
     padding: 15px;
     background-color: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .endereco-section h3 {
@@ -178,4 +193,96 @@
 .loading-container,
 .loading-content {
     display: none;
+}
+
+/* Adicionando estilos responsivos */
+@media (max-width: 768px) {
+  #edit_user {
+    padding: 1rem;
+  }
+
+  #edit_user #edit-form-container {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  #edit_user #edit-form {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  #edit_user .row_user_form {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #edit_user .col_user_form {
+    width: 100%;
+  }
+
+  #edit_user #edit-user-input-description {
+    width: 100% !important;
+  }
+
+  #edit_user #edit-buttons-options {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  /* Ajuste para inputs customizados - usando seletores mais específicos */
+  #edit_user .custom-input-responsive {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #edit_user #user-img-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #edit_user #edit-form {
+    padding: 0.5rem;
+  }
+
+  #edit_user .endereco-section {
+    padding: 10px;
+  }
+
+  /* Reduzir tamanho dos botões em telas muito pequenas */
+  #edit_user #edit-buttons-options button {
+    width: 100% !important;
+    max-width: 250px;
+  }
+}
+
+/* Para dispositivos touch - tornando os seletores mais específicos */
+@media (hover: none) and (pointer: coarse) {
+  /* Seletores específicos para evitar conflito com hamburger-menu */
+  #edit_user label, 
+  #edit_user input, 
+  #edit_user button:not(.hamburger-menu), 
+  #edit_user select, 
+  #edit_user textarea {
+    font-size: 16px !important; /* Evita zoom automático em iOS */
+  }
+  
+  #edit_user #edit-form input, 
+  #edit_user #edit-form textarea, 
+  #edit_user #edit-form button:not(.hamburger-menu) {
+    padding: 12px !important; /* Aumenta a área de toque */
+  }
+  
+  #edit_user .cep-helper-btn {
+    padding: 10px 15px !important;
+  }
+}
+
+/* Certifique-se de que o hamburger-menu não seja afetado */
+.hamburger-menu {
+  /* Preserve os estilos originais do hamburger-menu */
+  /* Esta linha não fará nada, mas está aqui para garantir que a classe seja preservada */
 }

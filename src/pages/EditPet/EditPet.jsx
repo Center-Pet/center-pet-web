@@ -155,6 +155,7 @@ export default function EditPet() {
     dewormed: "",
     specialCondition: "",
     waitingTime: "",
+    status: "", 
   });
 
   // Carregar estados do Brasil ao montar o componente
@@ -217,7 +218,6 @@ export default function EditPet() {
           name: data.name || "",
           type: data.type || "",
           coat: data.coat || "",
-          location: data.location || "",
           state: state,
           city: city,
           description: data.description || "",
@@ -230,6 +230,7 @@ export default function EditPet() {
           dewormed: data.health?.dewormed ? "Sim" : "Não",
           specialCondition: data.health?.specialCondition || "",
           waitingTime: waitingTimeValue,
+          status: data.status || "Disponível", // Carregando o status do pet
         });
 
         // Definir imagens do pet
@@ -380,6 +381,7 @@ export default function EditPet() {
       "size",
       "coat",
       "description",
+      "status", // Adicionado o status como campo obrigatório
     ];
     requiredFields.forEach((field) => {
       if (!petInfo[field] || petInfo[field].trim() === "") {
@@ -499,11 +501,14 @@ export default function EditPet() {
               specialCondition: petInfo.specialCondition,
             },
             waitingTime: petInfo.waitingTime,
+            status: petInfo.status, // Adicionando status aqui
             image: allImageUrls,
           };
 
           // Enviar para a API
           console.log("Enviando dados do pet para a API:", updatedPetInfo);
+          // Adicionar antes do fetch para verificar o valor do status
+          console.log("Status do pet a ser enviado:", petInfo.status);
           const response = await fetch(
             `https://centerpet-api.onrender.com/api/pets/update/${petId}`,
             {
@@ -976,9 +981,31 @@ export default function EditPet() {
                   />
                   <span>meses</span>
                 </div>
+                
                 {formErrors.waitingTime && (
                   <ErrorMessage message={formErrors.waitingTime} />
                 )}
+              </div>
+
+              <div className="info-row">
+                <label className="info-label">
+                  <Clock size={20} style={{ marginRight: 6 }} />
+                  Status:
+                </label>
+                <select
+                  name="status"
+                  value={petInfo.status}
+                  onChange={handleInputChange}
+                  className={`input-field ${
+                    formErrors.status ? "error" : ""
+                  }`}
+                >
+                  <option value="Disponível">Disponível</option>
+                  <option value="Indisponível">Indisponível</option>
+                  <option value="Adotado">Adotado</option>
+                  <option value="Aguardando">Aguardando</option>
+                </select>
+                {formErrors.status && <ErrorMessage message={formErrors.status} />}
               </div>
             </div>
 

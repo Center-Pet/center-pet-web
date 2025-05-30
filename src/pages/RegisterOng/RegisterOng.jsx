@@ -1,7 +1,5 @@
 import "./RegisterOng.css";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
-// Remover esta importação
-// import InputField from '../../components/Atoms/InputField/InputField'
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import { useState } from "react";
 import ImageInputField from "../../components/Atoms/ImageInputField/ImageInputField";
@@ -10,13 +8,12 @@ import "./RegisterOng.css";
 import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
 import { Eye, EyeSlash } from "phosphor-react";
-// Adicionar importação do CustomInput
 import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
 
-// Exemplo de função utilitária para garantir apenas números positivos
+// Função utilitária para garantir apenas números positivos (usada só onde precisa)
 const onlyPositive = (value) => {
   const num = value.replace(/\D/g, "");
-  return num.replace(/^0+/, '') || "0";
+  return num.replace(/^0+/, '') || "";
 };
 
 // link para rota: <Route path="/register-user" element={<RegisterUser />} />
@@ -585,7 +582,7 @@ const RegisterOng = () => {
             type="tel"
             placeholder="(00)00000-0000"
             value={phone}
-            onChange={(e) => setPhone(onlyPositive(e.target.value))}
+            onChange={(e) => setPhone(e.target.value)} // Deixe o componente CustomInput cuidar da formatação
             width="30rem"
             required
           />
@@ -635,13 +632,13 @@ const RegisterOng = () => {
                             </div>`,
                     html: `
                       <div class="endereco-modal-content">
-                        <p style="margin:0 0 0.7em 0;">
+                        <p>
                           <b style="color:#d14d72;">Seu endereço <span style="text-decoration:underline;">não será exibido no site</span>.</b>
                         </p>
                         <div class="endereco-modal-box">
                           <span class="endereco-modal-title">Pedimos o endereço apenas por motivos de segurança:</span>
                           <ul>
-                            <li>Evitar abandono de animais na porta do local</li>
+                            <li>Para verificar a localização da organização</li>
                             <li>Proteger a privacidade de protetores e ONGs</li>
                             <li>Facilitar a busca por pets próximos</li>
                           </ul>
@@ -690,7 +687,7 @@ const RegisterOng = () => {
                 placeholder="CEP"
                 value={zipCode}
                 onChange={(e) => {
-                  const val = onlyPositive(e.target.value);
+                  const val = e.target.value;
                   setZipCode(val);
                   if (val.replace(/\D/g, "").length === 8) {
                     buscarEnderecoPorCep(val);
@@ -1059,9 +1056,10 @@ const RegisterOng = () => {
               <CustomInput
                 type="text"
                 placeholder="CNPJ"
-                value={onlyPositive(cnpj || "")}
-                onChange={(e) => setCnpj(onlyPositive(e.target.value))}
+                value={cnpj || ""}
+                onChange={(e) => setCnpj(e.target.value)}
                 width="30rem"
+                format="cnpj"
                 required
               />
             </>
@@ -1072,10 +1070,11 @@ const RegisterOng = () => {
               <CustomInput
                 type="text"
                 placeholder="CPF"
-                value={onlyPositive(cpf || "")}
-                required
-                onChange={(e) => setCpf(onlyPositive(e.target.value))}
+                value={cpf || ""}
+                onChange={(e) => setCpf(e.target.value)}
                 width="30rem"
+                format="cpf"
+                required
               />
               <label>Número de colaboradores: </label>
               <CustomInput
@@ -1097,9 +1096,10 @@ const RegisterOng = () => {
               <CustomInput
                 type="text"
                 placeholder="CPF"
-                value={onlyPositive(cpf || "")}
-                onChange={(e) => setCpf(onlyPositive(e.target.value))}
+                value={cpf || ""}
+                onChange={(e) => setCpf(e.target.value)}
                 width="30rem"
+                format="cpf" // Adicionando esta propriedade para ativar a formatação
                 required
               />
             </>

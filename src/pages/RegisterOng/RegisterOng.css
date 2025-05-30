@@ -57,7 +57,6 @@ label {
     border: 1px solid #fcc8d1;
     background-color: white;
     transition: all 0.3s ease;
-    width: 30rem;
     resize: none;
 }
 
@@ -209,40 +208,54 @@ label {
 }
 
 .cep-info-btn {
-    background: none;
-    border: none;
+    background: #fff;
+    border: 1px solid #ffd6e0;
     color: #d14d72;
-    font-size: 1rem;
+    font-size: 0.93rem;
     cursor: pointer;
-    padding: 0.1rem 0.5rem;
-    border-radius: 6px;
+    padding: 0.13rem 0.6rem;
+    border-radius: 7px;
     font-weight: 500;
     display: flex;
     align-items: center;
     gap: 0.3rem;
-    transition: background 0.2s;
-    text-decoration: underline;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 4px rgba(209,77,114,0.06);
+    text-decoration: none;
+    outline: none;
+    height: 32px;
+    min-width: unset;
+    max-width: 220px;
 }
-
+.cep-info-btn:focus,
 .cep-info-btn:hover {
     background: #fef2f4;
+    box-shadow: 0 2px 8px rgba(209,77,114,0.13);
+    border-color: #d14d72;
 }
 
 .cep-info-icon {
-    font-size: 1.2rem;
-    margin-right: 0.2rem;
+    font-size: 1.1rem;
+    margin-right: 0.1rem;
+    color: #d14d72;
 }
 
+/* Caixa de privacidade */
 .endereco-privacidade {
     display: flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.97rem;
+    gap: 0.25rem;
+    font-size: 0.93rem;
     color: #888;
     background: #fef2f4;
-    border-radius: 6px;
-    padding: 0.15rem 0.7rem;
+    border-radius: 7px;
+    padding: 0.09rem 0.7rem;
     font-weight: 500;
+    margin-top: 0.2rem;
+    box-shadow: 0 1px 4px rgba(209,77,114,0.06);
+    max-width: 100%;
+    flex-wrap: wrap;
+    height: 32px;
 }
 
 .lock-icon {
@@ -535,52 +548,82 @@ label {
 
 /* Responsividade para o modal de endereço */
 .custom-swal-popup {
-  max-width: 95vw !important;
-  width: 100% !important;
+  max-width: 640px !important;   /* Mais largo para monitores grandes */
+  width: 96vw !important;
   padding: 0 !important;
   box-sizing: border-box;
+  border-radius: 18px !important;
 }
 
 .endereco-modal-content {
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   text-align: left;
   max-width: 600px;
   margin: auto;
-  line-height: 1.5;
-  padding: 0.5em 0.2em;
+  line-height: 1.7;
+  padding: 1.3em 1.5em 1.2em 1.5em;  /* padding lateral menor */
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.endereco-modal-content p {
+  margin: 0 0 0.7em 0;
+  font-size: 1.08rem;
 }
 
 .endereco-modal-box {
   background: #fef2f4;
-  border-radius: 8px;
-  padding: 0.7em 1em;
-  margin-bottom: 0.8em;
-  font-size: 1rem;
+  border-radius: 10px;
+  padding: 1em 1.3em;
+  margin-bottom: 1em;
+  font-size: 1.01rem;
+  border: 1px solid #ffd6e0;
+  box-shadow: 0 2px 8px rgba(209,77,114,0.07);
 }
 
 .endereco-modal-title {
   color: #d14d72;
-  font-weight: 500;
+  font-weight: 600;
   display: block;
-  margin-bottom: 0.4em;
+  margin-bottom: 0.5em;
+  font-size: 1.09rem;
 }
 
-@media (max-width: 600px) {
+.endereco-modal-content ul {
+  padding-left: 1.3em;
+  margin: 0.3em 0 0.3em 0;
+  font-size: 1.01rem;
+}
+
+.endereco-modal-content li {
+  margin-bottom: 0.45em;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
   .custom-swal-popup {
-    max-width: 99vw !important;
-    padding: 0 !important;
+    max-width: 98vw !important;
   }
   .endereco-modal-content {
-    font-size: 0.98rem;
-    padding: 0.2em 0.1em;
     max-width: 98vw;
+    padding: 1em 0.5em;
+    font-size: 0.99rem;
   }
   .endereco-modal-box {
-    padding: 0.6em 0.5em;
-    font-size: 0.95rem;
+    padding: 0.7em 0.5em;
+    font-size: 0.97rem;
   }
-  .swal2-title {
-    font-size: 1.1rem !important;
-    padding: 0.5em 0.2em !important;
+}
+
+@media (max-width: 400px) {
+  .endereco-modal-content {
+    font-size: 0.93rem;
+    padding: 0.5em 0.1em;
+  }
+  .endereco-modal-box {
+    padding: 0.5em 0.2em;
+    font-size: 0.93rem;
   }
 }

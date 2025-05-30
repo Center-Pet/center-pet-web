@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
-import InputField from "../../components/Atoms/InputField/InputField";
+import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import ImageInputField from "../../components/Atoms/ImageInputField/ImageInputField";
 import "./EditUser.css";
@@ -268,8 +268,10 @@ const EditUser = () => {
     <div id="edit_user">
       <div id="edit-form-container">
         <form id="edit-form" onSubmit={handleSubmit}>
-          <div id="edit-user-title">
-            <h1>Editar Perfil</h1>
+          <div style={{ textAlign: 'center', width: '100%' }}>
+            <TitleType type="h1" className="mb-4">
+              Editar Perfil
+            </TitleType>
           </div>
           
           <div id="user-img-profile">
@@ -282,31 +284,34 @@ const EditUser = () => {
               />
             </div>
           </div>          <label>Nome completo:</label>
-          <InputField
+          <CustomInput
             type="text"
             value={adopterData.fullName}
             onChange={(e) => handleInputChange("fullName", e.target.value)}
             width="70rem"
+            className="custom-input-responsive"
             required
           />
 
           <label>Telefone:</label>
-          <InputField
+          <CustomInput
             type="tel"
             value={adopterData.phone}
             onChange={(e) => handleInputChange("phone", e.target.value)}
             placeholder="(XX) XXXXX-XXXX"
             width="70rem"
+            className="custom-input-responsive"
             required
           />
 
           <label>Profissão:</label>
-          <InputField
+          <CustomInput
             type="text"
             value={adopterData.profession}
             onChange={(e) => handleInputChange("profession", e.target.value)}
             placeholder="Digite sua profissão"
             width="70rem"
+            className="custom-input-responsive"
           />
             <div id="edit-input-textarea">
             <label>Descrição</label>
@@ -338,7 +343,7 @@ const EditUser = () => {
                     flexWrap: "wrap",
                   }}
                 >
-                  <InputField
+                  <CustomInput
                     type="text"
                     placeholder="CEP"
                     value={adopterData.cep}
@@ -351,6 +356,7 @@ const EditUser = () => {
                       }
                     }}
                     width="11.4rem"
+                    className="custom-input-responsive"
                     maxLength={9}
                     disabled={loadingCep}
                   />
@@ -373,11 +379,12 @@ const EditUser = () => {
                 </div>
               </div>              <div className="col_user_form">
                 <label>Rua:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="Rua"
                   value={adopterData.street}
                   width="20rem"
+                  className="custom-input-responsive"
                   readOnly
                 />
               </div>
@@ -390,7 +397,7 @@ const EditUser = () => {
                     gap: "0.7rem",
                   }}
                 >
-                  <InputField
+                  <CustomInput
                     type="text"
                     placeholder="Número"
                     value={noNumber ? "S/N" : adopterData.number}
@@ -428,30 +435,33 @@ const EditUser = () => {
             
             <div className="row_user_form">              <div className="col_user_form">
                 <label>Bairro:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="Bairro"
                   value={adopterData.neighborhood}
                   width="21rem"
+                  className="custom-input-responsive"
                   readOnly
                 />
               </div>                <div className="col_user_form">
                 <label>Cidade:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="Cidade"
                   value={adopterData.city}
                   width="20rem"
+                  className="custom-input-responsive"
                   readOnly
                 />
               </div>
               <div className="col_user_form">
                 <label>Estado:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="UF"
                   value={adopterData.state}
                   width="6rem"
+                  className="custom-input-responsive"
                   readOnly
                 />
               </div>
@@ -460,7 +470,7 @@ const EditUser = () => {
             <div className="row_user_form">
               <div className="col_user_form">
                 <label>Complemento:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="Complemento"
                   value={adopterData.complement}

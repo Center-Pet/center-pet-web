@@ -1,15 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ButtonType from '../../Atoms/ButtonType/ButtonType';
 import './Navbar.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import CustomAvatar from '../../Atoms/CustomAvatar/CustomAvatar';
 import useAuth from '../../../hooks/useAuth';
-import { Heart, House, PawPrint, Note, User, ChartLine } from "phosphor-react";
+import { Heart, House, PawPrint, Note, User, ChartLine, Gear } from "phosphor-react";
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMobileView, setIsMobileView] = useState(false);
     const navigate = useNavigate();
     const { isAuthenticated, userType, user, isLoading } = useAuth();
+
+    // Detectar quando a tela está em modo mobile
+    useEffect(() => {
+        const checkScreenSize = () => {
+            setIsMobileView(window.innerWidth <= 780);
+        };
+        
+        // Verificar tamanho inicial
+        checkScreenSize();
+        
+        // Adicionar listener para redimensionamento
+        window.addEventListener('resize', checkScreenSize);
+        
+        // Limpar listener
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -21,18 +38,25 @@ const Navbar = () => {
 
     // Verificar se o usuário precisa preencher o formulário
     const needsToFillForm = isAuthenticated && userType === "Adopter" && !user?.safeAdopter;
+    
+    // Verificar se é uma ONG
+    const isOng = isAuthenticated && userType === "Ong";
+
+    // Determinar se deve mostrar o ícone de configurações
+    // Mostra apenas se não estiver autenticado E não estiver em mobile OU se estiver em mobile mas o menu não estiver aberto
+    const shouldShowSettingsIcon = !isAuthenticated && (!isMobileView || (isMobileView && !isMenuOpen));
 
     return (
         <header>
             <div className="pink_square"></div>
             <nav id='navbar'>
-                <img
-                    id="logo"
-                    src="/assets/logo/CenterPet.png"
-                    alt="Center Pet Logo"
-                    onClick={() => navigate('/')}
-                    style={{ cursor: 'pointer' }}
-                />
+                <Link to="/" className="logo-link">
+                    <img
+                        id="logo"
+                        src="/assets/logo/CenterPet.png"
+                        alt="Center Pet Logo"
+                    />
+                </Link>
                 <button className="hamburger-menu" onClick={toggleMenu}>
                     ☰
                 </button>
@@ -47,7 +71,7 @@ const Navbar = () => {
                     </li>
 
                     {/* Botão de ONG apenas para usuários do tipo ONG */}
-                    {isAuthenticated && userType === "Ong" && (
+                    {isOng && (
                         <li>
                             <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/dashboard')}><ChartLine size={25} />Estatísticas</ButtonType>
                         </li>
@@ -78,7 +102,7 @@ const Navbar = () => {
                         <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/catalog'); closeMenu(); }}><PawPrint size={25} /> Catálogo</ButtonType>
                     </li>
 
-                    {isAuthenticated && userType === "Ong" && (
+                    {isOng && (
                         <li>
                             <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/dashboard'); closeMenu(); }}><ChartLine size={25} />Estatísticas</ButtonType>
                         </li>
@@ -91,6 +115,11 @@ const Navbar = () => {
                         </li>
                     )}
 
+                    {/* Botão de configurações no menu mobile para todos os usuários */}
+                    <li>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/configuracoes'); closeMenu(); }}><Gear size={25} /> Configurações</ButtonType>
+                    </li>
+
                     {!isAuthenticated && (
                         <li>
                             <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/login'); closeMenu(); }}><User size={25} /> Login</ButtonType>
@@ -98,17 +127,19 @@ const Navbar = () => {
                     )}
                 </ul>
 
-                {/* Avatar do usuário - mostrar APENAS se estiver autenticado */}
-                {!isLoading && isAuthenticated && (
+                {/* Avatar do usuário ou ícone de configurações */}
+                {!isLoading && isAuthenticated ? (
                     <div className="avatar-icon">
                         <CustomAvatar
-                            navigateTo={userType === "Adopter"
-                                ? `/adopter-profile/${user?._id}`
-                                : `/ong-profile/${user?._id}`
-                            }
                             imageSrc={user?.profileImg || "https://i.imgur.com/WanR0b3.png"}
                         />
                     </div>
+                ) : (
+                    shouldShowSettingsIcon && (
+                        <div className="settings-icon" onClick={() => navigate('/configuracoes')}>
+                            <Gear size={28} weight="fill" />
+                        </div>
+                    )
                 )}
             </nav>
         </header>

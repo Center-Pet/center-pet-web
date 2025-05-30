@@ -3,11 +3,14 @@ import Hero from "../../components/Molecules/Banner/Banner";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import ScrollToTop from "../../components/Atoms/ScrollToTop/ScrollToTop";
 import Title from "../../components/Atoms/TitleType/TitleType";
+import OngChart from "../../components/Molecules/OngChart/OngChart";
 import "./Home.css";
 
 const Home = () => {
   const [pets, setPets] = useState([]);
+  const [ongs, setOngs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingOngs, setLoadingOngs] = useState(true);
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -46,7 +49,28 @@ const Home = () => {
       }
     };
 
+    const fetchOngs = async () => {
+      setLoadingOngs(true);
+      try {
+        // Buscar todas as ONGs do sistema
+        const response = await fetch(
+          "https://centerpet-api.onrender.com/api/ongs"
+        );
+        const data = await response.json();
+        
+        // Mapear os dados recebidos
+        const ongsArray = Array.isArray(data.data) ? data.data : data;
+        setOngs(ongsArray);
+      } catch (error) {
+        console.error("Erro ao buscar as ONGs:", error);
+        setOngs([]);
+      } finally {
+        setLoadingOngs(false);
+      }
+    };
+
     fetchPets();
+    fetchOngs();
   }, []);
 
   return (
@@ -218,38 +242,22 @@ const Home = () => {
       </section>
 
       {/* ORGULHO EM APOIAR ONGS */}
-      <section className="proud-ongs-section">
-        <div className="proud-ongs-header">
-          <div>
-            <Title>Temos orgulho em apoiar essas ONGs incríveis</Title>
+      <section className="proud-ongs-section">        
+        {loadingOngs ? (
+          <div className="loading-spinner-container">
+            <div className="loading-spinner"></div>
           </div>
-        </div>
-        <div className="proud-ongs-cards">
-          <div className="ong-card">
-            <img
-              src="https://pbs.twimg.com/profile_images/1758521731545780224/KjQzo0Sr_400x400.jpg"
-              alt="Resgatiticos"
-              className="ong-logo"
-            />
-            <h3 className="ong-name">Resgatiticos</h3>
-            <a
-              href="https://www.instagram.com/resgatiticos/"
-              className="ong-details-btn"
-            >
-              Veja mais detalhes <span>&#8594;</span>
-            </a>
-          </div>
-          {/* <div className="ong-card">
-            <img src="/assets/ong2-logo.png" alt="Amigos de Patas" className="ong-logo" />
-            <h3 className="ong-name">Amigos de Patas</h3>
-            <a href="/ongs/amigos-de-patas" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
-          </div>
-          <div className="ong-card">
-            <img src="/assets/ong3-logo.png" alt="Lar dos Focinhos" className="ong-logo" />
-            <h3 className="ong-name">Lar dos Focinhos</h3>
-            <a href="/ongs/lar-dos-focinhos" className="ong-details-btn">Veja mais detalhes <span>&#8594;</span></a>
-          </div> */}
-        </div>
+        ) : (
+          <PetShowcase 
+            title="Temos orgulho em apoiar essas ONGs incríveis" 
+            category="ongs"
+            customComponent={(ongData) => (
+              <OngChart ongData={ongData} />
+            )}
+            pets={ongs}
+            limit={9}
+          />
+        )}
       </section>
 
       {/* DEPOIMENTOS DE ADOTANTES */}
