@@ -72,6 +72,13 @@
     transition: transform 0.3s ease;
   }
   
+
+  @media (max-width: 768px){
+    .pet-showcase-buttons {
+      display: none; /* Esconde as setas de navegação */
+    }
+  }
+
   @media (max-width: 768px) {
     .pet-showcase-title {
       font-size: 24px;
@@ -84,10 +91,6 @@
     .pet-showcase-button {
       padding: 6px 12px;
       font-size: 12px;
-    }
-
-    .pet-showcase-buttons {
-      display: none; /* Esconde as setas de navegação */
     }
   }
 
@@ -118,8 +121,13 @@
     background-color: #f8e5eb; /* Mesmo estilo de hover das setinhas */
   }
 
+
+
+
+
   /* Regras para mobile */
   @media (max-width: 768px) {
+
     .pet-showcase-buttons {
       display: none; /* Esconde as setas e o botão de desktop no mobile */
     }
@@ -177,5 +185,9 @@
     }
   }
 
-
-  
+  /* Responsividade - título do petshowcase */
+  @media (max-width: 719px){
+    .pet-showcase-container>.pet-showcase-header>.custom-title-wrapper>.custom-title{
+      font-size: 20px;
+    }
+  }

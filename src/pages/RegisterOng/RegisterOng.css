@@ -532,3 +532,55 @@ label {
   margin-top: 5px;
   margin-bottom: 10px;
 }
+
+/* Responsividade para o modal de endereço */
+.custom-swal-popup {
+  max-width: 95vw !important;
+  width: 100% !important;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+.endereco-modal-content {
+  font-size: 1.05rem;
+  text-align: left;
+  max-width: 600px;
+  margin: auto;
+  line-height: 1.5;
+  padding: 0.5em 0.2em;
+}
+
+.endereco-modal-box {
+  background: #fef2f4;
+  border-radius: 8px;
+  padding: 0.7em 1em;
+  margin-bottom: 0.8em;
+  font-size: 1rem;
+}
+
+.endereco-modal-title {
+  color: #d14d72;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.4em;
+}
+
+@media (max-width: 600px) {
+  .custom-swal-popup {
+    max-width: 99vw !important;
+    padding: 0 !important;
+  }
+  .endereco-modal-content {
+    font-size: 0.98rem;
+    padding: 0.2em 0.1em;
+    max-width: 98vw;
+  }
+  .endereco-modal-box {
+    padding: 0.6em 0.5em;
+    font-size: 0.95rem;
+  }
+  .swal2-title {
+    font-size: 1.1rem !important;
+    padding: 0.5em 0.2em !important;
+  }
+}

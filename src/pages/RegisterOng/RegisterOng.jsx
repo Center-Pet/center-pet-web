@@ -13,6 +13,12 @@ import { Eye, EyeSlash } from "phosphor-react";
 // Adicionar importação do CustomInput
 import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
 
+// Exemplo de função utilitária para garantir apenas números positivos
+const onlyPositive = (value) => {
+  const num = value.replace(/\D/g, "");
+  return num.replace(/^0+/, '') || "0";
+};
+
 // link para rota: <Route path="/register-user" element={<RegisterUser />} />
 // import para página: import RegisterUser from '../pages/RegisterUser/RegisterUser'
 const RegisterOng = () => {
@@ -397,6 +403,27 @@ const RegisterOng = () => {
       }
     }
 
+    if (
+      Number(collaborators) < 0 ||
+      Number(cnpj) < 0 ||
+      Number(cpf) < 0 ||
+      Number(phone) < 0 ||
+      Number(zipCode) < 0 ||
+      Number(number) < 0
+    ) {
+      Swal.fire({
+        title: "Atenção!",
+        text: "Não são permitidos valores negativos nos campos numéricos.",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 3000,
+        toast: false,
+        position: "center",
+        customClass: "swal2-toast warning",
+      });
+      return;
+    }
+
     let profileImageUrl = "";
     // Mostra o loading antes de iniciar o upload usando o componente PawAnimation
     const pawAnimationHtml = ReactDOMServer.renderToString(
@@ -558,9 +585,7 @@ const RegisterOng = () => {
             type="tel"
             placeholder="(00)00000-0000"
             value={phone}
-            onChange={(e) => {
-              setPhone(e.target.value);
-            }}
+            onChange={(e) => setPhone(onlyPositive(e.target.value))}
             width="30rem"
             required
           />
@@ -604,30 +629,30 @@ const RegisterOng = () => {
                 title="Por que pedimos o endereço?"
                 onClick={() =>
                   Swal.fire({
-                    title: `<div style="display:flex;align-items:center;gap:0.6rem;">
-                                                  <span style="font-size:1.7rem;color:#d14d72;">🔒</span>
-                                                  <span style="font-size:1.18rem;color:#d14d72;font-weight:700;">Por que pedimos seu endereço?</span>
-                                                </div>`,
+                    title: `<div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+                              <span style="font-size:1.7rem;color:#d14d72;">🔒</span>
+                              <span style="font-size:1.18rem;color:#d14d72;font-weight:700;">Por que pedimos seu endereço?</span>
+                            </div>`,
                     html: `
-                                        <div style="font-size:1.05rem;text-align:left;max-width:600px;margin:auto;line-height:1.5;"> <!-- Alterado max-width para 600px -->
-                                            <p style="margin:0 0 0.7em 0;">
-                                                <b style="color:#d14d72;">Seu endereço <span style="text-decoration:underline;">não será exibido no site</span>.</b>
-                                            </p>
-                                            <div style="background:#fef2f4;border-radius:8px;padding:0.7em 1em;margin-bottom:0.8em;">
-                                                <span style="color:#d14d72;font-weight:500;">Pedimos o endereço apenas por motivos de segurança:</span>
-                                                <ul style="margin:0.5em 0 0.5em 1.2em;padding:0;">
-                                                    <li>Evitar abandono de animais na porta do local</li>
-                                                    <li>Proteger a privacidade de protetores e ONGs</li>
-                                                    <li>Facilitar a busca por pets próximos</li>
-                                                </ul>
-                                            </div>
-                                            <span style="color:#d14d72;font-weight:500;">Sua privacidade é prioridade!</span>
-                                        </div>`,
+                      <div class="endereco-modal-content">
+                        <p style="margin:0 0 0.7em 0;">
+                          <b style="color:#d14d72;">Seu endereço <span style="text-decoration:underline;">não será exibido no site</span>.</b>
+                        </p>
+                        <div class="endereco-modal-box">
+                          <span class="endereco-modal-title">Pedimos o endereço apenas por motivos de segurança:</span>
+                          <ul>
+                            <li>Evitar abandono de animais na porta do local</li>
+                            <li>Proteger a privacidade de protetores e ONGs</li>
+                            <li>Facilitar a busca por pets próximos</li>
+                          </ul>
+                        </div>
+                        <span class="endereco-modal-title">Sua privacidade é prioridade!</span>
+                      </div>`,
                     icon: undefined,
                     confirmButtonColor: "#d14d72",
                     confirmButtonText: "Entendi",
                     customClass: {
-                      popup: "custom-swal-popup", // Adiciona uma classe customizada para controle adicional
+                      popup: "custom-swal-popup",
                     },
                   })
                 }
@@ -665,9 +690,10 @@ const RegisterOng = () => {
                 placeholder="CEP"
                 value={zipCode}
                 onChange={(e) => {
-                  setZipCode(e.target.value);
-                  if (e.target.value.replace(/\D/g, "").length === 8) {
-                    buscarEnderecoPorCep(e.target.value);
+                  const val = onlyPositive(e.target.value);
+                  setZipCode(val);
+                  if (val.replace(/\D/g, "").length === 8) {
+                    buscarEnderecoPorCep(val);
                   }
                 }}
                 width="12rem"
@@ -706,8 +732,8 @@ const RegisterOng = () => {
               <CustomInput
                 type="text"
                 placeholder="Número"
-                value={noNumber ? "S/N" : number}
-                onChange={(e) => setNumber(e.target.value)}
+                value={noNumber ? "S/N" : onlyPositive(number)}
+                onChange={(e) => setNumber(onlyPositive(e.target.value))}
                 width="10rem"
                 required={!noNumber}
                 disabled={noNumber}
@@ -1031,10 +1057,10 @@ const RegisterOng = () => {
             <>
               <label>CNPJ: </label>
               <CustomInput
-                type="number"
+                type="text"
                 placeholder="CNPJ"
-                value={cnpj}
-                onChange={(e) => setCnpj(e.target.value)}
+                value={onlyPositive(cnpj || "")}
+                onChange={(e) => setCnpj(onlyPositive(e.target.value))}
                 width="30rem"
                 required
               />
@@ -1044,18 +1070,22 @@ const RegisterOng = () => {
             <>
               <label>CPF (do representante do projeto): </label>
               <CustomInput
-                type="number"
+                type="text"
                 placeholder="CPF"
-                value={cpf}
+                value={onlyPositive(cpf || "")}
                 required
-                onChange={(e) => setCpf(e.target.value)}
+                onChange={(e) => setCpf(onlyPositive(e.target.value))}
                 width="30rem"
               />
               <label>Número de colaboradores: </label>
               <CustomInput
                 type="number"
-                value={collaborators}
-                onChange={(e) => setCollaborators(e.target.value)}
+                min={1}
+                value={collaborators || ""}
+                onChange={(e) => {
+                  const val = onlyPositive(e.target.value);
+                  setCollaborators(val === "0" ? "" : val);
+                }}
                 width="30rem"
                 required
               />
@@ -1067,8 +1097,8 @@ const RegisterOng = () => {
               <CustomInput
                 type="text"
                 placeholder="CPF"
-                value={cpf}
-                onChange={(e) => setCpf(e.target.value)}
+                value={onlyPositive(cpf || "")}
+                onChange={(e) => setCpf(onlyPositive(e.target.value))}
                 width="30rem"
                 required
               />

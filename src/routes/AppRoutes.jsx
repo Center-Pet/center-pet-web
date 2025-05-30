@@ -17,7 +17,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
 import CatalogFilter from "../pages/CatalogFilter/CatalogFilter"
 import AdoptionPage from "../pages/AdoptionPage/AdoptionPage";
-import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import ResetPassword from "../pages/ResetPassword/ResetPassword";
 
 
 
