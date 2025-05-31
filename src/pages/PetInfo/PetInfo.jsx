@@ -49,6 +49,7 @@ export default function PetInfo() {
         // Buscar informações do pet
         const response = await fetch(
           `https://centerpet-api.onrender.com/api/pets/${petId}`
+
         );
 
         if (!response.ok) {
@@ -181,7 +182,7 @@ export default function PetInfo() {
     // Cria a adoção no banco de dados
     try {
       const response = await fetch(
-        "https://centerpet-api.onrender.com/api/adoptions/create",
+        "http://localhost:5000/api/adoptions/create",
         {
           method: "POST",
           headers: {
@@ -192,27 +193,43 @@ export default function PetInfo() {
             userId: user._id,
             petId: pet._id,
             ongId: pet.ongId,
-            status: status || "requestReceived", // Defina o status inicial como 'requestReceived'
-            requestDate: new Date(), // Data da solicitação
+            status: status || "requestReceived",
+            requestDate: new Date(),
           }),
         }
       );
 
-      // Verifica se a resposta foi bem-sucedida
       if (!response.ok) {
         const errorData = await response.json();
         console.log("Erro detalhado da API:", errorData);
         throw new Error("Erro ao criar solicitação de adoção.");
       }
 
+      // Enviar email de solicitação de adoção
+      await fetch(
+        "http://localhost:5000/api/emails/adoption-request",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            adopterName: user.fullName,
+            adopterEmail: user.email,
+            petName: pet.name,
+            ongId: pet.ongId,
+            petId: pet._id,
+          }),
+        }
+      );
+
       Swal.fire({
         title: "Solicitação Enviada!",
         html: `
-          <p>Sua solicitação para adotar <strong>${
-            pet.name
-          }</strong> foi enviada com sucesso para a ONG <strong>${
-          ongData ? ongData.name : ""
-        }</strong>.</p>
+          <p>Sua solicitação para adotar <strong>${pet.name
+          }</strong> foi enviada com sucesso para a ONG <strong>${ongData ? ongData.name : ""
+          }</strong>.</p>
           <p>Agora é necessário aguardar a análise da ONG, que irá verificar as informações fornecidas no seu formulário de adotante seguro.</p>
           <p>Você receberá uma notificação assim que houver uma resposta.</p>
         `,
@@ -518,9 +535,8 @@ export default function PetInfo() {
                       key={index}
                       src={image || "https://i.imgur.com/WanR0b3.png"}
                       alt={`${pet.name} thumbnail ${index + 1}`}
-                      className={`pet-thumbnail ${
-                        currentImage === index ? "active" : ""
-                      }`}
+                      className={`pet-thumbnail ${currentImage === index ? "active" : ""
+                        }`}
                       onClick={() => handleThumbnailClick(index)}
                     />
                   ))}
@@ -542,8 +558,8 @@ export default function PetInfo() {
               </h4>
               <h4 className="location-subtitle">
                 <MapPin size={16} style={{ marginRight: 4 }} />
-                {pet.city && pet.state ? `${pet.city}, ${pet.state}` : 
-                 pet.location ? pet.location : "Localização não informada"}
+                {pet.city && pet.state ? `${pet.city}, ${pet.state}` :
+                  pet.location ? pet.location : "Localização não informada"}
               </h4>
               <p className="pet-bio">
                 {pet.description || "Sem descrição disponível."}
@@ -589,9 +605,8 @@ export default function PetInfo() {
                 {/* Se não for ONG ou for adotante, mostrar botão de adotar */}
                 {canAdopt && (
                   <button
-                    className={`adopt-button ${
-                      adoptionRequested ? "requested" : ""
-                    }`}
+                    className={`adopt-button ${adoptionRequested ? "requested" : ""
+                      }`}
                     onClick={handleAdoptPet}
                     disabled={adoptionRequested}
                   >
@@ -612,10 +627,10 @@ export default function PetInfo() {
 
         {similarPets.length > 0 && (
           <div className="carousel-section">
-            <PetShowcase 
-            title="Outros Pets" 
-            pets={similarPets} 
-            limit={15}
+            <PetShowcase
+              title="Outros Pets"
+              pets={similarPets}
+              limit={15}
             />
           </div>
         )}
@@ -642,9 +657,8 @@ export default function PetInfo() {
                 alt={pet.name}
                 onClick={handleImageClick}
                 style={{
-                  transform: `scale(${zoomLevel}) translate(${
-                    zoomPosition.x / zoomLevel
-                  }px, ${zoomPosition.y / zoomLevel}px)`,
+                  transform: `scale(${zoomLevel}) translate(${zoomPosition.x / zoomLevel
+                    }px, ${zoomPosition.y / zoomLevel}px)`,
                   cursor:
                     zoomLevel > 1
                       ? isDragging

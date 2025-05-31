@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import InputField from "../../components/Atoms/InputField/InputField";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import useAuth from "../../hooks/useAuth";
 import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
@@ -53,6 +53,7 @@ function validarSenhaForte(senha) {
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const location = useLocation();
 
   const handleRegisterOng = () => {
     navigate("/register-ong");
@@ -108,6 +109,12 @@ const Login = () => {
     }, 6000);
     return () => clearInterval(interval);
   }, [images.length]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const emailFromReset = params.get("email");
+    if (emailFromReset) setEmail(emailFromReset);
+  }, [location]);
 
   const handleFormSwitch = () => {
     setIsSwitching(true);

@@ -7,16 +7,18 @@ import Swal from "sweetalert2";
 import "./AdoptionPage.css";
 
 export default function AdoptionPage() {
-  const [showDetails, setShowDetails] = useState(false);
-  const toggleDetails = () => setShowDetails((prev) => !prev);
-  const { petId, userId, ongId } = useParams();
+  const { adoptionId, petId, userId, ongId } = useParams();
   const navigate = useNavigate();
   const { userType } = useAuth();
 
   const [pet, setPet] = useState(null);
   const [adopter, setAdopter] = useState(null);
   const [ong, setOng] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+
+
+  const toggleDetails = () => setShowDetails((prev) => !prev);
 
   useEffect(() => {
     if (!petId || !userId || !ongId) {
@@ -32,8 +34,8 @@ export default function AdoptionPage() {
       try {
         const [petRes, adopterRes, ongRes] = await Promise.all([
           fetch(`https://centerpet-api.onrender.com/api/pets/${petId}`),
-          fetch(`https://centerpet-api.onrender.com/api/users/${userId}`),
-          fetch(`https://centerpet-api.onrender.com/api/ongs/${ongId}`)
+          fetch(`https://centerpet-api.onrender.com/api/adopters/${userId}`),
+          fetch(`https://centerpet-api.onrender.com/api/ongs/${ongId}`),
         ]);
 
         if (!petRes.ok) throw new Error("Erro ao buscar informações do pet.");
@@ -43,12 +45,12 @@ export default function AdoptionPage() {
         const [petData, adopterData, ongData] = await Promise.all([
           petRes.json(),
           adopterRes.json(),
-          ongRes.json()
+          ongRes.json(),
         ]);
 
-        setPet(petData);
-        setAdopter(adopterData);
-        setOng(ongData);
+        setPet(petData.data || petData);
+        setAdopter(adopterData.data || adopterData);
+        setOng(ongData.data || ongData);
       } catch (err) {
         console.error(err);
         Swal.fire({
@@ -64,57 +66,115 @@ export default function AdoptionPage() {
     fetchData();
   }, [petId, userId, ongId, navigate]);
 
+
   const handleAccept = async () => {
-    try {
-      const res = await fetch(`https://centerpet-api.onrender.com/api/adoptions/accept`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ petId, userId, ongId }),
-      });
-      if (!res.ok) throw new Error("Erro ao aceitar solicitação.");
-      Swal.fire({
-        title: "Solicitação aceita!",
-        icon: "success",
-        confirmButtonColor: "#FF8BA7",
-      }).then(() => navigate(-1));
-    } catch (err) {
-      console.error(err);
-      Swal.fire({
-        title: "Erro",
-        text: err.message || "Erro ao aceitar solicitação.",
-        icon: "error",
-      });
+    const result = await Swal.fire({
+      title: "Aceitar solicitação?",
+      text: "Você tem certeza que deseja aceitar esta adoção? O adotante será notificado por email.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#4caf50",
+      cancelButtonColor: "#ff4d4d",
+      confirmButtonText: "Sim, aceitar",
+      cancelButtonText: "Cancelar",
+      background: "#fff",
+      color: "#333",
+    });
+    if (result.isConfirmed) {
+      setLoading(true);
+      try {
+        const res = await fetch(`http://localhost:5000/api/adoptions/accept/${adoptionId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        });
+        if (!res.ok) throw new Error("Erro ao aceitar solicitação.");
+        await Swal.fire({
+          title: "Solicitação aceita!",
+          text: "O adotante foi notificado por email. Agora é só combinar a entrega!",
+          icon: "success",
+          confirmButtonColor: "#4caf50",
+          background: "#fff",
+          color: "#333",
+        });
+        navigate("/home"); // <-- ajuste aqui
+      } catch (err) {
+        Swal.fire({
+          title: "Erro",
+          text: err.message || "Erro ao aceitar solicitação.",
+          icon: "error",
+          confirmButtonColor: "#ff4d4d",
+          background: "#fff",
+          color: "#333",
+        });
+      }
+      setLoading(false);
     }
   };
 
   const handleReject = async () => {
-    try {
-      const res = await fetch(`https://centerpet-api.onrender.com/api/adoptions/reject`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ petId, userId, ongId }),
-      });
-      if (!res.ok) throw new Error("Erro ao recusar solicitação.");
-      Swal.fire({
-        title: "Solicitação recusada!",
-        icon: "info",
-        confirmButtonColor: "#FF8BA7",
-      }).then(() => navigate(-1));
-    } catch (err) {
-      console.error(err);
-      Swal.fire({
-        title: "Erro",
-        text: err.message || "Erro ao recusar solicitação.",
-        icon: "error",
-      });
+    const result = await Swal.fire({
+      title: "Recusar solicitação?",
+      text: "Tem certeza que deseja recusar esta adoção? O adotante será notificado por email.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ff4d4d",
+      cancelButtonColor: "#4caf50",
+      confirmButtonText: "Sim, recusar",
+      cancelButtonText: "Cancelar",
+      background: "#fff",
+      color: "#333",
+    });
+    if (result.isConfirmed) {
+      setLoading(true);
+      try {
+        const res = await fetch(`http://localhost:5000/api/adoptions/reject/${adoptionId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        });
+        if (!res.ok) throw new Error("Erro ao recusar solicitação.");
+        await Swal.fire({
+          title: "Solicitação recusada!",
+          text: "O adotante foi notificado por email.",
+          icon: "info",
+          confirmButtonColor: "#ff4d4d",
+          background: "#fff",
+          color: "#333",
+        });
+        navigate("/home"); // <-- ajuste aqui
+      } catch (err) {
+        Swal.fire({
+          title: "Erro",
+          text: err.message || "Erro ao recusar solicitação.",
+          icon: "error",
+          confirmButtonColor: "#ff4d4d",
+          background: "#fff",
+          color: "#333",
+        });
+      }
+      setLoading(false);
     }
   };
+
+  function getImageUrl(img) {
+    if (!img) return "https://i.imgur.com/WanR0b3.png";
+    if (Array.isArray(img)) img = img[0];
+    if (!img) return "https://i.imgur.com/WanR0b3.png";
+    if (img.startsWith("http")) return img;
+    return `https://centerpet-api.onrender.com/uploads/${img}`;
+  }
+
+  function maskCPF(cpf) {
+    if (!cpf) return "Não informado";
+    const digits = String(cpf).replace(/\D/g, "");
+    if (digits.length !== 11) return "Não informado";
+    return `***.${digits.slice(3, 6)}.***-**`;
+  }
 
   if (loading) {
     return <div className="adoption-page-container">Carregando...</div>;
@@ -127,19 +187,11 @@ export default function AdoptionPage() {
         <div className="adoption-card">
           <h3>Pet</h3>
           <div>
-            {pet ? (
-              <img
-                src={pet.images?.[0] || "https://i.imgur.com/WanR0b3.png"}
-                alt={pet.name || "Imagem do pet"}
-                className="adoption-pet-img"
-              />
-            ) : (
-              <img
-                src="https://i.imgur.com/WanR0b3.png"
-                alt="Imagem do pet não disponível"
-                className="adoption-pet-img"
-              />
-            )}
+            <img
+              src={getImageUrl(pet?.images || pet?.image)}
+              alt={pet?.name || "Imagem do pet"}
+              className="adoption-pet-img"
+            />
 
             <p><strong>Nome:</strong> {pet?.name || "Não informado"}</p>
             <p><strong>Espécie:</strong> {pet?.type || "Não informado"}</p>
@@ -168,7 +220,7 @@ export default function AdoptionPage() {
             <p><strong>Profissão:</strong> {adopter?.profession || "Não informado"}</p>
             <p><strong>Descrição pessoal:</strong> {adopter?.description || "Não informada"}</p>
             <p><strong>Data de nascimento:</strong> {adopter?.birth ? new Date(adopter.birth).toLocaleDateString() : "Não informada"}</p>
-            <p><strong>CPF:</strong> {adopter?.cpf || "Não informado"}</p>
+            <p><strong>CPF:</strong> {adopter?.cpf ? maskCPF(adopter.cpf) : "Não informado"}</p>
             <p><strong>Endereço:</strong> {adopter?.street || "Rua não informada"}, Nº {adopter?.number || "s/n"} — {adopter?.neighborhood || "Bairro não informado"}, {adopter?.city || "Cidade não informada"} - {adopter?.cep || "CEP não informado"}</p>
 
             <ButtonType onClick={toggleDetails} className="toggle-details-btn">
@@ -212,7 +264,7 @@ export default function AdoptionPage() {
           <h3>ONG Responsável</h3>
           <div>
             <img
-              src={ong?.profileImg || "https://i.imgur.com/WanR0b3.png"}
+              src={getImageUrl(ong?.profileImg)}
               alt="Foto da ONG"
               className="adoption-pet-img"
             />
@@ -228,24 +280,56 @@ export default function AdoptionPage() {
             <p><strong>Endereço:</strong></p>
             <p>
               {[
-                ong?.address?.street || "Rua não informada",
-                ong?.address?.number || "s/n",
-                ong?.address?.neighborhood || "Bairro não informado",
-                ong?.address?.city || "Cidade não informada",
-                ong?.address?.uf || "UF não informada",
-                ong?.address?.cep || "CEP não informado",
+                ong?.address?.street,
+                ong?.address?.number,
+                ong?.address?.neighborhood,
+                ong?.address?.city,
+                ong?.address?.uf,
+                ong?.address?.cep,
                 ong?.address?.complement && `(${ong.address.complement})`,
               ]
                 .filter(Boolean)
-                .join(", ")}
+                .join(", ") || "Endereço não informado"}
             </p>
           </div>
         </div>
       </div>
       {userType === "Ong" && (
-        <div className="adoption-actions">
-          <ButtonType className="accept-btn" onClick={handleAccept} bgColor="green">Aceitar Solicitação</ButtonType>
-          <ButtonType className="reject-btn" onClick={handleReject} bgColor="red">Recusar Solicitação</ButtonType>
+        <div className="adoption-actions" style={{ margin: "32px 0", display: "flex", gap: 16 }}>
+          <button
+            className="accept-btn"
+            onClick={handleAccept}
+            disabled={loading}
+            style={{
+              background: "#4caf50",
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              padding: "10px 24px",
+              fontWeight: "bold",
+              fontSize: 16,
+              cursor: loading ? "not-allowed" : "pointer"
+            }}
+          >
+            Aceitar Solicitação
+          </button>
+          <button
+            className="reject-btn"
+            onClick={handleReject}
+            disabled={loading}
+            style={{
+              background: "#ff4d4d",
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              padding: "10px 24px",
+              fontWeight: "bold",
+              fontSize: 16,
+              cursor: loading ? "not-allowed" : "pointer"
+            }}
+          >
+            Recusar Solicitação
+          </button>
         </div>
       )}
     </div>

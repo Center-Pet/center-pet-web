@@ -17,7 +17,7 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
 import CatalogFilter from "../pages/CatalogFilter/CatalogFilter"
 import AdoptionPage from "../pages/AdoptionPage/AdoptionPage";
-import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import ResetPassword from "../pages/ResetPassword/ResetPassword";
 
 
 
@@ -44,7 +44,7 @@ const AppRoutes = () => {
       <Route path="/edit-org" element={<EditOrg />} />
       <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
       <Route path="/catalog-filter" element={<CatalogFilter />} />
-      <Route path="/adoption/:petId/:userId/:ongId" element={<AdoptionPage />} />
+      <Route path="/adoption/:adoptionId/:petId/:userId/:ongId" element={<AdoptionPage />} />
     </Routes>
   );
 };
