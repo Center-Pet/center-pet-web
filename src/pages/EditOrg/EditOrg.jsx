@@ -2,7 +2,7 @@ import "./EditOrg.css";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import ImageInputField from "../../components/Atoms/ImageInputField/ImageInputField";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
-import InputField from "../../components/Atoms/InputField/InputField";
+import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
 import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -337,8 +337,10 @@ const EditOrg = () => {
     <div id="edit_org">
       <div id="edit-form-container">
         <form id="edit-form" onSubmit={handleSubmit}>
-          <div id="edit-org-title">
-            <h1>Editar Perfil da Organização</h1>
+          <div style={{ textAlign: 'center', width: '100%' }}>
+            <TitleType type="h1" className="mb-4">
+              Editar Perfil da Organização
+            </TitleType>
           </div>
           <div id="org-img-profile">
             <h2>Sua foto de perfil</h2>
@@ -353,20 +355,27 @@ const EditOrg = () => {
           </div>
 
           <label>Email: (não editável)</label>
-          <InputField type="email" value={email} width="70rem" readOnly />
+          <CustomInput
+            type="email"
+            value={email}
+            width="70rem"
+            className="custom-input-responsive"
+            readOnly
+          />
 
           <label>Nome da organização: </label>
-          <InputField
+          <CustomInput
             type="text"
             placeholder="Nome da organização"
             width="70rem"
+            className="custom-input-responsive"
             value={fullName}
             required
             onChange={(e) => setFullName(e.target.value)}
           />
 
           <label>Número de telefone: </label>
-          <InputField
+          <CustomInput
             type="tel"
             placeholder="(XX) XXXXX-XXXX"
             width="70rem"
@@ -378,7 +387,7 @@ const EditOrg = () => {
           {role === "Projeto" && (
             <>
               <label>Colaboradores: </label>
-              <InputField
+              <CustomInput
                 type="number"
                 placeholder="Número de colaboradores"
                 width="70rem"
@@ -420,7 +429,7 @@ const EditOrg = () => {
                     flexWrap: "wrap",
                   }}
                 >
-                  <InputField
+                  <CustomInput
                     type="text"
                     placeholder="CEP"
                     value={zipCode}
@@ -458,7 +467,7 @@ const EditOrg = () => {
 
               <div className="col_user_form">
                 <label>Rua:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="Rua"
                   value={street}
@@ -476,7 +485,7 @@ const EditOrg = () => {
                     gap: "0.7rem",
                   }}
                 >
-                  <InputField
+                  <CustomInput
                     type="text"
                     placeholder="Número"
                     value={noNumber ? "S/N" : number}
@@ -512,7 +521,7 @@ const EditOrg = () => {
             <div className="row_user_form">
               <div className="col_user_form">
                 <label>Bairro:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="Bairro"
                   value={neighborhood}
@@ -523,7 +532,7 @@ const EditOrg = () => {
               </div>
               <div className="col_user_form">
                 <label>Cidade:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="Cidade"
                   value={city}
@@ -534,7 +543,7 @@ const EditOrg = () => {
               </div>
               <div className="col_user_form">
                 <label>UF:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="UF"
                   value={stateUf}
@@ -547,7 +556,7 @@ const EditOrg = () => {
             <div className="row_user_form">
               <div className="col_user_form">
                 <label>Complemento:</label>
-                <InputField
+                <CustomInput
                   type="text"
                   placeholder="Complemento"
                   value={complement}
@@ -559,7 +568,7 @@ const EditOrg = () => {
           </div>
 
           <label>Instagram: </label>
-          <InputField
+          <CustomInput
             type="url"
             placeholder="Link da sua conta Instagram"
             width="70rem"
@@ -568,7 +577,7 @@ const EditOrg = () => {
           />
 
           <label>Facebook: </label>
-          <InputField
+          <CustomInput
             type="url"
             placeholder="Link da sua conta Facebook"
             width="70rem"
@@ -577,7 +586,7 @@ const EditOrg = () => {
           />
 
           <label>Site: </label>
-          <InputField
+          <CustomInput
             type="url"
             placeholder="Link do seu site"
             width="70rem"
@@ -586,7 +595,7 @@ const EditOrg = () => {
           />
 
           <label>Chave Pix: </label>
-          <InputField
+          <CustomInput
             type="text"
             placeholder="Sua chave PIX para doações"
             width="70rem"

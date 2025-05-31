@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import InputField from "../../Atoms/InputField/InputField";
 import ButtonType from "../../Atoms/ButtonType/ButtonType";
 import PawAnimation from "../PawAnimation/PawAnimation";
+import { sendForgotPassword } from "../../services/emailService";
 import "./ForgotPasswordModal.css";
 
 /**
@@ -53,6 +54,15 @@ const ForgotPasswordModal = ({ onClose, email = "", onSubmit }) => {
       setErrorMessage("Ocorreu um erro ao enviar. Tente novamente.");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleForgotPassword = async (email) => {
+    const result = await sendForgotPassword(email);
+    if (result.success) {
+      // Sucesso
+    } else {
+      // Erro
     }
   };
 

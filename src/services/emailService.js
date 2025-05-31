@@ -35,7 +35,12 @@ export async function sendForgotPassword(email) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email })
         });
-        return await response.json();
+        const data = await response.json();
+        if (response.ok) {
+            return { success: true, ...data };
+        } else {
+            return { success: false, ...data };
+        }
     } catch (error) {
         return { success: false, error: error.message };
     }

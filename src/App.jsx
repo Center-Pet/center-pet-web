@@ -10,19 +10,21 @@ import FontControls from "./components/Molecules/FontControls/FontControls";
 import ColorBlindFilter from './components/Molecules/ColorBlindFilter/ColorBlindFilter'; 
 import SvgColorBlindFilters from "./components/Molecules/ColorBlindFilter/SvgColorBlindFilters";
 import ThemeToggle from "./components/Molecules/ThemeToggle/ThemeToggle";
+import { AccessibilityProvider, useAccessibility } from "./contexts/AccessibilityContext";
 
 function AppContent() {
   const location = useLocation();
   const hideNavbarRoutes = ["/login", "/cadastro", "/register-ong"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+  const { settings } = useAccessibility();
 
   return (
     <div className="app-wrapper" style={{ position: 'relative' }}>
-      <AnimatedBackground /> {/* 👈 Background animado adicionado aqui */}
-      {/* <FontControls /> 👈 Controles de acessibilidade adicionados aqui */}
-      <ColorBlindFilter />{/* 👈 Filtro de daltonismo adicionado aqui */}
-      <SvgColorBlindFilters /> {/* 👈 SVGs para filtros de daltonismo */}
-      {/* <ThemeToggle /> 👈 Pode ficar na navbar ou flutuando */}
+      <AnimatedBackground />
+      
+      {/* Renderizar os componentes de acessibilidade apenas se estiverem ativados */}
+      {settings.colorBlindFilter && <ColorBlindFilter />}
+      
       {!shouldHideNavbar && <Navbar />} 
       <AppRoutes />
       <ChatButton />
@@ -35,7 +37,9 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <AppContent />
+        <AccessibilityProvider>
+          <AppContent />
+        </AccessibilityProvider>
       </AuthProvider>
     </Router>
   );

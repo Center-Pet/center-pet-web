@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Heartbeat,
   Clock,
+  ChartPie
 } from "phosphor-react";
 
 export default function PetInfo() {
@@ -495,7 +496,13 @@ export default function PetInfo() {
     {
       label: "Esperando um amigo há",
       value: pet.waitingTime ? `${pet.waitingTime} meses` : "Não informado",
-      icon: <Clock size={20} style={{ marginRight: 6 }} />,
+      icon: <Clock size={20} style={{ marginRight: 6 }} />, // Substitua ChartDonut por ChartPie
+    },
+    {
+      label: "Status",
+      value: pet.status || "Não informado", // Removido o texto "meses" que estava sendo adicionado incorretamente
+      icon: <ChartPie size={20} style={{ marginRight: 6 }} />
+
     },
   ];
 

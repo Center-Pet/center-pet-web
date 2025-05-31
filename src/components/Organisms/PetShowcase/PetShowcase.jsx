@@ -3,18 +3,24 @@
 import { useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import CardPet from "../../Molecules/CardPet/CardPet";
-// Corrija a importação dos ícones - phosphor-react usa nomenclatura diferente
 import { CaretLeft, CaretRight } from "phosphor-react";
 import "./PetShowcase.css";
 import Title from "../../Atoms/TitleType/TitleType";
 
-const PetShowcase = ({ title, pets, category, ongId, limit }) => {
+const PetShowcase = ({ 
+  title, 
+  pets, 
+  category,
+  ongId, 
+  limit,
+  customComponent 
+}) => {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Limitar a quantidade de pets exibidos se houver um limite definido
-  const displayPets = limit > 0 ? pets.slice(0, limit) : pets;
+  // Limitar a quantidade de items exibidos se houver limite definido
+  const displayItems = limit > 0 ? pets.slice(0, limit) : pets;
 
   const scrollRight = () => {
     const container = carouselRef.current;
@@ -42,11 +48,27 @@ const PetShowcase = ({ title, pets, category, ongId, limit }) => {
     }
   };
 
-  const handleCardClick = (petId) => {
-    navigate(`/pet-info/${petId}`);
+  const handleCardClick = (itemId) => {
+    // Se for uma ONG
+    if (category === "ongs") {
+      navigate(`/ong-profile/${itemId}`);
+    } else {
+      // Se for um pet
+      navigate(`/pet-info/${itemId}`);
+    }
   };
 
   const handleSeeMore = () => {
+    // Se for ONGs, navegar para o catálogo de ONGs
+    if (category === "ongs") {
+      navigate(
+        `/catalog-filter?category=ongs&title=${encodeURIComponent(
+          `Todas as ONGs Parceiras`
+        )}`
+      );
+      return;
+    }
+    
     // Se estiver na página de uma ONG, redireciona para ver todos os pets dessa ONG
     if (ongId) {
       navigate(
@@ -95,14 +117,14 @@ const PetShowcase = ({ title, pets, category, ongId, limit }) => {
           <button
             className="pet-showcase-button"
             onClick={scrollLeft}
-            aria-label="Ver pets anteriores"
+            aria-label="Ver itens anteriores"
           >
             <CaretLeft size={16} />
           </button>
           <button
             className="pet-showcase-button"
             onClick={scrollRight}
-            aria-label="Ver mais pets"
+            aria-label="Ver mais itens"
           >
             <CaretRight size={16} />
           </button>
@@ -118,27 +140,34 @@ const PetShowcase = ({ title, pets, category, ongId, limit }) => {
                   : "inline-block",
             }}
           >
-            {location.pathname === "/catalog" ? "Ver Categoria" : "Ver Mais"}
+            {location.pathname === "/catalog" ? "Ver Categoria" : "Ver Todos"}
           </button>
         </div>
       </div>
 
       <div className="pet-showcase-carousel" ref={carouselRef} role="region">
-        {displayPets.map((pet, index) => (
-          <CardPet
-            key={index}
-            image={pet.image}
-            name={pet.name}
-            gender={pet.gender}
-            age={pet.age}
-            type={pet.type}
-            hasSpecialCondition={pet.hasSpecialCondition}
-            specialCondition={pet.specialCondition}
-            vaccinated={pet.vaccinated}
-            castrated={pet.castrated}
-            dewormed={pet.dewormed}
-            onClick={() => handleCardClick(pet.id)}
-          />
+        {displayItems.map((item, index) => (
+          <div key={index} className="pet-showcase-item">
+            {customComponent ? (
+              // Renderiza um componente personalizado se fornecido
+              customComponent(item)
+            ) : (
+              // Caso contrário, renderiza o CardPet padrão
+              <CardPet
+                image={item.image}
+                name={item.name}
+                gender={item.gender}
+                age={item.age}
+                type={item.type}
+                hasSpecialCondition={item.hasSpecialCondition}
+                specialCondition={item.specialCondition}
+                vaccinated={item.vaccinated}
+                castrated={item.castrated}
+                dewormed={item.dewormed}
+                onClick={() => handleCardClick(item.id)}
+              />
+            )}
+          </div>
         ))}
       </div>
     </div>

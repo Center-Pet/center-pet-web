@@ -113,14 +113,19 @@ body {
     display: none;
 }
 
-@media (max-width: 780px) {
+@media (min-width:481px) and (max-width: 780px) {
     .catalog-header {
         margin-left: 80px;
     }
 }
 
+/* Responsividade - Filtro centralizado */
+
 @media (max-width: 480px) {
     .catalog-header {
         margin-left: 50px;
+    }
+    .catalog-header>#filter{
+        width: 100%;
     }
 }

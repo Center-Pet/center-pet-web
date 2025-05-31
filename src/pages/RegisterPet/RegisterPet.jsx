@@ -22,6 +22,7 @@ import {
   MapPin,
   Heartbeat,
   Clock,
+  ChartPie, // Adicionado ChartPie para o ícone de status
 } from "phosphor-react";
 import "./RegisterPet.css";
 
@@ -145,6 +146,7 @@ export default function RegisterPet() {
     dewormed: "",
     specialCondition: "",
     waitingTime: "",
+    status: ""
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -390,6 +392,7 @@ export default function RegisterPet() {
               ...petInfo,
               ongId: user._id, // ID da ONG logada
               imagens: cloudinaryUrls, // Array de URLs do Cloudinary
+              status: petInfo.status || "Disponível"  // Garante que o status seja enviado explicitamente
             };
 
             Swal.fire({
@@ -535,7 +538,8 @@ export default function RegisterPet() {
               <label className="info-label">
                 <TextAlignLeft size={20} style={{ marginRight: 6 }} />
                 Biografia:
-              </label>              <textarea
+              </label>{" "}
+              <textarea
                 name="bio"
                 placeholder="Conte sobre a personalidade, rotina, preferências, histórico, necessidades especiais e curiosidades do pet."
                 value={petInfo.bio}
@@ -830,7 +834,6 @@ export default function RegisterPet() {
                 </select>
                 {formErrors.city && <ErrorMessage message={formErrors.city} />}
               </div>
-              <div className="last-row">
                 <div className="info-row">
                   <label className="info-label">
                     <Clock size={20} style={{ marginRight: 6 }} />
@@ -855,7 +858,24 @@ export default function RegisterPet() {
                     <ErrorMessage message={formErrors.waitingTime} />
                   )}
                 </div>
-              </div>
+                <div className="info-row">
+                  <label className="info-label">
+                    <ChartPie size={20} style={{ marginRight: 6 }} />
+                    Status:
+                  </label>
+                  <select
+                    name="status"
+                    value={petInfo.status}
+                    onChange={handleInputChange}
+                    className={`input-field ${formErrors.status ? "error" : ""}`}
+                  >
+                    <option value="Disponível">Disponível</option>
+                    <option value="Indisponível">Indisponível</option>
+                    <option value="Adotado">Adotado</option>
+                    <option value="Aguardando">Aguardando</option>
+                  </select>
+                  {formErrors.status && <ErrorMessage message={formErrors.status} />}
+                </div>
             </div>
             <div className="action-buttons">
               <button

@@ -1,0 +1,96 @@
+.ong-card {
+  background: #FEF2F4;
+  border: 1.5px solid #fcc8d1;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(209, 77, 114, 0.08);
+  padding: 2rem 1.3rem 1.5rem;
+  width: 240px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.ong-card:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(209, 77, 114, 0.13);
+  border-color: #d14d72;
+  background: #fff;
+}
+
+.ong-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1.1rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(209, 77, 114, 0.05);
+  border: 2px solid #fcc8d1;
+}
+
+.ong-name {
+  font-size: 1.13rem;
+  color: #d14d72;
+  font-weight: 600;
+  margin-bottom: 0.7rem;
+  text-align: center;
+}
+
+.ong-details-btn {
+  background: #fff;
+  color: #d14d72;
+  border: 1.5px solid #d14d72;
+  border-radius: 7px;
+  padding: 0.5rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: auto;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ong-details-btn:hover {
+  background: #d14d72;
+  color: #fff;
+  border-color: #d14d72;
+}
+
+/* Ajustes para visualização em grid (CatalogFilter) */
+.ongs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.ongs-grid .ong-card {
+  margin-bottom: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .ong-card {
+    width: 200px;
+    padding: 1.5rem 1rem 1.2rem;
+  }
+  
+  .ong-logo {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ong-card {
+    width: 100%;
+    max-width: 320px;
+  }
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { CaretLeft, CaretRight } from "phosphor-react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import CardPet from "../../components/Molecules/CardPet/CardPet";
+import OngChart from "../../components/Molecules/OngChart/OngChart";
 import Filter from "../../components/Atoms/Filter/Filter";
 import Title from "../../components/Atoms/TitleType/TitleType";
 import "./CatalogFilter.css";
@@ -10,17 +11,20 @@ const CatalogFilter = () => {
   const [searchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [pets, setPets] = useState([]);
-  const [filteredPets, setFilteredPets] = useState([]);
-  const petsPerPage = 15;
+  const [items, setItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const itemsPerPage = 15;
   const navigate = useNavigate();
 
   // Pega parâmetros da URL
-  const pageTitle = searchParams.get("title") || "Catálogo de Pets";
+  const pageTitle = searchParams.get("title") || "Catálogo";
   const ongId = searchParams.get("ongId");
   const category = searchParams.get("category");
+  
+  // Verificar se estamos exibindo ONGs ou pets
+  const isOngsView = category === "ongs";
 
-  // Estado para os filtros ativos
+  // Estado para os filtros ativos (apenas para pets)
   const [activeFilters, setActiveFilters] = useState({
     gender: [],
     size: [],
@@ -29,103 +33,119 @@ const CatalogFilter = () => {
   });
 
   useEffect(() => {
-    const fetchPets = async () => {
+    const fetchItems = async () => {
       setIsLoading(true);
       try {
-        // Definir o endpoint da API
-        let apiUrl = "https://centerpet-api.onrender.com/api/pets";
-
-        if (ongId) {
-          // Se tiver ongId, busca pets da ONG específica
-          apiUrl = `https://centerpet-api.onrender.com/api/pets/by-ong/${ongId}`;
+        let apiUrl;
+        
+        // Determinar qual endpoint chamar
+        if (isOngsView) {
+          // Buscar ONGs
+          apiUrl = "https://centerpet-api.onrender.com/api/ongs";
+        } else {
+          // Buscar pets
+          apiUrl = ongId 
+            ? `https://centerpet-api.onrender.com/api/pets/by-ong/${ongId}`
+            : "https://centerpet-api.onrender.com/api/pets";
         }
 
         // Fazer a requisição para a API
         const response = await fetch(apiUrl);
 
         if (!response.ok) {
-          throw new Error(`Erro ao buscar pets (${response.status})`);
+          throw new Error(`Erro ao buscar dados (${response.status})`);
         }
 
         // Processar os dados da resposta
         const data = await response.json();
-        const petsArray = Array.isArray(data.data) ? data.data : data;
+        const dataArray = Array.isArray(data.data) ? data.data : data;
 
-        // Processar os pets para garantir formato consistente
-        const processedPets = petsArray.map((pet) => ({
-          ...pet,
-          id: pet._id,
-          image:
-            pet.image?.[0] ||
-            pet.photos?.[0] ||
-            pet.imagens?.[0] ||
-            (Array.isArray(pet.image) && pet.image.length > 0
-              ? pet.image[0]
-              : null) ||
-            "https://i.imgur.com/WanR0b3.png",
-          // Processar atributos de saúde para filtragem
-          hasSpecialCondition:
-            pet.health?.specialCondition &&
-            pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
-          specialCondition: pet.health?.specialCondition || "Nenhuma",
-          vaccinated: pet.health?.vaccinated || false,
-          castrated: pet.health?.castrated || false,
-          dewormed: pet.health?.dewormed || false,
-        }));
+        if (isOngsView) {
+          // Processar ONGs
+          setItems(dataArray);
+          setFilteredItems(dataArray);
+        } else {
+          // Processar Pets
+          const processedPets = dataArray.map((pet) => ({
+            ...pet,
+            id: pet._id,
+            image:
+              pet.image?.[0] ||
+              pet.photos?.[0] ||
+              pet.imagens?.[0] ||
+              (Array.isArray(pet.image) && pet.image.length > 0
+                ? pet.image[0]
+                : null) ||
+              "https://i.imgur.com/WanR0b3.png",
+            // Processar atributos de saúde para filtragem
+            hasSpecialCondition:
+              pet.health?.specialCondition &&
+              pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
+            specialCondition: pet.health?.specialCondition || "Nenhuma",
+            vaccinated: pet.health?.vaccinated || false,
+            castrated: pet.health?.castrated || false,
+            dewormed: pet.health?.dewormed || false,
+          }));
 
-        // Aplicar filtro com base na categoria da URL
-        let filteredByCategory = processedPets;
+          // Aplicar filtro com base na categoria da URL
+          let filteredByCategory = processedPets;
 
-        if (category) {
-          switch (category) {
-            case "special":
-              // Filtrar pets com condição especial
-              filteredByCategory = processedPets.filter(
-                (pet) => pet.hasSpecialCondition
-              );
-              break;
-
-            case "more-patient":
-              // Filtrar e ordenar pets por tempo de espera (maior para menor)
-              filteredByCategory = [...processedPets]
-                .filter((pet) => !isNaN(Number(pet.waitingTime)))
-                .sort((a, b) => Number(b.waitingTime) - Number(a.waitingTime));
-              break;
-
-            case "new":
-              // Filtrar e ordenar pets por data de registro (mais recente primeiro)
-              filteredByCategory = [...processedPets]
-                .filter((pet) => pet.registerDate)
-                .sort(
-                  (a, b) => new Date(b.registerDate) - new Date(a.registerDate)
+          if (category && category !== "ongs") {
+            switch (category) {
+              case "special":
+                // Filtrar pets com condição especial
+                filteredByCategory = processedPets.filter(
+                  (pet) => pet.hasSpecialCondition
                 );
-              break;
+                break;
 
-            default:
-              // Sem filtro especial
-              break;
+              case "more-patient":
+                // Filtrar e ordenar pets por tempo de espera
+                filteredByCategory = [...processedPets]
+                  .filter((pet) => !isNaN(Number(pet.waitingTime)))
+                  .sort((a, b) => Number(b.waitingTime) - Number(a.waitingTime));
+                break;
+
+              case "new":
+                // Filtrar e ordenar pets por data de registro
+                filteredByCategory = [...processedPets]
+                  .filter((pet) => pet.registerDate)
+                  .sort(
+                    (a, b) => new Date(b.registerDate) - new Date(a.registerDate)
+                  );
+                break;
+
+              default:
+                // Sem filtro especial
+                break;
+            }
           }
-        }
 
-        setPets(filteredByCategory);
-        setFilteredPets(filteredByCategory);
+          setItems(filteredByCategory);
+          setFilteredItems(filteredByCategory);
+        }
       } catch (error) {
-        console.error("Erro ao buscar pets:", error);
-        setPets([]);
-        setFilteredPets([]);
+        console.error("Erro ao buscar dados:", error);
+        setItems([]);
+        setFilteredItems([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchPets();
-  }, [ongId, category]);
+    fetchItems();
+  }, [ongId, category, isOngsView]);
 
-  // Efeito para aplicar filtros do componente Filter
+  // Efeito para aplicar filtros do componente Filter (apenas para pets)
   useEffect(() => {
+    if (isOngsView) {
+      // Se for ONGs, não aplica filtros
+      return;
+    }
+    
     // Se não há filtros ativos, mostra todos os pets da categoria
     if (Object.values(activeFilters).every((arr) => arr.length === 0)) {
-      setFilteredPets(pets);
+      setFilteredItems(items);
       setCurrentPage(1);
       return;
     }
@@ -192,15 +212,15 @@ const CatalogFilter = () => {
     };
 
     // Aplicar filtros
-    setFilteredPets(pets.filter(matchesFilters));
+    setFilteredItems(items.filter(matchesFilters));
     setCurrentPage(1); // Resetar para primeira página ao aplicar filtros
-  }, [activeFilters, pets]);
+  }, [activeFilters, items, isOngsView]);
 
   // Paginação
-  const indexOfLastPet = currentPage * petsPerPage;
-  const indexOfFirstPet = indexOfLastPet - petsPerPage;
-  const currentPets = filteredPets.slice(indexOfFirstPet, indexOfLastPet);
-  const totalPages = Math.ceil(filteredPets.length / petsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
   // Handlers para navegação de página
   const goToPreviousPage = () => {
@@ -226,9 +246,11 @@ const CatalogFilter = () => {
         <div className="catalog-title-container">
           <Title>{pageTitle}</Title>
         </div>
-        <div className="filter-container">
-          <Filter onFilterChange={handleFilterChange} />
-        </div>
+        {!isOngsView && (
+          <div className="filter-container">
+            <Filter onFilterChange={handleFilterChange} />
+          </div>
+        )}
       </div>
 
       {isLoading ? (
@@ -237,32 +259,52 @@ const CatalogFilter = () => {
         </div>
       ) : (
         <>
-          <div className="page-pet-grid">
-            {currentPets.length > 0 ? (
-              currentPets.map((pet, index) => (
-                <CardPet
-                  key={index}
-                  image={pet.image}
-                  name={pet.name}
-                  gender={pet.gender}
-                  age={pet.age}
-                  type={pet.type}
-                  hasSpecialCondition={pet.hasSpecialCondition}
-                  specialCondition={pet.specialCondition}
-                  vaccinated={pet.vaccinated}
-                  castrated={pet.castrated}
-                  dewormed={pet.dewormed}
-                  onClick={() => navigate(`/pet-info/${pet.id}`)}
-                />
-              ))
-            ) : (
-              <p className="no-pets-message">
-                Nenhum pet encontrado com os filtros selecionados.
-              </p>
-            )}
-          </div>
+          {isOngsView ? (
+            // Render ONGs grid
+            <div className="ongs-grid">
+              {currentItems.length > 0 ? (
+                currentItems.map((ong, index) => (
+                  <OngChart 
+                    key={index}
+                    ongData={ong}
+                    onClick={() => navigate(`/ong-profile/${ong._id}`)}
+                  />
+                ))
+              ) : (
+                <p className="no-items-message">
+                  Nenhuma ONG encontrada.
+                </p>
+              )}
+            </div>
+          ) : (
+            // Render Pets grid
+            <div className="page-pet-grid">
+              {currentItems.length > 0 ? (
+                currentItems.map((pet, index) => (
+                  <CardPet
+                    key={index}
+                    image={pet.image}
+                    name={pet.name}
+                    gender={pet.gender}
+                    age={pet.age}
+                    type={pet.type}
+                    hasSpecialCondition={pet.hasSpecialCondition}
+                    specialCondition={pet.specialCondition}
+                    vaccinated={pet.vaccinated}
+                    castrated={pet.castrated}
+                    dewormed={pet.dewormed}
+                    onClick={() => navigate(`/pet-info/${pet.id}`)}
+                  />
+                ))
+              ) : (
+                <p className="no-pets-message">
+                  Nenhum pet encontrado com os filtros selecionados.
+                </p>
+              )}
+            </div>
+          )}
 
-          {filteredPets.length > 0 && (
+          {filteredItems.length > 0 && (
             <div className="pagination-controls">
               <button
                 onClick={goToPreviousPage}
