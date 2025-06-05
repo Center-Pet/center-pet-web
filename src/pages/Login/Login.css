@@ -71,17 +71,19 @@
 .form-section {
   width: 33.33%;
   padding: 1rem;
+  padding-right: 0; /* Remover padding do lado direito */
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  /* Inclui padding no tamanho total */
 }
 
 .form-container {
   width: 100%;
   max-width: 480px;
   box-sizing: border-box;
+  padding-right: 0.5rem; /* Adicionar um padding mínimo à direita */
+  margin-right: 0; /* Garantir que não haja margem à direita */
 }
 
 .form-header {
@@ -142,7 +144,7 @@
   .form-section {
     width: 100%;
     /* Ocupar toda a largura disponível */
-    padding: 1rem 1.5rem;
+    padding: 1rem 0.5rem; /* Reduzir padding horizontal */
     /* Adicionar mais padding horizontal */
     height: 100vh;
     /* Ocupar toda a altura */
@@ -151,7 +153,7 @@
   }
 
   .form-container {
-    max-width: 90%;
+    max-width: 95%; /* Aumentar a largura máxima para telas menores */
     /* Reduz a largura máxima */
     margin: 0 auto;
     /* Centraliza horizontalmente */
@@ -210,6 +212,8 @@
   .toggle-row {
     display: flex;
     flex-direction: column;
+        margin-bottom: 1rem;
+
     gap: 0.5rem;
   }
 
@@ -339,7 +343,7 @@ input[type="password"] {
 .toggle-ong {
   margin-top: 0.3rem;
   /* Reduza o espaçamento vertical */
-  margin-bottom: 0;
+  margin-bottom: 1rem;
   /* Remova margens extras */
   line-height: 1.2;
   /* Ajuste a altura da linha para aproximar o texto */
@@ -614,83 +618,154 @@ input[type="password"] {
 .password-strength-meter {
   margin-top: 0.5rem;
   margin-bottom: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  padding: 10px 15px;
+  background-color: rgba(252, 200, 209, 0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
   border-left: 3px solid #D14D72;
   width: 100%;
   box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .password-strength-meter h4 {
   font-size: 14px;
-  color: #333;
+  color: #D14D72;
   margin-top: 0;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .password-requirements {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
 }
 
 .password-requirements li {
   font-size: 13px;
-  margin-bottom: 5px;
+  flex-basis: calc(50% - 10px);
   display: flex;
   align-items: center;
-  color: #dc3545; /* Vermelho para requisitos não cumpridos */
+  color: #777;
   transition: color 0.3s ease;
+  padding: 3px 0;
 }
 
 .password-requirements li.valid {
-  color: #28a745; /* Verde mais forte para requisitos cumpridos */
+  color: #4CAF50;
   font-weight: 500;
+}
+
+.password-requirements li.invalid {
+  color: #F06292;
 }
 
 .password-requirement-icon {
   margin-right: 8px;
-  font-weight: bold;
+  width: 16px;
+  height: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  font-size: 10px;
+  flex-shrink: 0;
 }
 
-/* Círculos de validação com cor */
 .password-requirements li.valid .password-requirement-icon {
-  color: #28a745; /* Verde para o ícone de check */
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #4CAF50;
 }
 
 .password-requirements li.invalid .password-requirement-icon {
-  color: #dc3545; /* Vermelho para o círculo vazio */
+  background-color: rgba(240, 98, 146, 0.1);
+  color: #F06292;
+  border: 1px solid rgba(240, 98, 146, 0.3);
 }
 
-/* Responsividade para telas menores */
+/* Ajuste para layout em dispositivos menores */
 @media (max-width: 768px) {
   .password-strength-meter {
-    padding: 8px 12px;
+    padding: 10px 14px;
   }
-
-  .password-strength-meter h4 {
-    font-size: 13px;
+  
+  .password-requirements {
+    flex-direction: column;
+    gap: 5px;
   }
-
+  
   .password-requirements li {
+    flex-basis: 100%;
     font-size: 12px;
   }
 }
 
-@media (max-width: 480px) {
-  .password-requirements {
-    grid-template-columns: 1fr;
+/* Animação suave para os itens de requisito */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
   }
-  
-  .password-strength-meter {
-    padding: 8px 12px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+.password-requirements li {
+  animation: fadeIn 0.3s ease forwards;
+  animation-delay: calc(0.1s * var(--item-index, 0));
+  opacity: 0;
+}
+
+/* Scroll vertical suave para o formulário quando necessário */
+.form-container {
+  max-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: #D14D72 #f5f5f5;
+}
+
+.form-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-container::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.form-container::-webkit-scrollbar-thumb {
+  background-color: #FCC8D1;
+  border-radius: 10px;
+}
+
+/* Container específico para botões de login/cadastro */
+.login-button-wrapper {
+  width: 100%;
+  max-width: 90%; /* Reduz o tamanho para 80% da largura disponível */
+  margin: 0 auto; /* Centraliza o botão */
+  position: relative;
+  overflow: hidden; /* Impede que o efeito de hover saia do container */
+  box-sizing: border-box;
+}
+
+/* Sobrescreve o comportamento de hover apenas para os botões dentro do form de login */
+.login-button-wrapper button:hover {
+  transform: none !important; /* Remove o efeito de transform que aumenta o tamanho */
+  box-shadow: 0 2px 4px rgba(209, 77, 114, 0.2) !important; /* Sombra mais sutil */
+}
+
+/* Adiciona um efeito de hover mais sutil ao invés do aumento de tamanho */
+.login-button-wrapper button {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }

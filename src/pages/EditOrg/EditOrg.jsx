@@ -83,10 +83,24 @@ const EditOrg = () => {
           setProfileImage(ongData.profileImg);
         }
 
-        if (ongData.socialMidia) {
-          setInstagram(ongData.socialMidia.instagram || "");
-          setFacebook(ongData.socialMidia.facebook || "");
-          setWebsite(ongData.socialMidia.site || "");
+        if (ongData.socialMedia || ongData.socialMidia) {
+          const social = ongData.socialMedia || ongData.socialMidia;
+          
+          // Remove o prefixo https:// ou http:// para exibição amigável
+          const displayInstagram = social.instagram ? 
+            social.instagram.replace(/^https?:\/\/(www\.)?(instagram\.com\/)?/, '') : 
+            '';
+          setInstagram(displayInstagram.startsWith('@') ? displayInstagram : displayInstagram ? `@${displayInstagram}` : '');
+          
+          const displayFacebook = social.facebook ? 
+            social.facebook.replace(/^https?:\/\/(www\.)?(facebook\.com\/)?/, '') : 
+            '';
+          setFacebook(displayFacebook);
+          
+          const displayWebsite = social.website || social.site ? 
+            (social.website || social.site).replace(/^https?:\/\/(www\.)?/, '') : 
+            '';
+          setWebsite(displayWebsite);
         }
 
         if (ongData.address) {
@@ -190,6 +204,11 @@ const EditOrg = () => {
           }
         }
 
+        // Formatando as URLs das redes sociais antes de enviar
+        const formattedInstagram = formatSocialMediaUrl(instagram, 'instagram');
+        const formattedFacebook = formatSocialMediaUrl(facebook, 'facebook');
+        const formattedWebsite = formatSocialMediaUrl(website, 'website');
+
         // ATENÇÃO: use os nomes corretos dos campos!
         const updateData = {
           name: fullName,
@@ -210,9 +229,9 @@ const EditOrg = () => {
           },
           socialMedia: {
             // <-- nome esperado pelo backend
-            instagram,
-            facebook,
-            website, // será convertido para .site no backend
+            instagram: formattedInstagram,
+            facebook: formattedFacebook,
+            website: formattedWebsite, // será convertido para .site no backend
           },
         };
 
@@ -321,6 +340,43 @@ const EditOrg = () => {
     } finally {
       setLoadingCep(false);
     }
+  };
+
+  // Função utilitária para formatar URLs de redes sociais
+  const formatSocialMediaUrl = (url, platform) => {
+    if (!url) return "";
+    
+    // Se já começa com http:// ou https://, retorna como está
+    if (url.match(/^https?:\/\//)) {
+      return url;
+    }
+
+    // Remove @ inicial se presente (comum em handles de Instagram)
+    if (url.startsWith('@')) {
+      url = url.substring(1);
+    }
+
+    // Formata conforme a plataforma
+    switch (platform) {
+      case 'instagram':
+        // Se o usuário inseriu apenas o nome de usuário
+        if (!url.includes('.')) {
+          return `https://instagram.com/${url}`;
+        }
+        break;
+      case 'facebook':
+        // Se o usuário inseriu apenas o nome de usuário/página
+        if (!url.includes('.')) {
+          return `https://facebook.com/${url}`;
+        }
+        break;
+      case 'website':
+        // Para sites, sempre adicionar https://
+        break;
+    }
+
+    // Padrão para todos os casos não específicos acima
+    return `https://${url}`;
   };
 
   if (isLoading) {
@@ -565,21 +621,28 @@ const EditOrg = () => {
                 />
               </div>
             </div>
-          </div>
-
-          <label>Instagram: </label>
+          </div>          <label>Instagram: </label>
           <CustomInput
-            type="url"
-            placeholder="Link da sua conta Instagram"
+            type="text"
+            placeholder="@nome_de_usuario"
             width="70rem"
             value={instagram}
-            onChange={(e) => setInstagram(e.target.value)}
+            onChange={(e) => {
+              // Garante que sempre comece com @
+              const value = e.target.value;
+              if (value === '' || value.startsWith('@')) {
+                setInstagram(value);
+              } else {
+                setInstagram(`@${value}`);
+              }
+            }}
+            className="instagram-input"
           />
 
           <label>Facebook: </label>
           <CustomInput
-            type="url"
-            placeholder="Link da sua conta Facebook"
+            type="text" // Mudado de "url" para "text"
+            placeholder="facebook.com/sua_pagina ou seu_perfil"
             width="70rem"
             value={facebook}
             onChange={(e) => setFacebook(e.target.value)}
@@ -587,8 +650,8 @@ const EditOrg = () => {
 
           <label>Site: </label>
           <CustomInput
-            type="url"
-            placeholder="Link do seu site"
+            type="text" // Mudado de "url" para "text"
+            placeholder="seusite.com.br"
             width="70rem"
             value={website}
             onChange={(e) => setWebsite(e.target.value)}

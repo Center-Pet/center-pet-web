@@ -488,7 +488,8 @@ const EditUser = () => {
               type="button"
               width="250px"
               bgColor="#FF4D4D"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault(); // Previne o comportamento padrão
                 Swal.fire({
                   title: "Tem certeza?",
                   text: "Todas as alterações feitas serão perdidas.",
@@ -501,7 +502,7 @@ const EditUser = () => {
                   showCloseButton: true,
                 }).then((result) => {
                   if (result.isConfirmed) {
-                    navigate(-1);
+                    navigate(`/adopter-profile/${adopterId || user?._id}`);
                   }
                 });
               }}

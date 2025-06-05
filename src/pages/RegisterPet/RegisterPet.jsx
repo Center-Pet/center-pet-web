@@ -22,7 +22,7 @@ import {
   MapPin,
   Heartbeat,
   Clock,
-  ChartPie, // Adicionado ChartPie para o ícone de status
+  ChartPie,
 } from "phosphor-react";
 import "./RegisterPet.css";
 import { API_URL } from "../../config/api";
@@ -764,11 +764,25 @@ export default function RegisterPet() {
                   {!petInfo.specialCondition && (
                     <option value="">Selecione</option>
                   )}
-                  {specialConditions.map((cond, idx) => (
-                    <option key={idx} value={cond}>
-                      {cond}
-                    </option>
-                  ))}
+                  {specialConditions.map((cond, idx) =>
+                    cond === "Nenhuma" ? (
+                      <option
+                        key={idx}
+                        value={cond}
+                        style={{
+                          fontWeight: "bold",
+                          color: "#D14D72",
+                          backgroundColor: "#FFF0F5"
+                        }}
+                      >
+                        {cond}
+                      </option>
+                    ) : (
+                      <option key={idx} value={cond}>
+                        {cond}
+                      </option>
+                    )
+                  )}
                 </select>
                 {formErrors.specialCondition && (
                   <ErrorMessage message={formErrors.specialCondition} />
@@ -870,6 +884,7 @@ export default function RegisterPet() {
                     onChange={handleInputChange}
                     className={`input-field ${formErrors.status ? "error" : ""}`}
                   >
+                    {!petInfo.status && <option value="">Selecione</option>}
                     <option value="Disponível">Disponível</option>
                     <option value="Indisponível">Indisponível</option>
                     <option value="Adotado">Adotado</option>

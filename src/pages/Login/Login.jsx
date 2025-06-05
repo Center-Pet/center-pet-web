@@ -523,6 +523,15 @@ const Login = () => {
     });
   };
 
+  // Função para formatar CPF
+  function formatarCPF(valor) {
+    valor = valor.replace(/\D/g, "");
+    valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+    valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+    valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    return valor;
+  }
+
   // Verificar se o Swal foi carregado corretamente
   if (!Swal || !Swal.fire) {
     console.error("SweetAlert2 não foi carregado corretamente!");
@@ -549,7 +558,13 @@ const Login = () => {
       <div className="form-section">
         <div className="form-container">
           <div className={`form-header ${isSwitching ? "switching" : ""}`}>
-            <img className="logo" src="../../assets/logo/CenterPet.png" alt="Logo" />
+            <img
+              className="logo"
+              src="../../assets/logo/CenterPet.png"
+              alt="Logo"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate('/home')}
+            />
             <h2>{isLogin ? "Bem vindo de volta!" : "Criar Conta"}</h2>
           </div>
 
@@ -584,9 +599,11 @@ const Login = () => {
                     Esqueci minha senha
                   </button>
                 </div>
-                <ButtonType bgColor="#D14D72" type="submit" width="107%">
-                  Entrar
-                </ButtonType>
+                <div className="login-button-wrapper">
+                  <ButtonType bgColor="#D14D72" type="submit" width="100%">
+                    Entrar
+                  </ButtonType>
+                </div>
               </>
             ) : (
               <>
@@ -604,7 +621,7 @@ const Login = () => {
                   placeholder="CPF"
                   value={cpf}
                   onChange={(e) => {
-                    setCpf(e.target.value);
+                    setCpf(formatarCPF(e.target.value));
                     setPasswordError("");
                   }}
                   required
@@ -694,9 +711,11 @@ const Login = () => {
                     </span>
                   </label>
                 </div>
-                <ButtonType bgColor="#D14D72" type="submit" width="107%">
-                  Cadastrar
-                </ButtonType>
+                <div className="login-button-wrapper">
+                  <ButtonType bgColor="#D14D72" type="submit" width="100%">
+                    Cadastrar
+                  </ButtonType>
+                </div>
               </>
             )}
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ButtonType from '../../Atoms/ButtonType/ButtonType';
 import './Navbar.css';
 import { useNavigate, Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { Heart, House, PawPrint, Note, User, ChartLine, Gear } from "phosphor-re
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMobileView, setIsMobileView] = useState(false);
+    const menuRef = useRef(null); // Adicione esta linha
     const navigate = useNavigate();
     const { isAuthenticated, userType, user, isLoading } = useAuth();
 
@@ -36,6 +37,26 @@ const Navbar = () => {
         setIsMenuOpen(false);
     };
 
+    // Fecha o menu ao clicar fora
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target)
+            ) {
+                setIsMenuOpen(false);
+            }
+        }
+        if (isMenuOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isMenuOpen]);
+
     // Verificar se o usuário precisa preencher o formulário
     const needsToFillForm = isAuthenticated && userType === "Adopter" && !user?.safeAdopter;
     
@@ -48,9 +69,13 @@ const Navbar = () => {
 
     return (
         <header>
-            <div className="pink_square"></div>
+            <div
+                className="pink_square"
+                onClick={() => navigate('/home')}
+                style={{ cursor: "pointer" }} // opcional: mostra que é clicável
+            ></div>
             <nav id='navbar'>
-                <Link to="/" className="logo-link">
+                <Link to="/home" className="logo-link">
                     <img
                         id="logo"
                         src="/assets/logo/CenterPet.png"
@@ -93,7 +118,10 @@ const Navbar = () => {
                 </ul>
 
                 {/* Menu para mobile */}
-                <ul className={`menu ${isMenuOpen ? "open" : ""}`}>
+                <ul
+                    className={`menu ${isMenuOpen ? "open" : ""}`}
+                    ref={menuRef} // Adicione o ref aqui
+                >
                     <button className="close-menu" onClick={closeMenu}>✕</button>
                     <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/home'); closeMenu(); }}><House size={25} />Home</ButtonType>

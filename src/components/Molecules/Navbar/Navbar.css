@@ -20,18 +20,14 @@
 }
 
 .logo-link {
+    z-index: 4; /* logo acima do pink_square, mas ambos clicáveis */
     position: absolute;
     top: 10px;
     left: 110px;
     width: 100px;
     height: 100px;
-    z-index: 3;
-    display: flex;      /* Troque para flex para garantir que o img ocupe tudo */
-    align-items: stretch;
-    justify-content: stretch;
-    padding: 0;
-    margin: 0;
     cursor: pointer;
+    /* Remova display: flex, align-items, justify-content se não for mais necessário */
 }
 
 #logo {
@@ -48,7 +44,6 @@
 
 .pink_square {
     position: absolute;
-    /* Alterado de fixed para absolute */
     background-color: #D14D72;
     transform: rotate(10deg);
     width: 623px;
@@ -56,8 +51,7 @@
     top: -540px;
     left: -330px;
     border-radius: 60px;
-    z-index: 3;
-    /* Garante que o pink_square fique abaixo do logo */
+    z-index: 3; /* igual ao logo-link */
 }
 
 /* Menu padrão para telas maiores */

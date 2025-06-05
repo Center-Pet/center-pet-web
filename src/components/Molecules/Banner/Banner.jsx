@@ -1,11 +1,14 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
+import { useNavigate } from "react-router-dom"; // Adicione esta linha
 import "swiper/css";
 import "swiper/css/pagination";
 import "./Banner.css";
 
 const Banner = () => {
+  const navigate = useNavigate(); // Adicione esta linha
+
   const slides = [
     {
       title: "Transforme Vidas",
@@ -48,7 +51,12 @@ const Banner = () => {
               <div className="banner-content">
                 <h1>{slide.title}</h1>
                 <p>{slide.text}</p>
-                <button className="banner-button">Adote Agora!</button>
+                <button
+                  className="banner-button"
+                  onClick={() => navigate('/catalog')}
+                >
+                  Adote Agora!
+                </button>
               </div>
               <div className="banner-image">
                 <img src={slide.image} alt={slide.alt} />

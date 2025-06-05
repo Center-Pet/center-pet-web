@@ -1,9 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Adicione esta linha
 import ScrollToTop from "../../Atoms/ScrollToTop/ScrollToTop";
 import "./Footer.css";
 import { EnvelopeSimple, FacebookLogo, InstagramLogo } from "phosphor-react";
 
 function Footer() {
+  const navigate = useNavigate(); // Adicione esta linha
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -11,7 +14,12 @@ function Footer() {
           <div className="social-links">
 
             <div className="footer-logo">
-              <img src="/assets/logo/CPCenterPet.png" alt="Center Pet Logo" />
+              <img
+                src="/assets/logo/CPCenterPet.png"
+                alt="Center Pet Logo"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate('/home')}
+              />
             </div>
             <div className="social-media">
               <span>Siga-nos:</span>
@@ -43,7 +51,12 @@ function Footer() {
           </div>
         </div>
         <div className="footer-logo">
-          <img src="/assets/logo/CPCenterPet.png" alt="Center Pet Logo" />
+          <img
+            src="/assets/logo/CPCenterPet.png"
+            alt="Center Pet Logo"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate('/home')}
+          />
         </div>
         <nav className="footer-nav">
           <a href="/">Início</a>

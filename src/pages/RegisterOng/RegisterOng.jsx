@@ -445,6 +445,11 @@ const RegisterOng = () => {
         profileImageUrl = await uploadImageToCloudinary(profileImg);
       }
 
+      // Formata URLs das redes sociais antes de enviar
+      const formattedInstagram = formatSocialMediaUrl(instagram, 'instagram');
+      const formattedFacebook = formatSocialMediaUrl(facebook, 'facebook');
+      const formattedWebsite = formatSocialMediaUrl(website, 'website');
+
       // Preparar dados para envio à API
       const ongData = {
         name: fullName,
@@ -462,9 +467,9 @@ const RegisterOng = () => {
           state: stateUf,
         },
         socialMedia: {
-          instagram: instagram || "",
-          facebook: facebook || "",
-          website: website || "",
+          instagram: formattedInstagram || "",
+          facebook: formattedFacebook || "",
+          website: formattedWebsite || "",
         },
         pixKey: pixKey || "",
         profileImage: profileImageUrl,
@@ -556,6 +561,53 @@ const RegisterOng = () => {
       }
     }
     return false;
+  };
+  // Função utilitária para formatar URLs de redes sociais
+  const formatSocialMediaUrl = (url, platform) => {
+    if (!url) return "";
+    
+    // Tratamento especial para Instagram
+    if (platform === 'instagram') {
+      // Se começa com @, extrair o nome de usuário
+      if (url.startsWith('@')) {
+        return `https://instagram.com/${url.substring(1)}`;
+      }
+      
+      // Se já começa com http:// ou https://, retorna como está
+      if (url.match(/^https?:\/\//)) {
+        return url;
+      }
+      
+      // Se contém instagram.com, extrair apenas o nome de usuário
+      if (url.includes('instagram.com/')) {
+        const username = url.split('instagram.com/')[1].split('/')[0];
+        return `https://instagram.com/${username}`;
+      }
+      
+      // Caso contrário, assumir que é apenas o nome de usuário
+      return `https://instagram.com/${url}`;
+    }
+    
+    // Para outros tipos de redes sociais, se já tem http:// ou https://, manter como está
+    if (url.match(/^https?:\/\//)) {
+      return url;
+    }
+    
+    // Formata conforme a plataforma
+    switch (platform) {
+      case 'facebook':
+        // Se o usuário inseriu apenas o nome de usuário/página
+        if (!url.includes('.')) {
+          return `https://facebook.com/${url}`;
+        }
+        break;
+      case 'website':
+        // Para sites, sempre adicionar https://
+        break;
+    }
+
+    // Padrão para todos os casos não específicos acima
+    return `https://${url}`;
   };
 
   return (
@@ -788,18 +840,29 @@ const RegisterOng = () => {
               required
               disabled
             />
-          </div>
-          <label>Instagram: </label>
+          </div>          <label>Instagram: </label>
           <CustomInput
-            type="url"
+            type="text"
+            placeholder="@nome_de_usuario"
             value={instagram}
-            onChange={(e) => setInstagram(e.target.value)}
+            onChange={(e) => {
+              // Garante que sempre comece com @
+              const value = e.target.value;
+              if (value === '' || value.startsWith('@')) {
+                setInstagram(value);
+              } else {
+                setInstagram(`@${value}`);
+              }
+            }}
             required={socialMediaValidation()}
             width="30rem"
+            className="instagram-input"
           />
+
           <label>Facebook: </label>
           <CustomInput
-            type="url"
+            type="text" // Mudamos de "url" para "text" para aceitar qualquer entrada
+            placeholder="facebook.com/sua_pagina ou seu_perfil"
             value={facebook}
             onChange={(e) => setFacebook(e.target.value)}
             required={socialMediaValidation()}
@@ -807,7 +870,8 @@ const RegisterOng = () => {
           />
           <label>Site: </label>
           <CustomInput
-            type="url"
+            type="text" // Mudamos de "url" para "text" para aceitar qualquer entrada
+            placeholder="seusite.com.br"
             value={website}
             onChange={(e) => setWebsite(e.target.value)}
             required={socialMediaValidation()}

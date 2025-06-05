@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import "./CustomAvatar.css";
@@ -13,6 +13,27 @@ export default function CustomAvatar({ imageSrc }) {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { logout, user, userType } = useAuth();
+  const avatarRef = useRef(null);
+
+  // Fecha o menu ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        avatarRef.current &&
+        !avatarRef.current.contains(event.target)
+      ) {
+        setIsMenuOpen(false);
+      }
+    }
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   const handleToggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -91,7 +112,7 @@ export default function CustomAvatar({ imageSrc }) {
 
   return (
     user && (
-      <div className="custom-avatar-container">
+      <div className="custom-avatar-container" ref={avatarRef}>
         <img
           className="custom-avatar-icon"
           src={imageSrc}

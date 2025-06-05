@@ -951,11 +951,25 @@ export default function EditPet() {
                   {!petInfo.specialCondition && (
                     <option value="">Selecione</option>
                   )}
-                  {specialConditions.map((cond, idx) => (
-                    <option key={idx} value={cond}>
-                      {cond}
-                    </option>
-                  ))}
+                  {specialConditions.map((cond, idx) =>
+                    cond === "Nenhuma" ? (
+                      <option
+                        key={idx}
+                        value={cond}
+                        style={{
+                          fontWeight: "bold",
+                          color: "#D14D72",
+                          backgroundColor: "#FFF0F5"
+                        }}
+                      >
+                        {cond}
+                      </option>
+                    ) : (
+                      <option key={idx} value={cond}>
+                        {cond}
+                      </option>
+                    )
+                  )}
                 </select>
                 {formErrors.specialCondition && (
                   <ErrorMessage message={formErrors.specialCondition} />
