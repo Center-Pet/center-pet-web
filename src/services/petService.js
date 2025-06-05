@@ -2,8 +2,7 @@
  * Serviço para buscar pets da API
  */
 
-// URL base da API, usando a mesma URL que você usa no PetInfo.jsx
-const API_URL = 'https://centerpet-api.onrender.com/api';
+import { API_URL } from "../config/api";
 
 /**
  * Busca pets por categoria

@@ -5,9 +5,10 @@ import Swal from 'sweetalert2';
 import useAuth from "../../hooks/useAuth";
 import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
-import { Check, Eye, EyeSlash } from "phosphor-react"; // Importando ícones do Phosphor
+import { Check } from "phosphor-react"; // Importando ícones do Phosphor
 import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
 import { sendWelcomeEmail } from "../../services/emailService";
+import { API_URL } from "../../config/api";
 
 import "./Login.css";
 
@@ -234,7 +235,7 @@ const Login = () => {
         };
 
         const response = await fetch(
-          "https://centerpet-api.onrender.com/api/adopters/register",
+          `${API_URL}/adopters/register`,  // Corrigida aspas de fechamento
           {
             method: "POST",
             headers: {
@@ -347,8 +348,8 @@ const Login = () => {
         };
 
         const response = await fetch(
-          "https://centerpet-api.onrender.com/api/auth/login",
-          // https://centerpet-api.onrender.com/api/auth/login QUANDO VOLTAR PARA PRODUÇÃO, DESCOMENTAR ESSE E COMENTAR O DE CIMA
+          `${API_URL}/auth/login`,
+          // Removido comentário com URL fixa
           {
             method: "POST",
             headers: {
@@ -435,8 +436,7 @@ const Login = () => {
     try {
       // Implemente a chamada à API de recuperação de senha
       const response = await fetch(
-        "https://centerpet-api.onrender.com/api/auth/forgot-password",
-        // "https://centerpet-api.onrender.com/api/auth/forgot-password", QUANDO VOLTAR PARA PRODUÇÃO DESCOMENTAR ESSE E COMENTAR O DE CIMA
+        `${API_URL}/auth/forgot-password`,
         {
           method: "POST",
           headers: {

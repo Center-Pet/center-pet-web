@@ -1,3 +1,5 @@
+import { API_URL } from "../config/api";
+
 /**
  * Envia email de boas-vindas para novos usuários
  * @param {Object} user - { email: string, fullName: string }
@@ -5,7 +7,7 @@
  */
 export async function sendWelcomeEmail(user) {
     try {
-        const response = await fetch("https://centerpet-api.onrender.com/api/emails/welcome/adopter", {
+        const response = await fetch(`${API_URL}/emails/welcome/adopter`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -30,7 +32,7 @@ export async function sendWelcomeEmail(user) {
 
 export async function sendForgotPassword(email) {
     try {
-        const response = await fetch("https://centerpet-api.onrender.com/api/auth/forgot-password", {
+        const response = await fetch(`${API_URL}/auth/forgot-password`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email })

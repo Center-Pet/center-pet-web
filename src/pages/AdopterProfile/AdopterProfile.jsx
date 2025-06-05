@@ -35,7 +35,7 @@ const AdopterProfile = () => {
 
         const token = localStorage.getItem("token");
         const response = await fetch(
-          `https://centerpet-api.onrender.com/api/adopters/${adopterId}`,
+          `${API_URL}/adopters/${adopterId}`,
           {
             headers: {
               Authorization: token ? `Bearer ${token}` : "",
@@ -140,7 +140,7 @@ const AdopterProfile = () => {
                               try {
                                 const token = localStorage.getItem("token");
                                 const response = await fetch(
-                                  `https://centerpet-api.onrender.com/api/adopters/delete/${adopterId}`,
+                                  `${API_URL}/adopters/delete/${adopterId}`,
                                   {
                                     method: "DELETE",
                                     headers: {
@@ -233,7 +233,7 @@ const AdopterProfile = () => {
                       if (result.isConfirmed) {
                         try {
                           const token = localStorage.getItem('token');
-                          const response = await fetch(`https://centerpet-api.onrender.com/api/adopters/delete/${adopterId}`, {
+                          const response = await fetch(`${API_URL}/adopters/delete/${adopterId}`, {
                             method: 'DELETE',
                             headers: {
                               'Authorization': token ? `Bearer ${token}` : '',

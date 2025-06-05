@@ -9,6 +9,7 @@ import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
 import { Eye, EyeSlash } from "phosphor-react";
 import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
+import { API_URL } from "../../config/api";
 
 // Função utilitária para garantir apenas números positivos (usada só onde precisa)
 const onlyPositive = (value) => {
@@ -477,7 +478,7 @@ const RegisterOng = () => {
 
       // Chamada à API com a rota correta
       const response = await fetch(
-        "https://centerpet-api.onrender.com/api/ongs/register",
+        `${API_URL}/ongs/register`,
         {
           method: "POST",
           headers: {
@@ -820,15 +821,10 @@ const RegisterOng = () => {
             width="30rem"
           />
           <label>Senha: </label>
-          <div
-            style={{ position: "relative", width: "100%", maxWidth: "30rem" }}
-          >
-            <div
-              className="password-input-container"
-              style={{ position: "relative", width: "100%" }}
-            >
+          <div style={{ position: "relative", width: "100%", maxWidth: "30rem" }}>
+            <div className="password-input-container" style={{ position: "relative", width: "100%" }}>
               <CustomInput
-                type={showPassword ? "text" : "password"}
+                isPassword={true}
                 placeholder="Senha"
                 value={password}
                 onChange={(e) => {
@@ -836,92 +832,35 @@ const RegisterOng = () => {
                   setPassword(novaSenha);
                   setPasswordValidation(validarSenhaForte(novaSenha));
                 }}
-                className={`${
-                  password && !passwordValidation.valido ? "input-error" : ""
-                }`}
+                className={password && !passwordValidation.valido ? "input-error" : ""}
                 required
+                showPassword={showPassword}
+                toggleShowPassword={() => setShowPassword(!showPassword)}
                 width="100%"
               />
-              <button
-                type="button"
-                className="password-toggle-button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  color: "#666",
-                }}
-              >
-                {showPassword ? (
-                  <EyeSlash size={20} weight="bold" />
-                ) : (
-                  <Eye size={20} weight="bold" />
-                )}
-              </button>
             </div>
-            {/* Mantenha o verificador de requisitos de senha */}
             {password && password.length > 0 && (
               <div className="password-strength-meter">
                 <h4>Requisitos de senha:</h4>
                 <ul className="password-requirements">
-                  <li
-                    className={`password-requirement-item ${
-                      passwordValidation.comprimentoMinimo ? "valid" : "invalid"
-                    }`}
-                  >
-                    <span className="password-requirement-icon">
-                      {passwordValidation.comprimentoMinimo ? "✓" : "○"}
-                    </span>
+                  <li className={passwordValidation.comprimentoMinimo ? 'valid' : 'invalid'}>
+                    <span className="password-requirement-icon">{passwordValidation.comprimentoMinimo ? '✓' : '○'}</span>
                     Mínimo de 8 caracteres
                   </li>
-                  <li
-                    className={`password-requirement-item ${
-                      passwordValidation.temNumero ? "valid" : "invalid"
-                    }`}
-                  >
-                    <span className="password-requirement-icon">
-                      {passwordValidation.temNumero ? "✓" : "○"}
-                    </span>
+                  <li className={passwordValidation.temNumero ? 'valid' : 'invalid'}>
+                    <span className="password-requirement-icon">{passwordValidation.temNumero ? '✓' : '○'}</span>
                     Pelo menos um número
                   </li>
-                  <li
-                    className={`password-requirement-item ${
-                      passwordValidation.temMaiuscula ? "valid" : "invalid"
-                    }`}
-                  >
-                    <span className="password-requirement-icon">
-                      {passwordValidation.temMaiuscula ? "✓" : "○"}
-                    </span>
+                  <li className={passwordValidation.temMaiuscula ? 'valid' : 'invalid'}>
+                    <span className="password-requirement-icon">{passwordValidation.temMaiuscula ? '✓' : '○'}</span>
                     Pelo menos uma maiúscula
                   </li>
-                  <li
-                    className={`password-requirement-item ${
-                      passwordValidation.temMinuscula ? "valid" : "invalid"
-                    }`}
-                  >
-                    <span className="password-requirement-icon">
-                      {passwordValidation.temMinuscula ? "✓" : "○"}
-                    </span>
+                  <li className={passwordValidation.temMinuscula ? 'valid' : 'invalid'}>
+                    <span className="password-requirement-icon">{passwordValidation.temMinuscula ? '✓' : '○'}</span>
                     Pelo menos uma minúscula
                   </li>
-                  <li
-                    className={`password-requirement-item ${
-                      passwordValidation.temCaractereEspecial
-                        ? "valid"
-                        : "invalid"
-                    }`}
-                  >
-                    <span className="password-requirement-icon">
-                      {passwordValidation.temCaractereEspecial ? "✓" : "○"}
-                    </span>
+                  <li className={passwordValidation.temCaractereEspecial ? 'valid' : 'invalid'}>
+                    <span className="password-requirement-icon">{passwordValidation.temCaractereEspecial ? '✓' : '○'}</span>
                     Pelo menos um caractere especial
                   </li>
                 </ul>
@@ -929,44 +868,17 @@ const RegisterOng = () => {
             )}
           </div>
           <label>Confirmar Senha: </label>
-          <div
-            className="password-input-container"
-            style={{ position: "relative", width: "100%", maxWidth: "30rem" }}
-          >
+          <div className="password-input-container" style={{ position: "relative", width: "100%", maxWidth: "30rem" }}>
             <CustomInput
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirmar Senha"
+              isPassword={true}
+              placeholder="Confirme sua Senha"
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
               required
+              showPassword={showConfirmPassword}
+              toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
               width="100%"
             />
-            <button
-              type="button"
-              className="password-toggle-button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              aria-label={
-                showConfirmPassword ? "Ocultar senha" : "Mostrar senha"
-              }
-              style={{
-                position: "absolute",
-                right: "10px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                color: "#666",
-              }}
-            >
-              {showConfirmPassword ? (
-                <EyeSlash size={20} weight="bold" />
-              ) : (
-                <Eye size={20} weight="bold" />
-              )}
-            </button>
           </div>
           <div id="image">
             <h2>Insira sua imagem de perfil</h2>

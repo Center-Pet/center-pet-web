@@ -4,6 +4,7 @@ import ImageInputField from "../../components/Atoms/ImageInputField/ImageInputFi
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
 import Swal from "sweetalert2";
+import { API_URL } from '../../config/api';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -11,7 +12,6 @@ import useAuth from "../../hooks/useAuth";
 const EditOrg = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const API_URL = "https://centerpet-api.onrender.com/api"; // URL da API em produção
 
   const [loadingCep, setLoadingCep] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

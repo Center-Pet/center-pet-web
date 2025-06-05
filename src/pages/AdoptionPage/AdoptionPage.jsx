@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
+import { API_URL } from "../../config/api";
 import Swal from "sweetalert2";
 import "./AdoptionPage.css";
 
@@ -33,9 +34,9 @@ export default function AdoptionPage() {
     const fetchData = async () => {
       try {
         const [petRes, adopterRes, ongRes] = await Promise.all([
-          fetch(`https://centerpet-api.onrender.com/api/pets/${petId}`),
-          fetch(`https://centerpet-api.onrender.com/api/adopters/${userId}`),
-          fetch(`https://centerpet-api.onrender.com/api/ongs/${ongId}`),
+          fetch(`${API_URL}/pets/${petId}`),
+          fetch(`${API_URL}/adopters/${userId}`),
+          fetch(`${API_URL}/ongs/${ongId}`),
         ]);
 
         if (!petRes.ok) throw new Error("Erro ao buscar informações do pet.");

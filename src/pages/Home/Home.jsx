@@ -5,6 +5,7 @@ import ScrollToTop from "../../components/Atoms/ScrollToTop/ScrollToTop";
 import Title from "../../components/Atoms/TitleType/TitleType";
 import OngChart from "../../components/Molecules/OngChart/OngChart";
 import "./Home.css";
+import { API_URL } from "../../config/api";
 
 const Home = () => {
   const [pets, setPets] = useState([]);
@@ -18,7 +19,7 @@ const Home = () => {
       try {
         // Buscar todos os pets disponíveis
         const response = await fetch(
-          "https://centerpet-api.onrender.com/api/pets"
+          `${API_URL}/pets`
         );
         const data = await response.json();
 
@@ -54,7 +55,7 @@ const Home = () => {
       try {
         // Buscar todas as ONGs do sistema
         const response = await fetch(
-          "https://centerpet-api.onrender.com/api/ongs"
+          `${API_URL}/ongs`
         );
         const data = await response.json();
         

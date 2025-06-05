@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import './AdoptionsList.css'
 import Title from "../../Atoms/TitleType/TitleType";
+// Corrigido: Caminho de importação do API_URL
+import { API_URL } from '../../../config/api';
+
 
 export default function AdoptionsList ({ongId}) {
 
@@ -24,9 +27,11 @@ export default function AdoptionsList ({ongId}) {
             const token = localStorage.getItem("token");
             console.log("AdoptionsTable: Token de autenticação presente?", !!token);
             
-            const url = `https://centerpet-api.onrender.com/api/adoptions/by-ong/${ongId}`;
+            // Corrigido: URL definida usando API_URL
+            const url = `${API_URL}/adoptions/ongs/${ongId}`;
             console.log("AdoptionsTable: Fazendo requisição para:", url);
             
+            // Corrigido: URL completa usando a variável url
             const res = await fetch(url, {
                 headers: {
                 Authorization: token ? `Bearer ${token}` : "",
@@ -86,7 +91,7 @@ export default function AdoptionsList ({ongId}) {
             try {
                 console.log("Buscando detalhes do adotante com ID:", adoption.userId._id);
                 const adopterRes = await fetch(
-                `https://centerpet-api.onrender.com/api/adopters/${adoption.userId._id}`,
+                `${API_URL}/adopters/${adoption.userId._id}`,
                 {
                     headers: {
                     Authorization: token ? `Bearer ${token}` : "",

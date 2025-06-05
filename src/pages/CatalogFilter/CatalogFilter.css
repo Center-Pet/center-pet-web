@@ -203,3 +203,12 @@ body {
   margin: 3rem 0;
   width: 100%;
 }
+
+.no-pets-message {
+  text-align: center;
+  width: 100%;
+  padding: 3rem 1rem;
+  color: #888;
+  font-size: 1.2rem;
+  font-weight: 500;
+}

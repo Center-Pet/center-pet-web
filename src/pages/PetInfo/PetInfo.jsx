@@ -22,6 +22,7 @@ import {
   Clock,
   ChartPie
 } from "phosphor-react";
+import { API_URL } from "../../config/api";
 
 export default function PetInfo() {
   const { petId } = useParams(); // Obtém o ID do pet da URL
@@ -49,7 +50,7 @@ export default function PetInfo() {
         setLoading(true);
         // Buscar informações do pet
         const response = await fetch(
-          `https://centerpet-api.onrender.com/api/pets/${petId}`
+          `${API_URL}/pets/${petId}`
 
         );
 
@@ -68,7 +69,7 @@ export default function PetInfo() {
           try {
             // Usar a rota correta para API de produção
             const ongResponse = await fetch(
-              `https://centerpet-api.onrender.com/api/ongs/${data.ongId}`
+              `${API_URL}/ongs/${data.ongId}`
             );
 
             if (ongResponse.ok) {
@@ -98,7 +99,7 @@ export default function PetInfo() {
         if (data.type) {
           try {
             const similarResponse = await fetch(
-              `https://centerpet-api.onrender.com/api/pets?type=${data.type}&limit=12&exclude=${petId}`
+              `${API_URL}/pets?type=${data.type}&limit=12&exclude=${petId}`
             );
             if (similarResponse.ok) {
               const similarData = await similarResponse.json();
@@ -285,7 +286,7 @@ export default function PetInfo() {
 
           // Fazer requisição para deletar o pet
           const response = await fetch(
-            `https://centerpet-api.onrender.com/api/pets/delete/${petId}`,
+            `${API_URL}/pets/delete/${petId}`,
             {
               method: "DELETE",
               headers: {

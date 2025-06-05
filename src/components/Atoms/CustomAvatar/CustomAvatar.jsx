@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import PawAnimation from "../../Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
 import { Gear } from "phosphor-react";
+import { API_URL } from "../../../config/api";
 
 export default function CustomAvatar({ imageSrc }) {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export default function CustomAvatar({ imageSrc }) {
       });
 
       const response = await fetch(
-        "https://centerpet-api.onrender.com/api/auth/logout",
+        `${API_URL}/auth/logout`,
         {
           method: "POST",
           headers: {

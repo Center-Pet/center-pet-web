@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { BiErrorCircle } from "react-icons/bi";
+import { API_URL } from "../../config/api.js";
 import Swal from "sweetalert2";
 import ImageUploadGrid from "../../components/Molecules/ImageUploadGrid/ImageUploadGrid";
 import OngCard from "../../components/Molecules/OngCard/OngCard";
@@ -25,6 +26,7 @@ import "./EditPet.css";
 
 // Arrays de raças e condições especiais (importados de RegisterPet)
 const dogBreeds = [
+  "Sem Raça Definida (SRD)",
   "Akita",
   "Basset Hound",
   "Beagle",
@@ -63,11 +65,11 @@ const dogBreeds = [
   "Shih Tzu",
   "Spitz Alemão",
   "Weimaraner",
-  "Yorkshire Terrier",
-  "Sem Raça Definida (SRD)",
+  "Yorkshire Terrier"
 ];
 
 const catBreeds = [
+  "Sem Raça Definida (SRD)",
   "Abissínio",
   "American Shorthair",
   "Angorá",
@@ -97,8 +99,7 @@ const catBreeds = [
   "Singapura",
   "Somali",
   "Sphynx",
-  "Turkish Van",
-  "Sem Raça Definida (SRD)",
+  "Turkish Van"
 ];
 
 const specialConditions = [
@@ -175,7 +176,7 @@ export default function EditPet() {
         setLoading(true);
         // Buscar informações do pet
         const response = await fetch(
-          `https://centerpet-api.onrender.com/api/pets/${petId}`
+          `${API_URL}/pets/${petId}`
         );
 
         if (!response.ok) {
@@ -258,7 +259,7 @@ export default function EditPet() {
         if (data.ongId) {
           try {
             const ongResponse = await fetch(
-              `https://centerpet-api.onrender.com/api/ongs/${data.ongId}`
+              `${API_URL}/ongs/${data.ongId}`
             );
 
             if (ongResponse.ok) {
@@ -510,7 +511,7 @@ export default function EditPet() {
           // Adicionar antes do fetch para verificar o valor do status
           console.log("Status do pet a ser enviado:", petInfo.status);
           const response = await fetch(
-            `https://centerpet-api.onrender.com/api/pets/update/${petId}`,
+            `${API_URL}/pets/update/${petId}`,
             {
               method: "PATCH",
               headers: {

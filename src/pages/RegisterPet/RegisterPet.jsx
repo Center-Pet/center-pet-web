@@ -25,8 +25,10 @@ import {
   ChartPie, // Adicionado ChartPie para o ícone de status
 } from "phosphor-react";
 import "./RegisterPet.css";
+import { API_URL } from "../../config/api";
 
 const dogBreeds = [
+  "Sem Raça Definida (SRD)",
   "Akita",
   "Basset Hound",
   "Beagle",
@@ -66,10 +68,10 @@ const dogBreeds = [
   "Spitz Alemão",
   "Weimaraner",
   "Yorkshire Terrier",
-  "Sem Raça Definida (SRD)",
 ];
 
 const catBreeds = [
+  "Sem Raça Definida (SRD)",
   "Abissínio",
   "American Shorthair",
   "Angorá",
@@ -100,7 +102,6 @@ const catBreeds = [
   "Somali",
   "Sphynx",
   "Turkish Van",
-  "Sem Raça Definida (SRD)",
 ];
 
 const specialConditions = [
@@ -165,7 +166,7 @@ export default function RegisterPet() {
         try {
           console.log("Buscando dados da ONG:", user._id);
 
-          const url = `https://centerpet-api.onrender.com/api/ongs/${user._id}`;
+          const url = `${API_URL}/ongs/${user._id}`;
           console.log("URL da requisição:", url);
 
           const response = await fetch(url, {
@@ -405,7 +406,7 @@ export default function RegisterPet() {
 
             // Enviar dados para a API
             const response = await fetch(
-              "https://centerpet-api.onrender.com/api/pets/register",
+              `${API_URL}/pets/register`,
               {
                 method: "POST",
                 headers: {

@@ -43,15 +43,8 @@
   transition: color 0.2s ease;
   z-index: 2;
   padding: 5px;
-}
-
-.custom-toggle-button:hover {
-  color: #D14D72;
-}
-
-.custom-toggle-button:focus {
-  outline: none;
-  color: #D14D72;
+  margin-top: -8px; /* Ajustando a posição vertical */
+  
 }
 
 /* Ajuste para campo de senha */

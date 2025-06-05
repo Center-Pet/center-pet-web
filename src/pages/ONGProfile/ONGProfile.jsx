@@ -7,6 +7,7 @@ import AdoptionsTable from "../../components/Organisms/AdoptionsTable/AdoptionsT
 import AdoptionsList from "../../components/Organisms/AdoptionsList/AdoptionsList";
 import useAuth from "../../hooks/useAuth";
 import "./ONGProfile.css";
+import { API_URL } from "../../config/api.js";
 import Swal from "sweetalert2";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 
@@ -41,7 +42,7 @@ const ONGProfile = () => {
 
         // Fazer a requisição para a API
         const response = await fetch(
-          `https://centerpet-api.onrender.com/api/ongs/${id}`,
+          `${API_URL}/ongs/${id}`,
           {
             headers: {
               Authorization: token ? `Bearer ${token}` : "",
@@ -79,7 +80,7 @@ const ONGProfile = () => {
     const fetchOngPets = async (ongId, token) => {
       try {
         const response = await fetch(
-          `https://centerpet-api.onrender.com/api/pets/by-ong/${ongId}`,
+          `${API_URL}/pets/by-ong/${ongId}`,
           {
             headers: {
               Authorization: token ? `Bearer ${token}` : "",
@@ -222,7 +223,7 @@ const ONGProfile = () => {
                             if (result.isConfirmed) {
                               try {                                const token = localStorage.getItem("token"); // Obter o token de autenticação
                                 const response = await fetch(
-                                  `https://centerpet-api.onrender.com/api/ongs/delete/${ongData._id}`,
+                                  `${API_URL}/ongs/delete/${ongData._id}`,
                                   {
                                     method: "DELETE",
                                     headers: {
@@ -276,7 +277,7 @@ const ONGProfile = () => {
               </div>
               <div className="info-ong">
                 <div className="info-ong-item">
-                  <h3>Contato:</h3>
+                  <h3>Meio de Contato:</h3>
                   <p style={{ color: "#000000" }}>
                     {ongData.phone || "Não informado"}
                   </p>
@@ -288,7 +289,7 @@ const ONGProfile = () => {
                   </p>
                 </div>
                 <div className="info-ong-item">
-                  <h3>Doações:</h3>
+                  <h3>Pix:</h3>
                   <p style={{ color: "#000000" }}>
                     {ongData.pixKey || "Não informado"}
                   </p>
@@ -329,7 +330,7 @@ const ONGProfile = () => {
             {ongPets && ongPets.length > 0 ? (
               <PetShowcase
                 limit={15}
-                title={`Seus Pets Cadastrados - ${ongData.name}`}
+                title={`Pets Cadastrados - ${ongData.name}`}
                 pets={ongPets.map((pet) => ({
                   id: pet._id,
                   image:

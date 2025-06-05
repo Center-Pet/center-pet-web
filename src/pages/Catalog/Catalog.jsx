@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import Filter from "../../components/Atoms/Filter/Filter";
+import { API_URL } from "../../config/api.js";
 import "./Catalog.css";
 
 const Catalog = () => {
@@ -18,15 +19,14 @@ const Catalog = () => {
     size: [],
     age: [],
     health: [],
+    coat: [], // <-- Adicione esta linha para o filtro de pelagem
   });
 
   useEffect(() => {
     const fetchPets = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          "https://centerpet-api.onrender.com/api/pets"
-        );
+        const response = await fetch(`${API_URL}/pets`);
         const data = await response.json();
 
         // Processando todos os pets para garantir formato consistente
@@ -50,6 +50,7 @@ const Catalog = () => {
           vaccinated: pet.health?.vaccinated || false,
           castrated: pet.health?.castrated || false,
           dewormed: pet.health?.dewormed || false,
+          coat: pet.coat || "", // <-- Adicione esta linha para garantir que todos os pets tenham pelagem
         }));
 
         // Pets Especiais: filtra os que têm condições especiais
@@ -95,6 +96,16 @@ const Catalog = () => {
 
     fetchPets();
   }, []);
+
+  // Função utilitária para normalizar strings (remove acentos, caixa e final o/a)
+  function normalize(str) {
+    return (str || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/(o|a)$/i, "")
+      .toLowerCase()
+      .trim();
+  }
 
   // Efeito para aplicar filtros quando activeFilters mudar
   useEffect(() => {
@@ -147,6 +158,15 @@ const Catalog = () => {
             return petAge.toLowerCase().includes("adulto");
           if (filter === "Idoso") return petAge.toLowerCase().includes("idoso");
           return false;
+        });
+        if (!matches) return false;
+      }
+
+      // Verificar filtro de pelagem
+      if (activeFilters.coat && activeFilters.coat.length > 0) {
+        const petCoat = normalize(pet.coat);
+        const matches = activeFilters.coat.some((filter) => {
+          return petCoat === normalize(filter);
         });
         if (!matches) return false;
       }

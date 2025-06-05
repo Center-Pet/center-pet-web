@@ -7,6 +7,20 @@ import { CaretLeft, CaretRight } from "phosphor-react";
 import "./PetShowcase.css";
 import Title from "../../Atoms/TitleType/TitleType";
 
+// Função para obter a mensagem apropriada de acordo com a categoria
+const getNoItemsMessage = (category) => {
+  switch (category) {
+    case "special":
+      return "Não há pets com condições especiais disponíveis no momento.";
+    case "more-patient":
+      return "Não há pets mais pacientes disponíveis no momento.";
+    case "new":
+      return "Não há novos pets disponíveis no momento.";
+    default:
+      return "Nenhum pet encontrado nesta categoria.";
+  }
+};
+
 const PetShowcase = ({ 
   title, 
   pets, 
@@ -145,31 +159,37 @@ const PetShowcase = ({
         </div>
       </div>
 
-      <div className="pet-showcase-carousel" ref={carouselRef} role="region">
-        {displayItems.map((item, index) => (
-          <div key={index} className="pet-showcase-item">
-            {customComponent ? (
-              // Renderiza um componente personalizado se fornecido
-              customComponent(item)
-            ) : (
-              // Caso contrário, renderiza o CardPet padrão
-              <CardPet
-                image={item.image}
-                name={item.name}
-                gender={item.gender}
-                age={item.age}
-                type={item.type}
-                hasSpecialCondition={item.hasSpecialCondition}
-                specialCondition={item.specialCondition}
-                vaccinated={item.vaccinated}
-                castrated={item.castrated}
-                dewormed={item.dewormed}
-                onClick={() => handleCardClick(item.id)}
-              />
-            )}
-          </div>
-        ))}
-      </div>
+      {pets && pets.length > 0 ? (
+        <div className="pet-showcase-carousel" ref={carouselRef} role="region">
+          {displayItems.map((item, index) => (
+            <div key={index} className="pet-showcase-item">
+              {customComponent ? (
+                // Renderiza um componente personalizado se fornecido
+                customComponent(item)
+              ) : (
+                // Caso contrário, renderiza o CardPet padrão
+                <CardPet
+                  image={item.image}
+                  name={item.name}
+                  gender={item.gender}
+                  age={item.age}
+                  type={item.type}
+                  hasSpecialCondition={item.hasSpecialCondition}
+                  specialCondition={item.specialCondition}
+                  vaccinated={item.vaccinated}
+                  castrated={item.castrated}
+                  dewormed={item.dewormed}
+                  onClick={() => handleCardClick(item.id)}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="no-pets-container">
+          <p className="no-pets-message">{getNoItemsMessage(category)}</p>
+        </div>
+      )}
     </div>
   );
 };

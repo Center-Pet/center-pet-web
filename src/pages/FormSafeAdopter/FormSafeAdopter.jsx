@@ -7,6 +7,7 @@ import InputMask from "react-input-mask";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"; // Supondo que você usa SweetAlert2 para notificações
+import { API_URL } from "../../config/api.js";
 
 const FormSafeAdopter = () => {
   const { user } = useAuth();
@@ -160,7 +161,7 @@ const FormSafeAdopter = () => {
 
       console.log("Enviando dados para a API:", dataToSend);
 
-      const response = await fetch("https://centerpet-api.onrender.com/api/adopters/updateSafeAdopter", {
+      const response = await fetch(`${API_URL}/adopters/updateSafeAdopter`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

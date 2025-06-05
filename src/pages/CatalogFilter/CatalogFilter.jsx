@@ -6,6 +6,30 @@ import OngChart from "../../components/Molecules/OngChart/OngChart";
 import Filter from "../../components/Atoms/Filter/Filter";
 import Title from "../../components/Atoms/TitleType/TitleType";
 import "./CatalogFilter.css";
+import { API_URL } from "../../config/api";
+
+// Função para obter a mensagem apropriada de acordo com a categoria
+const getNoItemsMessage = (category) => {
+  switch (category) {
+    case "special":
+      return "Não há pets com condições especiais disponíveis no momento.";
+    case "more-patient":
+      return "Não há pets mais pacientes disponíveis no momento.";
+    case "new":
+      return "Não há novos pets disponíveis no momento.";
+    default:
+      return "Nenhum pet encontrado nesta categoria.";
+  }
+};
+
+function normalize(str) {
+  return (str || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/(o|a)$/i, "") // remove final 'o' ou 'a' (Curto/Curta, Médio/Média, Longo/Longa)
+    .toLowerCase()
+    .trim();
+}
 
 const CatalogFilter = () => {
   const [searchParams] = useSearchParams();
@@ -24,12 +48,13 @@ const CatalogFilter = () => {
   // Verificar se estamos exibindo ONGs ou pets
   const isOngsView = category === "ongs";
 
-  // Estado para os filtros ativos (apenas para pets)
+  // Estado para os filtros ativos (agora incluindo pelagem)
   const [activeFilters, setActiveFilters] = useState({
     gender: [],
     size: [],
     age: [],
     health: [],
+    coat: [], // Adicionando o novo filtro de pelagem
   });
 
   useEffect(() => {
@@ -41,12 +66,12 @@ const CatalogFilter = () => {
         // Determinar qual endpoint chamar
         if (isOngsView) {
           // Buscar ONGs
-          apiUrl = "https://centerpet-api.onrender.com/api/ongs";
+          apiUrl = `${API_URL}/ongs`;
         } else {
           // Buscar pets
           apiUrl = ongId 
-            ? `https://centerpet-api.onrender.com/api/pets/by-ong/${ongId}`
-            : "https://centerpet-api.onrender.com/api/pets";
+            ? `${API_URL}/pets/by-ong/${ongId}`
+            : `${API_URL}/pets`;
         }
 
         // Fazer a requisição para a API
@@ -85,6 +110,7 @@ const CatalogFilter = () => {
             vaccinated: pet.health?.vaccinated || false,
             castrated: pet.health?.castrated || false,
             dewormed: pet.health?.dewormed || false,
+            coat: pet.coat || "", // <-- ADICIONE ESTA LINHA
           }));
 
           // Aplicar filtro com base na categoria da URL
@@ -189,6 +215,15 @@ const CatalogFilter = () => {
             return petAge.toLowerCase().includes("adulto");
           if (filter === "Idoso") return petAge.toLowerCase().includes("idoso");
           return false;
+        });
+        if (!matches) return false;
+      }
+
+      // Verificar filtro de pelagem
+      if (activeFilters.coat.length > 0) {
+        const petCoat = normalize(pet.coat);
+        const matches = activeFilters.coat.some((filter) => {
+          return petCoat === normalize(filter);
         });
         if (!matches) return false;
       }
@@ -298,7 +333,11 @@ const CatalogFilter = () => {
                 ))
               ) : (
                 <p className="no-pets-message">
-                  Nenhum pet encontrado com os filtros selecionados.
+                  {activeFilters && 
+                   (Object.values(activeFilters).some(arr => arr.length > 0) ||
+                    activeFilters.coat.length > 0)
+                    ? "Nenhum pet encontrado com os filtros selecionados." 
+                    : getNoItemsMessage(category)}
                 </p>
               )}
             </div>

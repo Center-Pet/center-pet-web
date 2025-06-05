@@ -38,7 +38,7 @@ export default function AdoptionsTable({ ongId }) {
         const token = localStorage.getItem("token");
         console.log("AdoptionsTable: Token de autenticação presente?", !!token);
         
-        const url = `https://centerpet-api.onrender.com/api/adoptions/by-ong/${ongId}`;
+        const url = `${API_URL}/adoptions/by-ong/${ongId}`;
         console.log("AdoptionsTable: Fazendo requisição para:", url);
         
         const res = await fetch(url, {
@@ -100,7 +100,7 @@ export default function AdoptionsTable({ ongId }) {
           try {
             console.log("Buscando detalhes do adotante com ID:", adoption.userId._id);
             const adopterRes = await fetch(
-              `https://centerpet-api.onrender.com/api/adopters/${adoption.userId._id}`,
+              `${API_URL}/adopters/${adoption.userId._id}`,
               {
                 headers: {
                   Authorization: token ? `Bearer ${token}` : "",

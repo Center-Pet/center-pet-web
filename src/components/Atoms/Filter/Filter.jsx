@@ -12,12 +12,14 @@ const Filter = ({ onFilterChange }) => {
     size: [],
     age: [],
     health: [],
+    coat: [], // Nova categoria para pelagem
   });
 
   const categories = {
     Gênero: ["Fêmea", "Macho"],
     Porte: ["Grande Porte", "Médio Porte", "Pequeno Porte"],
     Idade: ["Filhote", "Jovem", "Adulto", "Idoso"],
+    Pelagem: ["Curta", "Média", "Longa", "Sem pelo"], // Alterado para corresponder ao cadastro
     Saúde: [
       "Vacinado",
       "Não Vacinado",
@@ -34,6 +36,7 @@ const Filter = ({ onFilterChange }) => {
     Gênero: "gender",
     Porte: "size",
     Idade: "age",
+    Pelagem: "coat", // Mapeamento para pelagem
     Saúde: "health",
   };
 
@@ -90,6 +93,7 @@ const Filter = ({ onFilterChange }) => {
       size: [],
       age: [],
       health: [],
+      coat: [], // Incluir pelagem na limpeza
     });
 
     // Desmarcar todos os checkboxes

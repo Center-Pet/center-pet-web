@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { Eye, EyeSlash } from "phosphor-react";
 import { useNavigate } from "react-router-dom";
-
-const API_URL = "https://centerpet-api.onrender.com/api/auth/reset-password";
+import { API_URL } from "../../config/api";
 
 function getTokenFromUrl() {
   const params = new URLSearchParams(window.location.search);
@@ -51,7 +50,7 @@ export default function ResetPassword() {
     }
     setLoading(true);
     try {
-      const res = await fetch(API_URL, {
+      const res = await fetch(`${API_URL}/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, password }),
@@ -74,7 +73,8 @@ export default function ResetPassword() {
           confirmButtonColor: "#D14D72",
         });
       }
-    } catch {
+    } catch (error) {
+      console.error("Erro ao redefinir senha:", error);
       Swal.fire({
         title: "Erro",
         text: "Erro ao conectar ao servidor.",

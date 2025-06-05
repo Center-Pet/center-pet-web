@@ -11,6 +11,7 @@ import ColorBlindFilter from './components/Molecules/ColorBlindFilter/ColorBlind
 import SvgColorBlindFilters from "./components/Molecules/ColorBlindFilter/SvgColorBlindFilters";
 import ThemeToggle from "./components/Molecules/ThemeToggle/ThemeToggle";
 import { AccessibilityProvider, useAccessibility } from "./contexts/AccessibilityContext";
+import { API_URL } from "./config/api.js";
 
 function AppContent() {
   const location = useLocation();

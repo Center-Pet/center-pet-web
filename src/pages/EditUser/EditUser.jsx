@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import CustomInput from "../../components/Atoms/CustomInput/CustomInput";
+import { API_URL } from "../../config/api.js";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import ImageInputField from "../../components/Atoms/ImageInputField/ImageInputField";
 import "./EditUser.css";
@@ -45,7 +46,7 @@ const EditUser = () => {
 
         const token = localStorage.getItem("token");
         const response = await fetch(
-          `https://centerpet-api.onrender.com/api/adopters/${idToFetch}`,
+          `${API_URL}/adopters/${idToFetch}`,
           {
             headers: {
               Authorization: token ? `Bearer ${token}` : "",
@@ -230,7 +231,7 @@ const EditUser = () => {
           profession: adopterData.profession,
           profileImg: profileImgUrl,
         };        const response = await fetch(
-          `https://centerpet-api.onrender.com/api/adopters/editProfile/${idToUpdate}`,
+          `${API_URL}/adopters/editProfile/${idToUpdate}`,
           {
             method: "PATCH",
             headers: {
