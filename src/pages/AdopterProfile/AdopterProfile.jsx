@@ -4,6 +4,7 @@ import { PencilSimple, Trash } from "phosphor-react";
 import TitleType from "../../components/Atoms/TitleType/TitleType";
 import "./AdopterProfile.css";
 import useAuth from "../../hooks/useAuth";
+import { API_URL } from "../../config/api";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType"; // Importe o componente ButtonType
 import Swal from "sweetalert2";
 
