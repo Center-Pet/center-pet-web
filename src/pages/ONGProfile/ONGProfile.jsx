@@ -27,6 +27,7 @@ const ONGProfile = () => {
 
   const [ongData, setOngData] = useState(null);
   const [ongPets, setOngPets] = useState([]);
+  const [adoptedPets, setAdoptedPets] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -104,10 +105,18 @@ const ONGProfile = () => {
         const petsData = responseData.data || responseData;
 
         // Garantir que temos um array
-        setOngPets(Array.isArray(petsData) ? petsData : []);
+        const petsArray = Array.isArray(petsData) ? petsData : [];
+        
+        // Contar quantos pets têm o status "Adotado"
+        const adoptedCount = petsArray.filter(pet => pet.status === "Adotado").length;
+        
+        // Atualizar os estados
+        setOngPets(petsArray);
+        setAdoptedPets(adoptedCount);
       } catch (err) {
         console.error("Erro ao buscar pets da ONG:", err);
         setOngPets([]);
+        setAdoptedPets(0);
       }
     };
 
@@ -382,7 +391,7 @@ const ONGProfile = () => {
               </div>
               <div className="ong-profile-header-statistics-item">
                 <p>Pets adotados:</p>
-                <p style={{ color: "#000000" }}>{ongPets?.length || 0}</p>
+                <p style={{ color: "#000000" }}>{adoptedPets}</p>
               </div>
             </div>
             <div>
