@@ -935,3 +935,28 @@
 .loading-spinner .spinner {
   display: none;
 }
+
+.load-more-button {
+  display: block;
+  margin: 2rem auto;
+  padding: 0.8rem 2rem;
+  background-color: #FF8BA7;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.load-more-button:hover {
+  background-color: #ff6b8d;
+  transform: translateY(-2px);
+}
+
+.load-more-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}

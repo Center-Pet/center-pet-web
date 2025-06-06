@@ -6,45 +6,34 @@ import Title from "../../components/Atoms/TitleType/TitleType";
 import OngChart from "../../components/Molecules/OngChart/OngChart";
 import "./Home.css";
 import { API_URL } from "../../config/api";
+import { getPets } from "../../services/petService";
 
 const Home = () => {
   const [pets, setPets] = useState([]);
   const [ongs, setOngs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingOngs, setLoadingOngs] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     const fetchPets = async () => {
       setLoading(true);
       try {
-        // Buscar todos os pets disponíveis
-        const response = await fetch(
-          `${API_URL}/pets`
-        );
-        const data = await response.json();
+        // Usar o serviço de pets com paginação
+        const petsData = await getPets('disponiveis', currentPage, 10);
+        
+        if (currentPage === 1) {
+          setPets(petsData);
+        } else {
+          setPets(prevPets => [...prevPets, ...petsData]);
+        }
 
-        // Mapear os dados recebidos para o formato esperado pelo PetShowcase
-        const petsArray = Array.isArray(data.data) ? data.data : data;
-        const formattedPets = petsArray.map((pet) => ({
-          id: pet._id,
-          image:
-            pet.image?.[0] ||
-            pet.photos?.[0] ||
-            pet.imagens?.[0] ||
-            (Array.isArray(pet.image) && pet.image.length > 0
-              ? pet.image[0]
-              : null) ||
-            "https://i.imgur.com/WanR0b3.png",
-          name: pet.name,
-          gender: pet.gender,
-          age: pet.age,
-          type: pet.type || "Não especificado",
-        }));
-
-        setPets(formattedPets);
+        // Se recebemos menos pets que o limite, não há mais páginas
+        setHasMore(petsData.length === 10);
       } catch (error) {
         console.error("Erro ao buscar os pets:", error);
-        setPets([]); // Em caso de erro, define uma lista vazia
+        setPets([]);
       } finally {
         setLoading(false);
       }
@@ -53,13 +42,9 @@ const Home = () => {
     const fetchOngs = async () => {
       setLoadingOngs(true);
       try {
-        // Buscar todas as ONGs do sistema
-        const response = await fetch(
-          `${API_URL}/ongs`
-        );
+        const response = await fetch(`${API_URL}/ongs`);
         const data = await response.json();
         
-        // Mapear os dados recebidos
         const ongsArray = Array.isArray(data.data) ? data.data : data;
         setOngs(ongsArray);
       } catch (error) {
@@ -72,7 +57,13 @@ const Home = () => {
 
     fetchPets();
     fetchOngs();
-  }, []);
+  }, [currentPage]);
+
+  const loadMorePets = () => {
+    if (!loading && hasMore) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
 
   return (
     <main className="home-container">
@@ -89,12 +80,23 @@ const Home = () => {
       </section>
 
       <section className="showcase-section">
-        {loading ? (
+        {loading && currentPage === 1 ? (
           <div className="loading-spinner-container">
             <div className="loading-spinner"></div>
           </div>
         ) : (
-          <PetShowcase title={"Pets Disponíveis"} pets={pets} limit={10} />
+          <>
+            <PetShowcase title={"Pets Disponíveis"} pets={pets} limit={10} />
+            {hasMore && (
+              <button 
+                className="load-more-button"
+                onClick={loadMorePets}
+                disabled={loading}
+              >
+                {loading ? 'Carregando...' : 'Carregar mais pets'}
+              </button>
+            )}
+          </>
         )}
       </section>
 
@@ -282,8 +284,8 @@ const Home = () => {
               />
             </div>
             <p className="testimonial-text">
-              “A adoção mudou minha vida! Ganhei um amigo fiel e muito amor em
-              casa. Recomendo para todos!”
+              "A adoção mudou minha vida! Ganhei um amigo fiel e muito amor em
+              casa. Recomendo para todos!"
             </p>
             <span className="testimonial-author">
               — Marcos Henrique, São Paulo/SP
@@ -303,8 +305,8 @@ const Home = () => {
               />
             </div>
             <p className="testimonial-text">
-              “O processo foi simples e seguro. Hoje não me imagino sem a Mel.
-              Obrigado, Center Pet!”
+              "O processo foi simples e seguro. Hoje não me imagino sem a Mel.
+              Obrigado, Center Pet!"
             </p>
             <span className="testimonial-author">
               — Carlos Henrique, Belo Horizonte/MG
@@ -324,8 +326,8 @@ const Home = () => {
               />
             </div>
             <p className="testimonial-text">
-              “Adotar é um ato de amor. Fui muito bem orientada e encontrei o
-              pet perfeito para minha família.”
+              "Adotar é um ato de amor. Fui muito bem orientada e encontrei o
+              pet perfeito para minha família."
             </p>
             <span className="testimonial-author">
               — Juliana Souza, Curitiba/PR

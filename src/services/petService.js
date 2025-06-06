@@ -4,13 +4,28 @@
 
 import { API_URL } from "../config/api";
 
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos em milissegundos
+
 /**
- * Busca pets por categoria
+ * Busca pets por categoria com cache
  * @param {string} category - Categoria dos pets (pacientes, novos, especiais)
+ * @param {number} page - Número da página
+ * @param {number} limit - Limite de pets por página
  * @returns {Promise<Array>} Lista de pets formatada para o componente PetShowcase
  */
-export const getPets = async (category) => {
+export const getPets = async (category, page = 1, limit = 10) => {
     try {
+        // Verificar cache
+        const cacheKey = `pets_${category}_${page}_${limit}`;
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+            const { data, timestamp } = JSON.parse(cachedData);
+            if (Date.now() - timestamp < CACHE_DURATION) {
+                console.log('Retornando dados do cache para:', category);
+                return data;
+            }
+        }
+
         let endpoint = `${API_URL}/pets`;
         let queryParams = new URLSearchParams();
 
@@ -28,8 +43,9 @@ export const getPets = async (category) => {
             queryParams.append('specialCondition', 'true');
         }
 
-        // Limitar a 10 pets por categoria
-        queryParams.append('limit', '10');
+        // Adicionar parâmetros de paginação
+        queryParams.append('page', page);
+        queryParams.append('limit', limit);
 
         // Fazer requisição à API
         const response = await fetch(`${endpoint}?${queryParams.toString()}`);
@@ -51,7 +67,7 @@ export const getPets = async (category) => {
         }
 
         // Formatar os dados para o formato esperado pelo PetShowcase
-        return petsData.map(pet => ({
+        const formattedPets = petsData.map(pet => ({
             id: pet._id,
             name: pet.name,
             // Se imagem for um array, pega a primeira, senão usa a imagem diretamente
@@ -61,6 +77,14 @@ export const getPets = async (category) => {
             gender: pet.gender,
             age: pet.age
         }));
+
+        // Salvar no cache
+        localStorage.setItem(cacheKey, JSON.stringify({
+            data: formattedPets,
+            timestamp: Date.now()
+        }));
+
+        return formattedPets;
     } catch (error) {
         console.error(`Erro ao buscar pets da categoria ${category}:`, error);
         return [];
@@ -68,19 +92,38 @@ export const getPets = async (category) => {
 };
 
 /**
- * Busca um pet específico pelo ID
+ * Busca um pet específico pelo ID com cache
  * @param {string} id - ID do pet
  * @returns {Promise<Object|null>} Dados do pet ou null em caso de erro
  */
 export const getPetById = async (id) => {
     try {
+        // Verificar cache
+        const cacheKey = `pet_${id}`;
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+            const { data, timestamp } = JSON.parse(cachedData);
+            if (Date.now() - timestamp < CACHE_DURATION) {
+                console.log('Retornando dados do cache para pet:', id);
+                return data;
+            }
+        }
+
         const response = await fetch(`${API_URL}/pets/${id}`);
 
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
 
-        return await response.json();
+        const data = await response.json();
+
+        // Salvar no cache
+        localStorage.setItem(cacheKey, JSON.stringify({
+            data,
+            timestamp: Date.now()
+        }));
+
+        return data;
     } catch (error) {
         console.error(`Erro ao buscar pet com ID ${id}:`, error);
         return null;
