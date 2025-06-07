@@ -19,7 +19,7 @@ const Catalog = () => {
     size: [],
     age: [],
     health: [],
-    coat: [], // <-- Adicione esta linha para o filtro de pelagem
+    coat: [],
   });
 
   useEffect(() => {
@@ -50,24 +50,28 @@ const Catalog = () => {
           vaccinated: pet.health?.vaccinated || false,
           castrated: pet.health?.castrated || false,
           dewormed: pet.health?.dewormed || false,
-          coat: pet.coat || "", // <-- Adicione esta linha para garantir que todos os pets tenham pelagem
+          coat: pet.coat || "",
+          status: pet.status || "Disponível", // Adicionando status com valor padrão
         }));
 
+        // Filtrando apenas pets disponíveis
+        const availablePets = processedPets.filter(pet => pet.status === "Disponível");
+
         // Pets Especiais: filtra os que têm condições especiais
-        const especiais = processedPets.filter(
+        const especiais = availablePets.filter(
           (pet) => pet.hasSpecialCondition
         );
         setPetsEspeciais(especiais);
 
         // Pets Mais Pacientes: maiores waitingTime
-        const pacientes = [...processedPets]
+        const pacientes = [...availablePets]
           .filter((pet) => !isNaN(Number(pet.waitingTime)))
           .sort((a, b) => Number(b.waitingTime) - Number(a.waitingTime))
           .slice(0, 10);
         setPetsMaisPacientes(pacientes);
 
         // Novos Pets: ordena por registerDate
-        const novos = [...processedPets]
+        const novos = [...availablePets]
           .filter((pet) => pet.registerDate)
           .sort((a, b) => new Date(b.registerDate) - new Date(a.registerDate))
           .slice(0, 10);

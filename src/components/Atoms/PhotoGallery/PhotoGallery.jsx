@@ -1,96 +1,63 @@
-import React, { useState } from "react";
-import "./PhotoGallery.css"; // Adicione seu CSS aqui
+import React from "react";
+import { Plus, X } from "phosphor-react";
+import Swal from "sweetalert2";
+import "./PhotoGallery.css";
 
-const PhotoGallery = ({ maxImages = 5, onImageChange }) => {
-  const [images, setImages] = useState([]);
-
-  const handleImageChange = (event) => {
-    const files = Array.from(event.target.files);
-    const newImages = files.map((file) => ({
-      url: URL.createObjectURL(file),
-      file,
-    }));
-
-    // Verifica se o limite será excedido
-    if (images.length + newImages.length > maxImages) {
-      alert(`Você pode adicionar no máximo ${maxImages} imagens.`);
+const PhotoGallery = ({ maxImages = 5, value = [], onImageChange }) => {
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    
+    if (value.length + files.length > maxImages) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Limite de imagens',
+        text: `Você pode adicionar no máximo ${maxImages} imagens.`,
+        confirmButtonColor: '#D14D72'
+      });
       return;
     }
 
-    const updatedImages = [...images, ...newImages];
-    setImages(updatedImages);
+    const newImages = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
 
-    // Atualiza o estado no formulário pai
-    if (onImageChange) {
-      onImageChange(updatedImages.map((img) => img.file));
-    }
+    onImageChange([...value, ...newImages]);
   };
 
-  const handleRemoveImage = (index) => {
-    const updatedImages = images.filter((_, i) => i !== index);
-    setImages(updatedImages);
-
-    // Atualiza o estado no formulário pai
-    if (onImageChange) {
-      onImageChange(updatedImages.map((img) => img.file));
-    }
+  const removeImage = (index) => {
+    const newImages = value.filter((_, i) => i !== index);
+    onImageChange(newImages);
   };
 
   return (
-    <div>
-      <div className="image-upload">
-        {images.length < maxImages && (
-          <>
-            <button
-              type="button" // Adicionado para evitar o comportamento padrão de envio
-              onClick={() => document.getElementById("image-input").click()}
-              style={{ cursor: "pointer", display: "block", marginBottom: "10px" }}
-            >
-              Clique para adicionar imagens +
-            </button>
-            <input
-              id="image-input"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-              style={{ display: "none" }}
-            />
-          </>
-        )}
-        {images.length >= maxImages && (
-          <p style={{ color: "red" }}>Limite de {maxImages} imagens atingido.</p>
-        )}
-      </div>
-      <div className="gallery">
-        {images.map((image, index) => (
-          <div key={index} className="image-preview" style={{ display: "inline-block", margin: "10px", position: "relative" }}>
-            <img
-              src={image.url}
-              alt={`Preview ${index}`}
-              style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "5px" }}
-            />
-            <button
-              type="button" // Adicionado para evitar o comportamento padrão de envio
-              onClick={() => handleRemoveImage(index)}
-              style={{
-                position: "absolute",
-                top: "5px",
-                right: "5px",
-                background: "red",
-                color: "white",
-                border: "none",
-                borderRadius: "50%",
-                cursor: "pointer",
-                width: "20px",
-                height: "20px",
-              }}
-            >
-              ×
-            </button>
+    <div className="photo-gallery">
+      {value.map((image, index) => (
+        <div key={index} className="photo-gallery-item">
+          <img src={image.preview} alt={`Preview ${index + 1}`} />
+          <button
+            className="remove-button"
+            onClick={() => removeImage(index)}
+            type="button"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      ))}
+      {value.length < maxImages && (
+        <label className="photo-gallery-item">
+          <div className="upload-placeholder">
+            <Plus className="upload-icon" weight="bold" />
+            <span className="upload-text">Adicionar foto</span>
           </div>
-        ))}
-      </div>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+          />
+        </label>
+      )}
     </div>
   );
 };

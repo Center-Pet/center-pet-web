@@ -43,6 +43,9 @@ export const getPets = async (category, page = 1, limit = 10) => {
             queryParams.append('specialCondition', 'true');
         }
 
+        // Adicionar filtro de status para pets disponíveis
+        queryParams.append('status', 'Disponível');
+
         // Adicionar parâmetros de paginação
         queryParams.append('page', page);
         queryParams.append('limit', limit);
@@ -70,12 +73,20 @@ export const getPets = async (category, page = 1, limit = 10) => {
         const formattedPets = petsData.map(pet => ({
             id: pet._id,
             name: pet.name,
-            // Se imagem for um array, pega a primeira, senão usa a imagem diretamente
-            image: Array.isArray(pet.image) && pet.image.length > 0
-                ? pet.image[0]
-                : (pet.image || 'https://i.imgur.com/WanR0b3.png'),
+            image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
+                   (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
+                   "https://i.imgur.com/WanR0b3.png",
             gender: pet.gender,
-            age: pet.age
+            age: pet.age,
+            type: pet.type,
+            hasSpecialCondition: pet.health?.specialCondition && 
+                               pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
+            specialCondition: pet.health?.specialCondition || "Nenhuma",
+            vaccinated: pet.health?.vaccinated || false,
+            castrated: pet.health?.castrated || false,
+            dewormed: pet.health?.dewormed || false,
+            coat: pet.coat || "",
+            status: pet.status || "Disponível"
         }));
 
         // Salvar no cache

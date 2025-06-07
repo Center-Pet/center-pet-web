@@ -1,27 +1,34 @@
 "use client";
 
+import React from 'react';
 import { Share } from "@phosphor-icons/react";
 import "./SocialShare.css";
+import Swal from 'sweetalert2';
 
-export default function SocialShare() {
+const SocialShare = ({ url, title }) => {
   const handleShare = async () => {
-    const shareData = {
-      title: document.title,
-      url: window.location.href,
-    };
-
-    try {
-      if (navigator.share) {
-        // Usa a API de compartilhamento nativa
-        await navigator.share(shareData);
-      } else {
-        // Fallback para navegadores que não suportam a API nativa
-        alert(
-          "Seu navegador não suporta o compartilhamento nativo. Por favor, copie a URL manualmente."
-        );
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          url: url
+        });
+      } catch {
+        console.error("Erro ao compartilhar conteúdo");
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao compartilhar',
+          text: 'Não foi possível compartilhar o conteúdo.',
+          confirmButtonColor: '#D14D72'
+        });
       }
-    } catch (error) {
-      console.error("Erro ao compartilhar:", error);
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Compartilhar',
+        text: 'Copie o link para compartilhar: ' + url,
+        confirmButtonColor: '#D14D72'
+      });
     }
   };
 
@@ -34,4 +41,6 @@ export default function SocialShare() {
       <Share size={27} weight="regular" color="#d25b82" />
     </button>
   );
-}
+};
+
+export default SocialShare;

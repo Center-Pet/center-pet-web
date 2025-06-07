@@ -27,14 +27,20 @@ const PetShowcase = ({
   category,
   ongId, 
   limit,
-  customComponent 
+  customComponent,
+  showAllPets = false // Nova prop para controlar se mostra todos os pets ou apenas os disponíveis
 }) => {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Filtrar pets por status se não estiver na tela de ONGs
+  const filteredPets = showAllPets 
+    ? pets 
+    : pets.filter(pet => pet.status === "Disponível");
+
   // Limitar a quantidade de items exibidos se houver limite definido
-  const displayItems = limit > 0 ? pets.slice(0, limit) : pets;
+  const displayItems = limit > 0 ? filteredPets.slice(0, limit) : filteredPets;
 
   const scrollRight = () => {
     const container = carouselRef.current;
@@ -147,7 +153,7 @@ const PetShowcase = ({
             onClick={handleSeeMore}
             style={{
               display:
-                limit > 0 && pets.length > limit
+                limit > 0 && filteredPets.length > limit
                   ? "inline-block"
                   : limit > 0
                   ? "none"
@@ -159,7 +165,7 @@ const PetShowcase = ({
         </div>
       </div>
 
-      {pets && pets.length > 0 ? (
+      {filteredPets && filteredPets.length > 0 ? (
         <div className="pet-showcase-carousel" ref={carouselRef} role="region">
           {displayItems.map((item, index) => (
             <div key={index} className="pet-showcase-item">
@@ -197,6 +203,7 @@ const PetShowcase = ({
 // Valor padrão para limit = 0 (sem limite)
 PetShowcase.defaultProps = {
   limit: 0,
+  showAllPets: false
 };
 
 export default PetShowcase;

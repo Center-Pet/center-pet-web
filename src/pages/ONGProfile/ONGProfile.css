@@ -501,3 +501,72 @@ li {
     margin: 5px;
   }
 }
+
+.pet-card-with-status {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pet-status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background-color: #D14D72;
+  z-index: 1;
+}
+
+.pet-status-disponível {
+  background-color: #D14D72;
+}
+
+.pet-status-adotado {
+  background-color: #4CAF50;
+}
+
+.pet-status-em_processo {
+  background-color: #FFA726;
+}
+
+.pet-status-aguardando {
+  background-color: #FFA726;
+}
+
+.pet-status-indisponível {
+  background-color: #9E9E9E;
+}
+
+.ong-profile-pets-section {
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.ong-profile-pets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.add-pet-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #D14D72;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-pet-button:hover {
+  background-color: #b13d5f;
+}

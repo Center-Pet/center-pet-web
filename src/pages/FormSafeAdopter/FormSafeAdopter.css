@@ -70,10 +70,13 @@ body {
   font-size: 1rem;
   font-family: 'Alexandria', sans-serif;
   background-color: #FEF2F4;
+  width: 100%;
+  box-sizing: border-box;
 }
+
 .adoption-form input,
 .adoption-form textarea {
-  width: 96.5%;
+  width: 100%;
 }
 
 .adoption-form select {
@@ -92,13 +95,13 @@ body {
   font-size: 1rem;
   font-weight: bold;
   color: #D14D72;
-  margin-top: 1rem;
   margin-left: 20px;
 }
 
 .adoption-form textarea {
   resize: none;
   height: 100px;
+  width: 100%;
 }
 
 .adoption-form button {
@@ -138,6 +141,47 @@ body {
   margin-top: 1.5rem;
 }
 
+.number-input-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.number-input-container input[type="text"] {
+  flex: 1;
+  width: calc(100% - 120px);
+}
+
+.no-number-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #D14D72;
+  cursor: pointer;
+  margin: 0 !important;
+  white-space: nowrap;
+  width: 120px;
+}
+
+.no-number-label input[type="checkbox"] {
+  width: auto !important;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.no-number-label input[type="checkbox"]:checked {
+  accent-color: #D14D72;
+}
+
+/* Ajuste para campos de data e telefone */
+.adoption-form input[type="date"],
+.adoption-form input[type="tel"] {
+  width: 100%;
+}
+
 /* Responsividade */
 @media (max-width: 900px) {
   .form-content {
@@ -167,4 +211,36 @@ body {
   .adoption-form button {
     font-size: 0.9rem;
   }
+
+  .number-input-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .number-input-container input[type="text"] {
+    width: 100%;
+  }
+
+  .no-number-label {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+
+fieldset[data-step="2"] input,
+fieldset[data-step="2"] select,
+fieldset[data-step="2"] textarea,
+fieldset[data-step="2"] .image-inputs {
+  margin-bottom: 18px;
+}
+
+fieldset[data-step="2"] .number-input-container {
+  margin-bottom: 18px;
+}
+
+fieldset[data-step="5"] input,
+fieldset[data-step="5"] select,
+fieldset[data-step="5"] textarea {
+  margin-bottom: 18px;
 }

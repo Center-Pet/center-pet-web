@@ -18,6 +18,7 @@ import "./ONGProfile.css";
 import { API_URL } from "../../config/api.js";
 import Swal from "sweetalert2";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
+import CardPet from "../../components/Molecules/CardPet/CardPet";
 
 const ONGProfile = () => {
   const { ongId } = useParams(); // Note que o param deve ser consistente com o nome na rota
@@ -110,8 +111,25 @@ const ONGProfile = () => {
         // Contar quantos pets têm o status "Adotado"
         const adoptedCount = petsArray.filter(pet => pet.status === "Adotado").length;
         
+        // Processar os pets para garantir formato consistente
+        const processedPets = petsArray.map(pet => ({
+          ...pet,
+          id: pet._id,
+          image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
+                 (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
+                 "https://i.imgur.com/WanR0b3.png",
+          hasSpecialCondition: pet.health?.specialCondition && 
+                              pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
+          specialCondition: pet.health?.specialCondition || "Nenhuma",
+          vaccinated: pet.health?.vaccinated || false,
+          castrated: pet.health?.castrated || false,
+          dewormed: pet.health?.dewormed || false,
+          coat: pet.coat || "",
+          status: pet.status || "Disponível"
+        }));
+        
         // Atualizar os estados
-        setOngPets(petsArray);
+        setOngPets(processedPets);
         setAdoptedPets(adoptedCount);
       } catch (err) {
         console.error("Erro ao buscar pets da ONG:", err);
@@ -411,35 +429,35 @@ const ONGProfile = () => {
           </div>
         </div>
 
-        {/* Condicional para mostrar os pets ou mensagem */}        <div className="carousel-container">
-          <div className="carousel-content">
-            {ongPets && ongPets.length > 0 ? (
-              <PetShowcase
-                limit={15}
-                title={`Pets Cadastrados - ${ongData.name}`}
-                pets={ongPets.map((pet) => ({
-                  id: pet._id,
-                  image:
-                    pet.image?.[0] ||
-                    pet.photos?.[0] ||
-                    pet.imagens?.[0] ||
-                    (Array.isArray(pet.image) && pet.image.length > 0
-                      ? pet.image[0]
-                      : null) ||
-                    "https://i.imgur.com/WanR0b3.png",
-                  name: pet.name,
-                  gender: pet.gender,
-                  age: pet.age,
-                  type: pet.type,
-                }))}
-                ongId={ongData._id}
-              />
-            ) : (
-              <p className="no-pets-message">
-                Nenhum pet disponível para adoção no momento.
-              </p>
+        {/* Seção de Pets */}
+        <div className="ong-profile-pets-section">
+          <PetShowcase
+            title={`Pets Cadastrados - ${ongData.name}`}            pets={ongPets}
+            category="all"
+            limit={0}
+            showAllPets={true}
+            customComponent={(pet) => (
+              <div className="pet-card-with-status">
+                <CardPet
+                  image={pet.image}
+                  name={pet.name}
+                  gender={pet.gender}
+                  age={pet.age}
+                  type={pet.type}
+                  hasSpecialCondition={pet.hasSpecialCondition}
+                  specialCondition={pet.specialCondition}
+                  vaccinated={pet.vaccinated}
+                  castrated={pet.castrated}
+                  dewormed={pet.dewormed}
+                  onClick={() => navigate(`/pet-info/${pet.id}`)}
+                />
+                <span className={`pet-status pet-status-${pet.status?.toLowerCase()}`}>
+                  {pet.status || "Disponível"}
+                </span>
+              </div>
             )}
-          </div>        </div>
+          />
+        </div>
         {user && user._id === ongData._id && (
           <>
             <AdoptionsTable ongId={ongData._id} />

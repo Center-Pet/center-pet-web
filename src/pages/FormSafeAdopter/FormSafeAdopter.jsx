@@ -10,15 +10,25 @@ import Swal from "sweetalert2"; // Supondo que você usa SweetAlert2 para notifi
 import { API_URL } from "../../config/api.js";
 
 const FormSafeAdopter = () => {
-  const { user } = useAuth();
+  const { user, updateUserData } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(0); // Estado para controlar a página atual
+  const [noNumber, setNoNumber] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleNoNumberChange = (e) => {
+    setNoNumber(e.target.checked);
+    if (e.target.checked) {
+      setFormData({ ...formData, number: "S/N" });
+    } else {
+      setFormData({ ...formData, number: "" });
+    }
   };
 
   const handleCepChange = async (e) => {
@@ -39,11 +49,21 @@ const FormSafeAdopter = () => {
             state: data.uf || "",
           }));
         } else {
-          alert("CEP não encontrado. Por favor, verifique e tente novamente.");
+          Swal.fire({
+            icon: 'error',
+            title: 'CEP não encontrado',
+            text: 'Por favor, verifique e tente novamente.',
+            confirmButtonColor: '#D14D72'
+          });
         }
       } catch (error) {
         console.error("Erro ao buscar o CEP:", error);
-        alert("Erro ao buscar o CEP. Verifique sua conexão e tente novamente.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao buscar CEP',
+          text: 'Verifique sua conexão e tente novamente.',
+          confirmButtonColor: '#D14D72'
+        });
       }
     }
   };
@@ -84,14 +104,24 @@ const FormSafeAdopter = () => {
     // Validação dos campos obrigatórios
     for (let field of stepFields) {
       if (field.required && !formData[field.name]) {
-        alert(`Por favor, preencha o campo: ${field.placeholder || field.name}`);
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: `Por favor, preencha o campo: ${field.placeholder || field.name}`,
+          confirmButtonColor: '#D14D72'
+        });
         return false;
       }
     }
 
     // Validação específica para o PhotoGallery no passo 3
     if (currentStep === 2 && (!formData.environmentImages || formData.environmentImages.length < 2)) {
-      alert("Por favor, adicione pelo menos 2 fotos do ambiente.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Fotos necessárias',
+        text: 'Por favor, adicione pelo menos 2 fotos do ambiente.',
+        confirmButtonColor: '#D14D72'
+      });
       return false;
     }
 
@@ -180,8 +210,8 @@ const FormSafeAdopter = () => {
           confirmButtonColor: '#D14D72'
         });
         
-        // Atualizar o objeto user no context (opcional)
-        // updateUser({ ...user, safeAdopter: true });
+        // Atualizar o objeto user no context
+        updateUserData({ safeAdopter: true });
         
         // Redirecionar para o perfil
         navigate(`/adopter-profile/${user._id}`);
@@ -248,7 +278,27 @@ const FormSafeAdopter = () => {
       </InputMask>
 
       <input type="text" name="street" placeholder="Rua" value={formData.street || ""} onChange={handleChange} required data-step="1" />
-      <input type="text" name="number" placeholder="Número" value={formData.number || ""} onChange={handleChange} required data-step="1" />
+      <div className="number-input-container">
+        <input 
+          type="text" 
+          name="number" 
+          placeholder="Número" 
+          value={formData.number || ""} 
+          onChange={handleChange} 
+          required 
+          data-step="1"
+          disabled={noNumber}
+        />
+        <label className="no-number-label">
+          <input
+            type="checkbox"
+            checked={noNumber}
+            onChange={handleNoNumberChange}
+            data-step="1"
+          />
+          Sem número
+        </label>
+      </div>
       <input type="text" name="neighborhood" placeholder="Bairro" value={formData.neighborhood || ""} onChange={handleChange} required data-step="1" />
       <input type="text" name="complement" placeholder="Complemento (opcional)" value={formData.complement || ""} onChange={handleChange} data-step="1" />
       <input type="text" name="city" placeholder="Cidade" value={formData.city || ""} onChange={handleChange} required data-step="1" />
@@ -330,7 +380,7 @@ const FormSafeAdopter = () => {
         <div className="image-inputs">
           <PhotoGallery
             maxImages={15}
-            value={formData.familyAgreementDetails || ""} 
+            value={formData.environmentImages || []} 
             onImageChange={(images) =>
               setFormData((prevData) => ({
                 ...prevData,

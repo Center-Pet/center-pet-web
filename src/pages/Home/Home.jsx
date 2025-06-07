@@ -7,6 +7,7 @@ import OngChart from "../../components/Molecules/OngChart/OngChart";
 import "./Home.css";
 import { API_URL } from "../../config/api";
 import { getPets } from "../../services/petService";
+import Swal from "sweetalert2";
 
 const Home = () => {
   const [pets, setPets] = useState([]);
@@ -375,7 +376,12 @@ const Home = () => {
       <button
         className="floating-help"
         aria-label="Ajuda ou Chat"
-        onClick={() => alert("Em breve você poderá falar com a gente!")}
+        onClick={() => Swal.fire({
+          icon: 'info',
+          title: 'Em breve!',
+          text: 'Em breve você poderá falar com a gente!',
+          confirmButtonColor: '#D14D72'
+        })}
       >
         <i className="fas fa-comments"></i>
       </button>

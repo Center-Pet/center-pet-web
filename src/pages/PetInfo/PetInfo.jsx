@@ -103,17 +103,27 @@ export default function PetInfo() {
             );
             if (similarResponse.ok) {
               const similarData = await similarResponse.json();
-              // Formatar os dados para o PetShowcase
-              const formattedPets = (similarData.data || similarData).map(
-                (pet) => ({
+              // Formatar os dados para o PetShowcase e filtrar apenas pets disponíveis
+              const formattedPets = (similarData.data || similarData)
+                .filter(pet => pet.status === "Disponível" && pet._id !== petId)
+                .map(pet => ({
                   id: pet._id,
-                  image: pet.image?.[0] || "https://i.imgur.com/WanR0b3.png",
+                  image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
+                         (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
+                         "https://i.imgur.com/WanR0b3.png",
                   name: pet.name,
                   gender: pet.gender,
                   age: pet.age,
                   type: pet.type,
-                })
-              );
+                  hasSpecialCondition: pet.health?.specialCondition && 
+                                    pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
+                  specialCondition: pet.health?.specialCondition || "Nenhuma",
+                  vaccinated: pet.health?.vaccinated || false,
+                  castrated: pet.health?.castrated || false,
+                  dewormed: pet.health?.dewormed || false,
+                  coat: pet.coat || "",
+                  status: pet.status || "Disponível"
+                }));
               setSimilarPets(formattedPets);
             }
           } catch (err) {
@@ -633,15 +643,15 @@ export default function PetInfo() {
           </div>
         </div>
 
-        {similarPets.length > 0 && (
-          <div className="carousel-section">
-            <PetShowcase
-              title="Outros Pets"
-              pets={similarPets}
-              limit={15}
-            />
-          </div>
-        )}
+        {/* Pets Similares */}
+        <section className="similar-pets-section">
+          <PetShowcase
+            title="Pets Similares"
+            pets={similarPets}
+            category="similar"
+            limit={4}
+          />
+        </section>
       </div>
 
       {/* Modal para exibir imagem em tamanho real */}
