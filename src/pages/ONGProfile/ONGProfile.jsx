@@ -445,6 +445,7 @@ const ONGProfile = () => {
             category="all"
             limit={0}
             showAllPets={true}
+            ongId={ongData._id}
             customComponent={(pet) => (
               <div className="pet-card-with-status">
                 <CardPet
