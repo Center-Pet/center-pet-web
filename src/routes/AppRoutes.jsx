@@ -19,6 +19,7 @@ import CatalogFilter from "../pages/CatalogFilter/CatalogFilter"
 import AdoptionPage from "../pages/AdoptionPage/AdoptionPage";
 import ResetPassword from "../pages/ResetPassword/ResetPassword"
 import Settings from "../pages/Settings/Settings";
+import HomeOng from "../pages/HomeOng/HomeOng";
 
 
 const AppRoutes = () => {
@@ -46,6 +47,7 @@ const AppRoutes = () => {
       <Route path="/catalog-filter" element={<CatalogFilter />} />
       <Route path="/adoption/:adoptionId" element={<AdoptionPage />} />
       <Route path="/configuracoes" element={<Settings />} />
+      <Route path="/home-ong" element={<HomeOng />} />
     </Routes>
   );
 };

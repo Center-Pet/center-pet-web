@@ -23,6 +23,15 @@ import {
 } from "phosphor-react";
 import { API_URL } from "../../config/api";
 
+function getWaitingTime(registerDate) {
+  if (!registerDate) return "Não informado";
+  const created = new Date(registerDate);
+  const now = new Date();
+  const diffMs = now - created;
+  const diffMonths = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.44)); // Aproximação de mês
+  return diffMonths <= 0 ? "Menos de 1 mês" : `${diffMonths} meses`;
+}
+
 const PetInfo = () => {
   const { petId } = useParams(); // Obtém o ID do pet da URL
   const navigate = useNavigate();
@@ -106,15 +115,15 @@ const PetInfo = () => {
                 .filter(pet => pet.status === "Disponível" && pet._id !== petId)
                 .map(pet => ({
                   id: pet._id,
-                  image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
-                         (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
-                         "https://i.imgur.com/WanR0b3.png",
+                  image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] ||
+                    (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
+                    "https://i.imgur.com/WanR0b3.png",
                   name: pet.name,
                   gender: pet.gender,
                   age: pet.age,
                   type: pet.type,
-                  hasSpecialCondition: pet.health?.specialCondition && 
-                                    pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
+                  hasSpecialCondition: pet.health?.specialCondition &&
+                    pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
                   specialCondition: pet.health?.specialCondition || "Nenhuma",
                   vaccinated: pet.health?.vaccinated || false,
                   castrated: pet.health?.castrated || false,
@@ -524,8 +533,8 @@ const PetInfo = () => {
     },
     {
       label: "Esperando um amigo há",
-      value: pet.waitingTime ? `${pet.waitingTime} meses` : "Não informado",
-      icon: <Clock size={20} style={{ marginRight: 6 }} />, // Substitua ChartDonut por ChartPie
+      value: getWaitingTime(pet.registerDate),
+      icon: <Clock size={20} style={{ marginRight: 6 }} />,
     },
     {
       label: "Status",
