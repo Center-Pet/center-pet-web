@@ -122,33 +122,6 @@ export default function AdoptionsTable({ ongId }) {
           ))}
         </tbody>
       </table>
-      <div className="adoptions-list-mobile">
-          {adoptions.map((adoption)=>(
-            <div key={adoption._id} className="adoptions-list-item-mobile">
-                <div className="adoption-list-item-title">
-                  <h4>Solicitação de {adoption.userId?.fullName}</h4>
-                  <button type="button">Mostrar</button>
-                </div>
-                <div className="adoption-list-item-description">
-                    <p>Nome do pet: {adoption.petId?.name || "Não informado"}</p>
-                    <p>Nome do adotante: {adoption.userId?.fullName || "Não informado"}</p>
-                    <p>Cidade: {adoption.userId?.city || "Não informado"}</p>
-                    <p>Contato: {adoption.userId?.phone || adoption.userId?.email || "Não informado"}</p>
-                    <p>Data de Solicitação: {adoption.requestDate? new Date(adoption.requestDate).toLocaleDateString("pt-BR") : "Não informado"}</p>
-                    <p>Status: <span className={`adoption-status adoption-status-${adoption.status}`}>
-                  {translateStatus(adoption.status)}
-                </span></p>
-                    <Link
-                      className="adoptions-table-link"
-                      to={`/adoption/${adoption._id}`}
-                    >
-                      Ver Mais
-                    </Link>
-                </div>
-                
-            </div>
-          ))}
-      </div>
       {/* Paginação */}
       {totalPages > 1 && (
         <div className="pagination-controls" style={{ 
