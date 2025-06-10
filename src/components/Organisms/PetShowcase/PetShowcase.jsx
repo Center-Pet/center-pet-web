@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import CardPet from "../../Molecules/CardPet/CardPet";
 import { CaretLeft, CaretRight } from "phosphor-react";
@@ -28,11 +28,14 @@ const PetShowcase = ({
   ongId, 
   limit,
   customComponent,
-  showAllPets = false // Nova prop para controlar se mostra todos os pets ou apenas os disponíveis
+  showAllPets = false
 }) => {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Filtrar pets por status se não estiver na tela de ONGs
   const filteredPets = category === "ongs"
@@ -46,26 +49,44 @@ const PetShowcase = ({
     const container = carouselRef.current;
     if (!container) return;
 
-    const scrollAmount = container.offsetWidth;
+    const scrollAmount = container.offsetWidth * 0.8;
     container.scrollBy({ left: scrollAmount, behavior: "smooth" });
-
-    // Lógica para rolagem infinita
-    if (container.scrollLeft + container.offsetWidth >= container.scrollWidth) {
-      container.scrollTo({ left: 0, behavior: "smooth" });
-    }
   };
 
   const scrollLeft = () => {
     const container = carouselRef.current;
     if (!container) return;
 
-    const scrollAmount = container.offsetWidth;
+    const scrollAmount = container.offsetWidth * 0.8;
     container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+  };
 
-    // Lógica para rolagem infinita
-    if (container.scrollLeft <= 0) {
-      container.scrollTo({ left: container.scrollWidth, behavior: "smooth" });
+  const handleTouchStart = (e) => {
+    setTouchStart(e.touches[0].clientX);
+    setIsDragging(true);
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    setTouchEnd(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      scrollRight();
+    } else if (isRightSwipe) {
+      scrollLeft();
     }
+
+    setTouchStart(null);
+    setTouchEnd(null);
+    setIsDragging(false);
   };
 
   const handleCardClick = (itemId) => {
@@ -166,14 +187,19 @@ const PetShowcase = ({
       </div>
 
       {filteredPets && filteredPets.length > 0 ? (
-        <div className="pet-showcase-carousel" ref={carouselRef} role="region">
+        <div 
+          className="pet-showcase-carousel" 
+          ref={carouselRef} 
+          role="region"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
           {displayItems.map((item, index) => (
             <div key={index} className="pet-showcase-item">
               {customComponent ? (
-                // Renderiza um componente personalizado se fornecido
                 customComponent(item)
               ) : (
-                // Caso contrário, renderiza o CardPet padrão
                 <CardPet
                   image={item.image}
                   name={item.name}
