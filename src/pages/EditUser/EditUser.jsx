@@ -11,7 +11,7 @@ import "./EditUser.css";
 
 const EditUser = () => {
   const { adopterId } = useParams(); // Obtém o ID da URL, se disponível
-  const { user } = useAuth(); // Obtém o usuário autenticado
+  const { user, updateUserData } = useAuth(); // Obtém o usuário autenticado e a função para atualizar o contexto
   const navigate = useNavigate();
   const [adopterData, setAdopterData] = useState({
     fullName: "",
@@ -186,7 +186,6 @@ const EditUser = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     Swal.fire({
       title: "Confirmar alterações",
       text: "Tem certeza que deseja salvar as alterações no perfil?",
@@ -199,9 +198,7 @@ const EditUser = () => {
       showCloseButton: true,
     }).then(async (result) => {
       if (!result.isConfirmed) return;
-      
       try {
-        // Mostrar loading
         Swal.fire({
           title: "Salvando alterações...",
           allowOutsideClick: false,
@@ -209,14 +206,12 @@ const EditUser = () => {
             Swal.showLoading();
           },
         });
-        
         const token = localStorage.getItem("token");
         const idToUpdate = adopterId || user?._id;
-
         let profileImgUrl = adopterData.profileImg;
         if (adopterData.profileImg instanceof File) {
           profileImgUrl = await uploadImageToCloudinary(adopterData.profileImg);
-        }        // Monta o objeto com os dados a serem enviados
+        }
         const updateData = {
           fullName: adopterData.fullName,
           description: adopterData.description,
@@ -230,7 +225,8 @@ const EditUser = () => {
           state: adopterData.state,
           profession: adopterData.profession,
           profileImg: profileImgUrl,
-        };        const response = await fetch(
+        };
+        const response = await fetch(
           `${API_URL}/adopters/editProfile/${idToUpdate}`,
           {
             method: "PATCH",
@@ -241,11 +237,16 @@ const EditUser = () => {
             body: JSON.stringify(updateData),
           }
         );
-
         if (!response.ok) {
           throw new Error("Erro ao atualizar os dados do adotante.");
         }
-
+        const updatedUser = await response.json();
+        // Atualiza o contexto e localStorage com os dados atualizados
+        updateUserData({
+          ...user,
+          ...updatedUser.data || updatedUser,
+          profileImg: profileImgUrl // Garante que a nova URL da imagem seja incluída
+        });
         Swal.fire({
           title: "Sucesso!",
           text: "Dados atualizados com sucesso.",

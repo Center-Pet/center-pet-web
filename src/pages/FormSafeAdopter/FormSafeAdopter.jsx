@@ -8,6 +8,28 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2"; // Supondo que você usa SweetAlert2 para notificações
 import { API_URL } from "../../config/api.js";
+import PawAnimation from "../../components/Molecules/PawAnimation/PawAnimation";
+import ReactDOMServer from "react-dom/server";
+
+const uploadImageToCloudinary = async (file) => {
+  const data = new FormData();
+  data.append("file", file);
+  data.append("upload_preset", "centerpet_default"); // mesmo preset do RegisterOng
+  data.append("cloud_name", "dx8zzla5s");
+
+  const response = await fetch(
+    "https://api.cloudinary.com/v1_1/dx8zzla5s/image/upload",
+    {
+      method: "POST",
+      body: data,
+    }
+  );
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result.error?.message || "Erro ao enviar imagem");
+  }
+  return result.secure_url;
+};
 
 const FormSafeAdopter = () => {
   const { user, updateUserData } = useAuth();
@@ -140,20 +162,40 @@ const FormSafeAdopter = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateStep()) {
-      return; // Valida o último passo antes de enviar
-    }
-    
     setIsSubmitting(true);
 
     try {
-      // Preparar os dados para envio
+      // Mostrar loading com PawAnimation
+      const pawAnimationHtml = ReactDOMServer.renderToString(
+        <PawAnimation text="Enviando formulário..." vertical={true} />
+      );
+
+      Swal.fire({
+        title: 'Processando',
+        html: pawAnimationHtml,
+        showConfirmButton: false,
+        allowOutsideClick: false
+      });
+
+      // 1. Upload das imagens do ambiente para o Cloudinary
+      let environmentImageUrls = [];
+      if (formData.environmentImages && formData.environmentImages.length > 0) {
+        for (const imgObj of formData.environmentImages) {
+          if (typeof imgObj === "string") {
+            environmentImageUrls.push(imgObj);
+          } else if (imgObj.file) {
+            const url = await uploadImageToCloudinary(imgObj.file);
+            environmentImageUrls.push(url);
+          }
+        }
+      }
+
+      // 2. Montar o objeto para envio ao backend
       const dataToSend = {
         ...formData,
-        email: user.email, // Importante: enviar o email para identificação
-        _id: user._id, // Importante: enviar o ID do usuário
-        // Converter strings "true"/"false" para booleanos reais
+        environmentImages: environmentImageUrls,
+        email: user.email,
+        _id: user._id,
         petsAllowed: formData.petsAllowed === "true",
         homeSafety: formData.homeSafety === "true",
         allergy: formData.allergy === "true",
@@ -170,15 +212,10 @@ const FormSafeAdopter = () => {
         safeAdopter: true
       };
 
-      // Logging para debug
-      console.log("ID do usuário:", user._id);
-      console.log("Email do usuário:", user.email);
-      console.log("Dados enviados:", dataToSend);
-
-      // Obter token de autenticação do localStorage
       const token = localStorage.getItem('token');
 
       if (!token) {
+        Swal.close();
         Swal.fire({
           icon: 'error',
           title: 'Erro de autenticação',
@@ -189,10 +226,8 @@ const FormSafeAdopter = () => {
         return;
       }
 
-      console.log("Enviando dados para a API:", dataToSend);
-
       const response = await fetch(`${API_URL}/adopters/updateSafeAdopter`, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
@@ -202,6 +237,8 @@ const FormSafeAdopter = () => {
 
       const responseData = await response.json(); 
 
+      Swal.close();
+
       if (response.ok) {
         Swal.fire({
           icon: 'success',
@@ -210,25 +247,23 @@ const FormSafeAdopter = () => {
           confirmButtonColor: '#D14D72'
         });
         
-        // Atualizar o objeto user no context
         updateUserData({ safeAdopter: true });
-        
-        // Redirecionar para o perfil
         navigate(`/adopter-profile/${user._id}`);
       } else {
         Swal.fire({
           icon: 'error',
           title: 'Erro ao enviar formulário',
-          text: responseData.message || 'Ocorreu um erro ao processar sua solicitação.',
+          text: responseData.message || 'Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.',
           confirmButtonColor: '#D14D72'
         });
       }
     } catch (error) {
-      console.error("Erro ao enviar o formulário:", error);
+      Swal.close();
+      console.error("Erro ao enviar formulário:", error);
       Swal.fire({
         icon: 'error',
-        title: 'Erro de conexão',
-        text: 'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.',
+        title: 'Erro',
+        text: 'Ocorreu um erro ao enviar o formulário. Por favor, tente novamente.',
         confirmButtonColor: '#D14D72'
       });
     } finally {

@@ -51,6 +51,7 @@
     padding: 10px 0;
     scrollbar-width: none; /* Oculta a barra de rolagem no Firefox */
     padding-right: 50%; /* Adiciona espaço para o último card ficar parcialmente visível */
+    overflow: visible;
   }
   
   .pet-showcase-carousel::-webkit-scrollbar {
@@ -204,4 +205,13 @@
     color: #181818;
     font-size: 1.1rem;
     font-weight: 500;
+  }
+
+  .pet-showcase-item {
+    position: relative;
+    z-index: 1;
+  }
+
+  .pet-showcase-item:hover {
+    z-index: 10;
   }

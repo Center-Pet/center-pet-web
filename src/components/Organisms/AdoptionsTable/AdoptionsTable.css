@@ -1,8 +1,12 @@
 .adoptions-table-container {
+  width: 90%;
+  margin: 0 auto;
+  display: block; /* Mostra por padrão */
   margin: 32px 0;
   background: #fef2f4;
-  border-radius: 12px;
-  box-shadow: 0 1px 8px #0001;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.2);
   padding: 15px;
 }
 
@@ -14,7 +18,13 @@
 
 .adoptions-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 20px;
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.2);
   font-family: 'Alexandria', sans-serif;
 }
 
@@ -32,24 +42,56 @@
   font-weight: bold;
 }
 
+.adoptions-table th:first-child {
+  border-top-left-radius: 16px;
+}
+.adoptions-table th:last-child {
+  border-top-right-radius: 16px;
+}
+
+.adoptions-table tr:last-child td:first-child {
+  border-bottom-left-radius: 16px;
+}
+.adoptions-table tr:last-child td:last-child {
+  border-bottom-right-radius: 16px;
+}
+
+.adoptions-table th:last-child,
+.adoptions-table td:last-child {
+  min-width: 110px;
+  text-align: center;
+  padding: 0 8px;
+}
+
 .adoptions-table-link {
+  display: inline-block;
+  background-color: #D14D72;
   color: #fff;
-  background: #d14d72;
-  padding: 6px 16px;
-  border-radius: 6px;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
   text-decoration: none;
+  white-space: nowrap;
   transition: background 0.2s;
+  margin: 0 auto;
 }
 
 .adoptions-table-link:hover {
-  background: #8f3e84;
+  background-color: #b13d5f;
 }
 
 .adoption-status {
-  padding: 4px 10px;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 0.95em;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  display: inline-block;
+  width: 160px;
+  box-sizing: border-box;
 }
 
 .adoption-status-pendente {
@@ -60,6 +102,65 @@
 }
 .adoption-status-recusada {
   background: #ff4d4d;
+}
+.adoption-status-canceled {
+  background: #bdbdbd;
+  color: #fff;
+}
+.adoption-status-em {
+  background: #ffb347;
+  color: #fff;
+}
+.adoption-status-em.andamento {
+  background: #ffb347;
+  color: #fff;
+}
+.adoption-status-em.adaptação {
+  background: #ffd966;
+  color: #fff;
+}
+.adoption-status-concluída {
+  background: #4caf50;
+  color: #fff;
+}
+.adoption-status-retorno {
+  background: #6c757d;
+  color: #fff;
+}
+
+.adoption-status-requestReceived {
+  background: #ffb347;
+  color: #fff;
+}
+
+.adoption-status-inProgress {
+  background: #4a90e2;
+  color: #fff;
+}
+
+.adoption-status-approved {
+  background: #4caf50;
+  color: #fff;
+}
+
+.adoption-status-rejected {
+  background: #f44336;
+  color: #fff;
+}
+
+.adoption-status-inAdjustment {
+  background: #9c27b0;
+  color: #fff;
+}
+
+.adoption-status-completed {
+  background: #2196f3;
+  color: #fff;
+}
+
+.adoption-status-return {
+  background: #ff9800;
+  color: #fff;
 }
 
 .adoptions-table-loading,
@@ -74,8 +175,16 @@
   }
 }
 
-@media (max-width: 1000px){
-  .adoptions-table-container{
-    display: none;
+/* Em telas menores que 1000px, esconde a tabela */
+@media (max-width: 1000px) {
+  .adoptions-table-container {
+    display: none !important;
+  }
+}
+
+/* Em telas maiores que 1000px, mostra a tabela */
+@media (min-width: 1001px) {
+  .adoptions-table-container {
+    display: block !important;
   }
 }

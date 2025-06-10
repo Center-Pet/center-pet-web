@@ -44,7 +44,6 @@ const AppRoutes = () => {
       <Route path="/edit-org" element={<EditOrg />} />
       <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
       <Route path="/catalog-filter" element={<CatalogFilter />} />
-      <Route path="/adoption/:adoptionId/:petId/:userId/:ongId" element={<AdoptionPage />} />
       <Route path="/adoption/:adoptionId" element={<AdoptionPage />} />
       <Route path="/configuracoes" element={<Settings />} />
     </Routes>

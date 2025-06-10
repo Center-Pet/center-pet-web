@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./AdoptionsTable.css";
+import { API_URL } from "../../../config/api";
 import Title from "../../Atoms/TitleType/TitleType";
+import { CaretLeft, CaretRight } from "phosphor-react";
 
 export default function AdoptionsTable({ ongId }) {
   const [adoptions, setAdoptions] = useState([]);
-  const [adoptionsWithDetails, setAdoptionsWithDetails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   
   const translateStatus = (status) => {
     if (!status) return "Solicitação Recebida";
@@ -14,138 +17,67 @@ export default function AdoptionsTable({ ongId }) {
     const statusMap = {
       'requestReceived': 'Solicitação Recebida',
       'inProgress': 'Em Andamento',
-      'inAdjustment': 'Em Ajustes',
+      'approved': 'Aprovada',
       'rejected': 'Recusada',
+      'canceled': 'Cancelada',
+      'inAdjustment': 'Em Adaptação',
       'completed': 'Concluída',
+      'return': 'Retorno',
       'pendente': 'Solicitação Recebida'
     };
     
     return statusMap[status] || status;
   };
   
-  // Primeiro useEffect para buscar as adoções básicas
+  // Buscar adoções da ONG
   useEffect(() => {
     if (!ongId) {
-      console.log("AdoptionsTable: ongId não fornecido, abortando busca de adoções");
       setLoading(false);
       return;
     }
-    
-    console.log("AdoptionsTable: Buscando adoções para a ONG com ID:", ongId);
-    
     const fetchAdoptions = async () => {
       try {        
         const token = localStorage.getItem("token");
-        console.log("AdoptionsTable: Token de autenticação presente?", !!token);
-        
         const url = `${API_URL}/adoptions/by-ong/${ongId}`;
-        console.log("AdoptionsTable: Fazendo requisição para:", url);
-        
         const res = await fetch(url, {
             headers: {
               Authorization: token ? `Bearer ${token}` : "",
             },
           });
-          
-        console.log("AdoptionsTable: Status da resposta:", res.status);
-        
         const data = await res.json();
-        // Verificamos e registramos a estrutura da resposta para depuração
-        console.log("Resposta da API de adoções:", data);
-        
-        // Verificamos se a resposta contém o formato esperado com o campo "adoptions"
         if (data && data.adoptions) {
-          console.log("Adoções encontradas:", data.adoptions.length);
           setAdoptions(data.adoptions);
         } else if (Array.isArray(data)) {
-          console.log("Array de adoções encontrado:", data.length);
           setAdoptions(data);
-        } else if (data && data.message && data.message.includes('Nenhuma adoção encontrada')) {
-          console.log("Mensagem da API:", data.message);
-          setAdoptions([]);
-          setLoading(false);
         } else {
-          console.log("Formato de resposta desconhecido:", data);
           setAdoptions([]);
-          setLoading(false);
         }
-      } catch (err) {
-        console.error("Erro ao buscar adoções:", err);
+      } catch {
         setAdoptions([]);
+      } finally {
         setLoading(false);
       }
     };
     fetchAdoptions();
   }, [ongId]);
-  
-  // Segundo useEffect para buscar detalhes de cada adotante
-  useEffect(() => {
-    if (adoptions.length === 0) return;
-    
-    const fetchAdoptersDetails = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const adoptionsWithAdopterDetails = [];
-        
-        console.log("Buscando detalhes dos adotantes para", adoptions.length, "adoções");
-        
-        // Para cada adoção, buscar detalhes do adotante
-        for (const adoption of adoptions) {
-          if (!adoption.userId || !adoption.userId._id) {
-            console.log("Adoção sem ID de usuário válido:", adoption);
-            adoptionsWithAdopterDetails.push(adoption);
-            continue;
-          }
-          
-          try {
-            console.log("Buscando detalhes do adotante com ID:", adoption.userId._id);
-            const adopterRes = await fetch(
-              `${API_URL}/adopters/${adoption.userId._id}`,
-              {
-                headers: {
-                  Authorization: token ? `Bearer ${token}` : "",
-                },
-              }
-            );
-              if (adopterRes.ok) {
-              const adopterDetails = await adopterRes.json();
-              console.log("Detalhes do adotante recebidos:", adopterDetails);
-              console.log("Nome do adotante:", adopterDetails.fullName);
-              console.log("Email do adotante:", adopterDetails.email);
-              console.log("Cidade do adotante:", adopterDetails.city);
-              
-              // Adicionar os detalhes do adotante à adoção
-              adoptionsWithAdopterDetails.push({
-                ...adoption,
-                adopterDetails
-              });
-            } else {
-              console.log("Erro ao buscar detalhes do adotante:", adopterRes.status);
-              adoptionsWithAdopterDetails.push(adoption);
-            }
-          } catch (err) {
-            console.error("Erro ao buscar detalhes do adotante:", err);
-            adoptionsWithAdopterDetails.push(adoption);
-          }
-        }
-        
-        console.log("Adoções com detalhes dos adotantes:", adoptionsWithAdopterDetails);
-        setAdoptionsWithDetails(adoptionsWithAdopterDetails);
-      } catch (err) {
-        console.error("Erro ao buscar detalhes dos adotantes:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchAdoptersDetails();
-  }, [adoptions]);
+
+  // Calcular o total de páginas
+  const totalPages = Math.ceil(adoptions.length / itemsPerPage);
+
+  // Obter as adoções da página atual
+  const getCurrentAdoptions = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return adoptions.slice(startIndex, endIndex);
+  };
+
+  // Função para mudar de página
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   if (loading) return <div className="adoptions-table-loading">Carregando adoções...</div>;
   if (!adoptions.length) return <div className="adoptions-table-empty">Nenhuma adoção encontrada.</div>;
-
-  // Usamos adoptionsWithDetails se disponível, caso contrário usamos adoptions
-  const displayAdoptions = adoptionsWithDetails.length > 0 ? adoptionsWithDetails : adoptions;
 
   return (
     <div className="adoptions-table-container">
@@ -159,32 +91,24 @@ export default function AdoptionsTable({ ongId }) {
             <th>Contato</th>
             <th>Data de Solicitação</th>
             <th>Status</th>
-            <th>Ver Mais</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>          
-          {displayAdoptions.map((adoption) => (
+          {getCurrentAdoptions().map((adoption) => (
             <tr key={adoption._id}>
               <td>{adoption.petId?.name || "Não informado"}</td>
-              <td>{adoption.adopterDetails?.fullName || adoption.userId?.fullName || "Não informado"}</td>
+              <td>{adoption.userId?.fullName || "Não informado"}</td>
+              <td>{adoption.userId?.city || "Não informado"}</td>
+              <td>{adoption.userId?.phone || adoption.userId?.email || "Não informado"}</td>
               <td>
-                {adoption.adopterDetails?.city || 
-                 (adoption.adopterDetails?.address?.city) || 
-                 "Não informado"}
-              </td>              <td>
-                {adoption.adopterDetails?.phone || 
-                 adoption.adopterDetails?.email || 
-                 adoption.userId?.email || 
-                 "Não informado"}
-              </td>
-              <td>
-                {adoption.createdAt
-                  ? new Date(adoption.createdAt).toLocaleDateString("pt-BR")
+                {adoption.requestDate
+                  ? new Date(adoption.requestDate).toLocaleDateString("pt-BR")
                   : "Não informado"}
               </td>
               <td>
-                <span className={`adoption-status adoption-status-${adoption.status?.toLowerCase()}`}>
-                  {translateStatus(adoption.status) || "Pendente"}
+                <span className={`adoption-status adoption-status-${adoption.status}`}>
+                  {translateStatus(adoption.status)}
                 </span>
               </td>              <td>
                 <Link
@@ -199,20 +123,20 @@ export default function AdoptionsTable({ ongId }) {
         </tbody>
       </table>
       <div className="adoptions-list-mobile">
-          {displayAdoptions.map((adoption)=>(
+          {adoptions.map((adoption)=>(
             <div key={adoption._id} className="adoptions-list-item-mobile">
                 <div className="adoption-list-item-title">
-                  <h4>Solicitação de {adoption.adopterDetails?.fullName}</h4>
+                  <h4>Solicitação de {adoption.userId?.fullName}</h4>
                   <button type="button">Mostrar</button>
                 </div>
                 <div className="adoption-list-item-description">
                     <p>Nome do pet: {adoption.petId?.name || "Não informado"}</p>
-                    <p>Nome do adotante: {adoption.adopterDetails?.fullName || adoption.userId?.fullName || "Não informado"}</p>
-                    <p>Cidade: {adoption.adopterDetails?.city || (adoption.adopterDetails?.address?.city) || "Não informado"}</p>
-                    <p>Contato: {adoption.adopterDetails?.phone || adoption.adopterDetails?.email || adoption.userId?.email || "Não informado"}</p>
-                    <p>Data de Solicitação: {adoption.createdAt? new Date(adoption.createdAt).toLocaleDateString("pt-BR") : "Não informado"}</p>
-                    <p>Status: <span className={`adoption-status adoption-status-${adoption.status?.toLowerCase()}`}>
-                  {translateStatus(adoption.status) || "Pendente"}
+                    <p>Nome do adotante: {adoption.userId?.fullName || "Não informado"}</p>
+                    <p>Cidade: {adoption.userId?.city || "Não informado"}</p>
+                    <p>Contato: {adoption.userId?.phone || adoption.userId?.email || "Não informado"}</p>
+                    <p>Data de Solicitação: {adoption.requestDate? new Date(adoption.requestDate).toLocaleDateString("pt-BR") : "Não informado"}</p>
+                    <p>Status: <span className={`adoption-status adoption-status-${adoption.status}`}>
+                  {translateStatus(adoption.status)}
                 </span></p>
                     <Link
                       className="adoptions-table-link"
@@ -225,6 +149,72 @@ export default function AdoptionsTable({ ongId }) {
             </div>
           ))}
       </div>
+      {/* Paginação */}
+      {totalPages > 1 && (
+        <div className="pagination-controls" style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          gap: '20px', 
+          margin: '30px 0',
+          padding: '20px'
+        }}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-button"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '40px',
+              height: '40px',
+              padding: 0,
+              backgroundColor: currentPage === 1 ? '#cccccc' : '#d25b82',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+              transition: 'background-color 0.3s, transform 0.2s'
+            }}
+            aria-label="Página anterior"
+          >
+            <CaretLeft size={24} weight="bold" />
+          </button>
+          
+          <span className="page-info" style={{
+            fontSize: '16px',
+            color: '#666',
+            minWidth: '120px',
+            textAlign: 'center'
+          }}>
+            Página {currentPage} de {totalPages}
+          </span>
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-button"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '40px',
+              height: '40px',
+              padding: 0,
+              backgroundColor: currentPage === totalPages ? '#cccccc' : '#d25b82',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+              transition: 'background-color 0.3s, transform 0.2s'
+            }}
+            aria-label="Próxima página"
+          >
+            <CaretRight size={24} weight="bold" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

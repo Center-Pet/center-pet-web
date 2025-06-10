@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -24,7 +23,7 @@ import {
 } from "phosphor-react";
 import { API_URL } from "../../config/api";
 
-export default function PetInfo() {
+const PetInfo = () => {
   const { petId } = useParams(); // Obtém o ID do pet da URL
   const navigate = useNavigate();
   const { user, userType, isAuthenticated } = useAuth();
@@ -51,7 +50,6 @@ export default function PetInfo() {
         // Buscar informações do pet
         const response = await fetch(
           `${API_URL}/pets/${petId}`
-
         );
 
         if (!response.ok) {
@@ -193,8 +191,16 @@ export default function PetInfo() {
 
     // Cria a adoção no banco de dados
     try {
+      Swal.fire({
+        title: "Enviando solicitação...",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
       const response = await fetch(
-        "http://localhost:5000/api/adoptions/create",
+        `${API_URL}/adoptions/create`,
         {
           method: "POST",
           headers: {
@@ -211,15 +217,27 @@ export default function PetInfo() {
         }
       );
 
+      const data = await response.json();
+      Swal.close();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        console.log("Erro detalhado da API:", errorData);
-        throw new Error("Erro ao criar solicitação de adoção.");
+        // Tratamento para solicitação recente
+        if (response.status === 400 && data.message?.includes("solicitação de adoção")) {
+          Swal.fire({
+            title: "Solicitação recente",
+            text: data.message,
+            icon: "warning",
+            confirmButtonColor: "#FF8BA7",
+          });
+          return;
+        }
+        // Outros erros
+        throw new Error(data.message || "Erro ao criar solicitação de adoção.");
       }
 
       // Enviar email de solicitação de adoção
       await fetch(
-        "http://localhost:5000/api/emails/adoption-request",
+        `${API_URL}/emails/adoption-request`,
         {
           method: "POST",
           headers: {
@@ -735,3 +753,5 @@ export default function PetInfo() {
     </>
   );
 }
+
+export default PetInfo;

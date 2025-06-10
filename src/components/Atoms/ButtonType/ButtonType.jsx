@@ -8,7 +8,11 @@ const ButtonType = ({ children, onClick, bgColor = '#D14D72', color = '#FEF2F4',
       onClick={onClick}
       style={{ backgroundColor: bgColor, color: color, width: width, margin: margin }}
     >
-      {icon && <img src={icon} alt="icon" className="button-icon" />} {/* Renderiza o ícone se fornecido */}
+      {icon && (
+        typeof icon === "string"
+          ? <img src={icon} alt="icon" className="button-icon" />
+          : <span className="button-icon">{icon}</span>
+      )}
       {children}
     </button>
   );

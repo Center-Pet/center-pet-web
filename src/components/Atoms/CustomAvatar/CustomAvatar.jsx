@@ -9,7 +9,9 @@ import ReactDOMServer from "react-dom/server";
 import { Gear } from "phosphor-react";
 import { API_URL } from "../../../config/api";
 
-export default function CustomAvatar({ imageSrc }) {
+const defaultAvatar = "https://i.imgur.com/WanR0b3.png";
+
+export default function CustomAvatar() {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { logout, user, userType } = useAuth();
@@ -115,7 +117,7 @@ export default function CustomAvatar({ imageSrc }) {
       <div className="custom-avatar-container" ref={avatarRef}>
         <img
           className="custom-avatar-icon"
-          src={imageSrc}
+          src={user.profileImg || defaultAvatar}
           alt="Avatar"
           onClick={handleToggleMenu}
         />
@@ -148,7 +150,3 @@ export default function CustomAvatar({ imageSrc }) {
     )
   );
 }
-
-CustomAvatar.propTypes = {
-  imageSrc: PropTypes.string.isRequired
-};

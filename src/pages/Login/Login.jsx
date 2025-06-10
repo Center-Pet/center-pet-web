@@ -349,7 +349,6 @@ const Login = () => {
 
         const response = await fetch(
           `${API_URL}/auth/login`,
-          // Removido comentário com URL fixa
           {
             method: "POST",
             headers: {

@@ -11,7 +11,7 @@ import useAuth from "../../hooks/useAuth";
 
 const EditOrg = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, updateUserData } = useAuth();
 
   const [loadingCep, setLoadingCep] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -258,6 +258,7 @@ const EditOrg = () => {
         }
 
         const data = await response.json();
+        updateUserData(data.data || data); // Atualiza contexto e localStorage
         Swal.fire({
           title: "Sucesso!",
           text: "Seu perfil foi atualizado com sucesso.",
@@ -266,10 +267,6 @@ const EditOrg = () => {
         }).then(() => {
           setProfileImage(finalImageUrl);
           setProfileImageFile(null);
-          if (data.data) {
-            const updatedUser = { ...user, ...data.data };
-            localStorage.setItem("user", JSON.stringify(updatedUser));
-          }
           navigate(`/ong-profile/${user._id}`);
         });
       } catch (error) {

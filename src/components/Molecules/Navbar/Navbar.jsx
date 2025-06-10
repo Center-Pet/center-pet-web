@@ -158,9 +158,7 @@ const Navbar = () => {
                 {/* Avatar do usuário ou ícone de configurações */}
                 {!isLoading && isAuthenticated ? (
                     <div className="avatar-icon">
-                        <CustomAvatar
-                            imageSrc={user?.profileImg || "https://i.imgur.com/WanR0b3.png"}
-                        />
+                        <CustomAvatar />
                     </div>
                 ) : (
                     shouldShowSettingsIcon && (

@@ -1,15 +1,23 @@
 /* tabela mobile */
 
-.adoptions-list-container{
-    width: 90%;
-    display: none;
+.adoptions-list-container {
+  width: 90%;
+  margin: 0 auto;
+  display: none; /* Esconde por padrão */
 }
-.adoptions-list-mobile{
-    border-radius: 10px;
-    overflow: hidden;
-    display: none;
-    box-shadow: 0px 0px 9px 0px rgba(0 , 0, 0, 0.2);
+
+.adoptions-list-mobile {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 8px #0001;
+  padding: 20px 10px 30px 10px;
+  display: block;
 }
+
 .adoption-list-item-title{
   background-color: #d14d72;
   color: rgb(255, 255, 255);
@@ -32,11 +40,189 @@
   margin-bottom: 25px;
 }
 
-@media (max-width: 1000px){
-  .adoptions-list-container{
+/* Estilos para telas maiores */
+@media (min-width: 1001px) {
+  .adoptions-table-container {
+    display: block !important;
+  }
+
+  .adoptions-list-container {
+    display: none;
+  }
+
+  .adoptions-list-mobile {
+    display: none;
+  }
+}
+
+/* Estilos para telas médias */
+@media (max-width: 1000px) {
+  .adoptions-list-container {
     display: block;
   }
-  .adoptions-list-mobile{
+
+  .adoptions-list-mobile {
     display: block;
+  }
+
+  /* Esconde a tabela em telas menores */
+  .adoptions-table-container {
+    display: none !important;
+  }
 }
+
+/* Carrossel mobile */
+.adoption-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.adoptions-list-mobile .adoption-carousel-item {
+  border-radius: 18px;
+  box-shadow: 0 1px 8px #0001;
+  background: #ffe0ea;
+  padding: 0 0 20px 0;
+  min-height: 420px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  transition: transform 0.7s cubic-bezier(.22, .61, .36, 1);
+  will-change: transform;
+  transform: translateX(0);
+}
+
+.adoptions-list-mobile .adoption-carousel-item.sliding.slide-left {
+  transform: translateX(-100%);
+}
+.adoptions-list-mobile .adoption-carousel-item.sliding.slide-right {
+  transform: translateX(100%);
+}
+
+.adoptions-list-mobile .adoption-carousel-item.slide-left:not(.sliding),
+.adoptions-list-mobile .adoption-carousel-item.slide-right:not(.sliding) {
+  transform: translateX(0);
+}
+
+.adoptions-list-mobile .adoptions-list-item-mobile {
+  border-radius: 18px;
+  background: #ffd6e3;
+  box-shadow: none;
+  margin: 0;
+  width: 100%;
+}
+
+.carousel-btn {
+  background: #D14D72;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.carousel-btn:hover {
+  background: #b13d5f;
+}
+
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fcc8d1;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.carousel-dot.active {
+  background: #D14D72;
+}
+
+.adoptions-list-mobile-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  background: #D14D72;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #0002;
+  opacity: 0.92;
+  transition: background 0.2s, opacity 0.2s;
+}
+.carousel-arrow.left {
+  left: 0;
+}
+.carousel-arrow.right {
+  right: 0;
+}
+.carousel-arrow:hover {
+  background: #b13d5f;
+  opacity: 1;
+}
+
+.adoptions-list-mobile-scroll {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0 20px 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  width: 100%;
+}
+.adoptions-list-mobile-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.adoptions-list-mobile-scroll .adoptions-list-item-mobile {
+  min-width: 320px;
+  max-width: 90vw;
+  flex: 0 0 auto;
+  border-radius: 32px;
+  background: #ffd6e3;
+  box-shadow: 0 1px 8px #0001;
+  margin: 0;
+  width: 100%;
+  transition: box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.adoptions-list-mobile-scroll .adoptions-list-item-mobile .adoption-list-item-title {
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+  overflow: hidden;
+}
+
+.adoptions-list-mobile-scroll .adoptions-list-item-mobile:hover {
+  box-shadow: 0 4px 16px #d14d7240;
 }

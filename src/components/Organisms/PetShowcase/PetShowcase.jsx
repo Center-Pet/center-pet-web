@@ -35,9 +35,9 @@ const PetShowcase = ({
   const location = useLocation();
 
   // Filtrar pets por status se não estiver na tela de ONGs
-  const filteredPets = showAllPets 
-    ? pets 
-    : pets.filter(pet => pet.status === "Disponível");
+  const filteredPets = category === "ongs"
+    ? pets
+    : (showAllPets ? pets : pets.filter(pet => pet.status === "Disponível"));
 
   // Limitar a quantidade de items exibidos se houver limite definido
   const displayItems = limit > 0 ? filteredPets.slice(0, limit) : filteredPets;

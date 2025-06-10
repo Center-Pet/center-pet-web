@@ -192,6 +192,14 @@ const ONGProfile = () => {
     return url.startsWith('http') ? url : `https://${url}`;
   };
 
+  // Determine se é a ONG dona
+  const isOngOwner = user && ongData && user._id === ongData._id;
+
+  // Filtrar pets para exibir apenas os disponíveis para adotantes
+  const petsToShow = isOngOwner
+    ? ongPets
+    : ongPets.filter(pet => pet.status === "Disponível");
+
   if (loading) {
     return (
       <div className="ong-profile-container">
@@ -432,7 +440,8 @@ const ONGProfile = () => {
         {/* Seção de Pets */}
         <div className="ong-profile-pets-section">
           <PetShowcase
-            title={`Pets Cadastrados - ${ongData.name}`}            pets={ongPets}
+            title={`Pets Cadastrados - ${ongData.name}`}
+            pets={petsToShow}
             category="all"
             limit={0}
             showAllPets={true}
@@ -451,9 +460,11 @@ const ONGProfile = () => {
                   dewormed={pet.dewormed}
                   onClick={() => navigate(`/pet-info/${pet.id}`)}
                 />
-                <span className={`pet-status pet-status-${pet.status?.toLowerCase()}`}>
-                  {pet.status || "Disponível"}
-                </span>
+                {isOngOwner && (
+                  <span className={`pet-status pet-status-${pet.status?.toLowerCase()}`}>
+                    {pet.status || "Disponível"}
+                  </span>
+                )}
               </div>
             )}
           />
