@@ -71,11 +71,11 @@ const Navbar = () => {
         <header>
             <div
                 className="pink_square"
-                onClick={() => navigate('/home')}
+                onClick={() => navigate(isOng ? '/home-ong' : '/home')}
                 style={{ cursor: "pointer" }} // opcional: mostra que é clicável
             ></div>
             <nav id='navbar'>
-                <Link to="/home" className="logo-link">
+                <Link to={isOng ? "/home-ong" : "/home"} className="logo-link">
                     <img
                         id="logo"
                         src="/assets/logo/CenterPet.png"
@@ -89,7 +89,7 @@ const Navbar = () => {
                 {/* Menu para desktop */}
                 <ul className="menu-desktop">
                     <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/home')}><House size={25} />Home</ButtonType>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate(isOng ? '/home-ong' : '/home')}><House size={25} />Home</ButtonType>
                     </li>
                     <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')}><PawPrint size={25} />Catálogo</ButtonType>
@@ -124,7 +124,7 @@ const Navbar = () => {
                 >
                     <button className="close-menu" onClick={closeMenu}>✕</button>
                     <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/home'); closeMenu(); }}><House size={25} />Home</ButtonType>
+                        <ButtonType bgColor={"#D14D72"} onClick={() => { navigate(isOng ? '/home-ong' : '/home'); closeMenu(); }}><House size={25} />Home</ButtonType>
                     </li>
                     <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/catalog'); closeMenu(); }}><PawPrint size={25} /> Catálogo</ButtonType>

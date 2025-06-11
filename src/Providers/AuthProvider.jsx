@@ -43,7 +43,12 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(userData));
       localStorage.setItem('token', token);
       localStorage.setItem('userType', type);
-      
+      // Salvar ongId se for ONG
+      if (type === 'Ong' || type === 'ONG') {
+        localStorage.setItem('ongId', userData._id);
+      } else {
+        localStorage.removeItem('ongId');
+      }
       setUser(userData);
       setUserType(type);
       setIsAuthenticated(true);

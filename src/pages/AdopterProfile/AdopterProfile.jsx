@@ -159,12 +159,12 @@ const AdopterProfile = () => {
                                 }
                                 localStorage.removeItem("token");
                                 logout();
+                                navigate('/home');
                                 Swal.fire(
                                   "Deletado!",
                                   "Sua conta foi deletada com sucesso.",
                                   "success"
                                 );
-                                navigate("/home");
                               } catch (error) {
                                 console.error(error);
                                 Swal.fire(
@@ -246,8 +246,8 @@ const AdopterProfile = () => {
                           }
                           localStorage.removeItem('token');
                           logout();
-                          Swal.fire('Deletado!', 'Sua conta foi deletada com sucesso.', 'success');
                           navigate('/home');
+                          Swal.fire('Deletado!', 'Sua conta foi deletada com sucesso.', 'success');
                         } catch (error) {
                           console.error(error);
                           Swal.fire('Erro!', 'Não foi possível deletar a conta. Tente novamente mais tarde.', 'error');

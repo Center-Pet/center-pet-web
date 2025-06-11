@@ -71,6 +71,7 @@ export default function CustomAvatar() {
 
       Swal.close();
       logout();
+      navigate('/home');
 
       Swal.fire({
         icon: response.ok ? 'success' : 'warning',

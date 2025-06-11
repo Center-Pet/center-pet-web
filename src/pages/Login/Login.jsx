@@ -370,14 +370,17 @@ const Login = () => {
 
           Swal.fire({
             title: 'Login bem-sucedido!',
-            text: 'Redirecionando para a página inicial...',
+            text: 'Redirecionando...',
             icon: 'success',
             showConfirmButton: false,
             timer: 2000,
             position: 'center'
           }).then(() => {
-            // Redirecionar para a página inicial após login
-            navigate('/');
+            if (result.userType === 'Ong' || result.userType === 'ONG') {
+              navigate('/home-ong');
+            } else {
+              navigate('/home');
+            }
           });
         } else {
           // Login falhou

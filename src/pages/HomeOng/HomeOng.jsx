@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Title from "../../components/Atoms/TitleType/TitleType";
+import TitleType from "../../components/Atoms/TitleType/TitleType";
 import "./HomeOng.css";
 import { API_URL } from "../../config/api";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
+import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 
 function getWaitingTime(registerDate) {
     if (!registerDate) return 0;
@@ -15,19 +17,21 @@ function getWaitingTime(registerDate) {
 }
 
 const HomeOng = () => {
-    const { user, userType, isLogged } = useAuth();
+    const { user, userType, isAuthenticated, isLoading } = useAuth();
     const navigate = useNavigate();
 
     const [pets, setPets] = useState([]);
     const [adoptions, setAdoptions] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [ongData, setOngData] = useState(null);
 
-    // Pega o ID da ONG logada do contexto ou localStorage
-    const ongId = user?.id || localStorage.getItem("ongId");
+    // Corrigir obtenção do ongId
+    const ongId = user?._id || localStorage.getItem('ongId');
+    console.log('user:', user, 'ongId:', ongId);
 
     // Proteção de rota: só ONG logada pode acessar
     useEffect(() => {
-        if (!isLogged) {
+        if (isLoading) return;
+        if (!isAuthenticated) {
             Swal.fire({
                 icon: "warning",
                 title: "Faça login para acessar",
@@ -44,52 +48,74 @@ const HomeOng = () => {
             }).then(() => navigate("/home"));
             return;
         }
-    }, [isLogged, userType, navigate]);
+    }, [isAuthenticated, userType, navigate, isLoading]);
 
     useEffect(() => {
+        if (isLoading) return;
+        if (!ongId) {
+            setOngData(null);
+            setPets([]);
+            setAdoptions([]);
+            return;
+        }
+        const token = localStorage.getItem('token');
         const fetchData = async () => {
-            setLoading(true);
             try {
-                // Pets cadastrados pela ONG
-                const petsRes = await fetch(`${API_URL}/pets?ongId=${ongId}`);
+                // Buscar dados da ONG logada
+                const ongRes = await fetch(`${API_URL}/ongs/${ongId}`, {
+                    headers: {
+                        Authorization: token ? `Bearer ${token}` : "",
+                        "Content-Type": "application/json"
+                    }
+                });
+                const ongJson = await ongRes.json();
+                setOngData(ongJson.data || ongJson);
+
+                // Buscar pets da ONG
+                const petsRes = await fetch(`${API_URL}/pets/by-ong/${ongId}`, {
+                    headers: {
+                        Authorization: token ? `Bearer ${token}` : "",
+                        "Content-Type": "application/json"
+                    }
+                });
                 const petsData = await petsRes.json();
                 setPets(Array.isArray(petsData.data) ? petsData.data : petsData);
 
-                // Adoções dessa ONG
-                const adoptionsRes = await fetch(`${API_URL}/adoptions?ongId=${ongId}`);
+                // Buscar adoções da ONG
+                const adoptionsRes = await fetch(`${API_URL}/adoptions/${ongId}`, {
+                    headers: {
+                        Authorization: token ? `Bearer ${token}` : "",
+                        "Content-Type": "application/json"
+                    }
+                });
                 const adoptionsData = await adoptionsRes.json();
-                setAdoptions(Array.isArray(adoptionsData.data) ? adoptionsData.data : adoptionsData);
-            } catch (error) {
+                if (!adoptionsRes.ok || !Array.isArray(adoptionsData.adoptions)) {
+                    setAdoptions([]);
+                } else {
+                    setAdoptions(adoptionsData.adoptions);
+                }
+            } catch {
                 Swal.fire({
                     icon: "error",
                     title: "Erro ao carregar dados",
                     text: "Não foi possível carregar as informações da ONG.",
                 });
-            } finally {
-                setLoading(false);
             }
         };
-        if (ongId) fetchData();
-    }, [ongId]);
+        fetchData();
+    }, [ongId, isLoading]);
 
     // Estatísticas
     const totalPets = pets.length;
-    const adoptedPets = pets.filter(p => (p.status || "").toLowerCase().includes("adotad")).length;
-    const availablePets = pets.filter(p => (p.status || "").toLowerCase().includes("dispon")).length;
-    const pendingAdoptions = adoptions.filter(a => a.status === "pending").length;
-
-    // Tempo médio de espera dos pets disponíveis
+    const adoptedPets = pets.filter(p => p.status === "Adotado").length;
+    const availablePets = pets.filter(p => p.status === "Disponível").length;
+    const pendingAdoptions = adoptions.filter(a => a.status === "requestReceived").length;
     const waitingTimes = pets
-        .filter(p => (p.status || "").toLowerCase().includes("dispon"))
+        .filter(p => p.status === "Disponível" && p.registerDate)
         .map(p => getWaitingTime(p.registerDate));
     const avgWaiting = waitingTimes.length
         ? Math.round(waitingTimes.reduce((a, b) => a + b, 0) / waitingTimes.length)
         : 0;
-
-    // Últimos pets cadastrados
-    const lastPets = [...pets]
-        .sort((a, b) => new Date(b.registerDate) - new Date(a.registerDate))
-        .slice(0, 3);
 
     // Últimas adoções realizadas
     const lastAdoptions = [...adoptions]
@@ -97,13 +123,26 @@ const HomeOng = () => {
         .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
         .slice(0, 3);
 
+    if (isLoading) return <div>Carregando...</div>;
+
+    if (!ongId) {
+        return (
+            <div style={{ padding: 32, textAlign: 'center' }}>
+                <TitleType color="#D14D72" align="left">Não foi possível identificar a ONG logada.</TitleType>
+                <p>Faça login novamente ou entre em contato com o suporte.</p>
+            </div>
+        );
+    }
+
     return (
         <main className="home-ong-container">
             <section className="ong-header">
                 <img src="/assets/logo/CP.jpg" alt="Logo Center Pet" className="ong-logo" />
                 <div>
-                    <Title>Bem-vinda, ONG!</Title>
+                    <Title>Bem-vinda, {ongData?.name || 'ONG'}!</Title>
                     <p className="ong-subtitle">
+                        {ongData?.address?.city ? `Cidade: ${ongData.address.city}` : ''}
+                        <br />
                         Aqui você gerencia seus pets, acompanha adoções e vê o impacto do seu trabalho!
                     </p>
                 </div>
@@ -140,22 +179,22 @@ const HomeOng = () => {
             </section>
 
             <section className="ong-actions">
-                <h2 className="section-title">Ações rápidas</h2>
+                <Title>Ações rápidas</Title>
                 <div className="ong-actions-buttons">
                     <a href="/register-pet" className="ong-action-btn">
                         <i className="fas fa-plus"></i> Cadastrar novo pet
                     </a>
-                    <a href="/dashboard" className="ong-action-btn">
+                    <a href={`/catalog-filter?ongId=${ongId}`} className="ong-action-btn">
                         <i className="fas fa-list"></i> Gerenciar pets
                     </a>
-                    <a href="/adoptions" className="ong-action-btn">
+                    <a href={`/ong-profile/${ongId}`} className="ong-action-btn">
                         <i className="fas fa-file-alt"></i> Ver solicitações de adoção
                     </a>
                 </div>
             </section>
 
             <section className="ong-impact">
-                <h2 className="section-title">Seu impacto</h2>
+                <Title>Seu impacto</Title>
                 <p>
                     Obrigado por fazer parte da Center Pet! Seu trabalho transforma vidas e inspira mais pessoas a adotar.
                 </p>
@@ -167,32 +206,18 @@ const HomeOng = () => {
             </section>
 
             <section className="ong-latest">
-                <h2 className="section-title">Últimos pets cadastrados</h2>
-                <div className="ong-latest-list">
-                    {lastPets.length === 0 && <p>Nenhum pet cadastrado ainda.</p>}
-                    {lastPets.map(pet => (
-                        <div key={pet._id} className="ong-latest-card">
-                            <img
-                                src={pet.images?.[0] || "/assets/logo/CP.jpg"}
-                                alt={pet.name}
-                                className="ong-latest-img"
-                            />
-                            <div>
-                                <strong>{pet.name}</strong>
-                                <div style={{ fontSize: 13, color: "#888" }}>
-                                    {pet.species} • {pet.breed}
-                                </div>
-                                <div style={{ fontSize: 12, color: "#d14d72" }}>
-                                    Cadastrado há {getWaitingTime(pet.registerDate)} dias
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <PetShowcase
+                    title="Últimos pets cadastrados"
+                    pets={pets.slice(-3).reverse()}
+                    category="all"
+                    limit={3}
+                    showAllPets={false}
+                    ongId={ongId}
+                />
             </section>
 
             <section className="ong-latest">
-                <h2 className="section-title">Últimas adoções realizadas</h2>
+                <Title>Últimas adoções realizadas</Title>
                 <div className="ong-latest-list">
                     {lastAdoptions.length === 0 && <p>Nenhuma adoção realizada ainda.</p>}
                     {lastAdoptions.map(adoption => (

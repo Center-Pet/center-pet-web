@@ -361,7 +361,7 @@ const ONGProfile = () => {
                                   "Sua conta foi deletada com sucesso.",
                                   "success"
                                 );
-                                navigate("/home"); // Redireciona para a página /home após a exclusão
+                                navigate('/home'); // Redireciona para a página /home após a exclusão
                               } catch (error) {
                                 console.error(error);
                                 Swal.fire(
