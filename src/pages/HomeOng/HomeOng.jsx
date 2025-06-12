@@ -7,18 +7,14 @@ import { API_URL } from "../../config/api";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
-
-function getWaitingTime(registerDate) {
-    if (!registerDate) return 0;
-    const created = new Date(registerDate);
-    const now = new Date();
-    const diffMs = now - created;
-    return Math.floor(diffMs / (1000 * 60 * 60 * 24)); // dias
-}
+import AdoptionsTable from "../../components/Organisms/AdoptionsTable/AdoptionsTable";
+import AdoptionsList from "../../components/Organisms/AdoptionsList/AdoptionsList";
+import useIsMobile from "../../hooks/useIsMobile";
 
 const HomeOng = () => {
     const { user, userType, isAuthenticated, isLoading } = useAuth();
     const navigate = useNavigate();
+    const isMobile = useIsMobile();
 
     const [pets, setPets] = useState([]);
     const [adoptions, setAdoptions] = useState([]);
@@ -79,10 +75,31 @@ const HomeOng = () => {
                     }
                 });
                 const petsData = await petsRes.json();
-                setPets(Array.isArray(petsData.data) ? petsData.data : petsData);
+                const processedPets = (Array.isArray(petsData.data) ? petsData.data : petsData).map(pet => ({
+                    id: pet._id,
+                    image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
+                           (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
+                           "https://i.imgur.com/WanR0b3.png",
+                    name: pet.name,
+                    gender: pet.gender,
+                    age: pet.age,
+                    type: pet.type,
+                    hasSpecialCondition: pet.health?.specialCondition && 
+                                      pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
+                    specialCondition: pet.health?.specialCondition || "Nenhuma",
+                    vaccinated: pet.health?.vaccinated || false,
+                    castrated: pet.health?.castrated || false,
+                    dewormed: pet.health?.dewormed || false,
+                    coat: pet.coat || "",
+                    status: pet.status || "Disponível",
+                    waitingTime: pet.waitingTime,
+                    registerDate: pet.registerDate
+                }));
+                console.log('Pets processados:', processedPets);
+                setPets(processedPets);
 
                 // Buscar adoções da ONG
-                const adoptionsRes = await fetch(`${API_URL}/adoptions/${ongId}`, {
+                const adoptionsRes = await fetch(`${API_URL}/adoptions/by-ong/${ongId}`, {
                     headers: {
                         Authorization: token ? `Bearer ${token}` : "",
                         "Content-Type": "application/json"
@@ -94,7 +111,8 @@ const HomeOng = () => {
                 } else {
                     setAdoptions(adoptionsData.adoptions);
                 }
-            } catch {
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
                 Swal.fire({
                     icon: "error",
                     title: "Erro ao carregar dados",
@@ -110,18 +128,43 @@ const HomeOng = () => {
     const adoptedPets = pets.filter(p => p.status === "Adotado").length;
     const availablePets = pets.filter(p => p.status === "Disponível").length;
     const pendingAdoptions = adoptions.filter(a => a.status === "requestReceived").length;
-    const waitingTimes = pets
-        .filter(p => p.status === "Disponível" && p.registerDate)
-        .map(p => getWaitingTime(p.registerDate));
+    
+    // Calcula o tempo médio de espera
+    const calculateWaitingTime = (pet) => {
+        console.log('Calculando tempo de espera para pet:', pet);
+        
+        // Se tiver waitingTime definido, usa ele
+        if (pet.waitingTime) {
+            const waitingTime = parseInt(pet.waitingTime);
+            console.log('Usando waitingTime:', waitingTime);
+            return waitingTime || 0;
+        }
+        
+        // Se não tiver waitingTime, calcula com base no registerDate
+        if (pet.registerDate) {
+            const registerDate = new Date(pet.registerDate);
+            const currentDate = new Date();
+            const diffTime = Math.abs(currentDate - registerDate);
+            const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30)); // Aproximação de 30 dias por mês
+            console.log('Calculado com registerDate:', diffMonths);
+            return diffMonths;
+        }
+        
+        console.log('Nenhum tempo de espera encontrado');
+        return 0;
+    };
+
+    const availablePetsList = pets.filter(p => p.status === "Disponível");
+    console.log('Pets disponíveis:', availablePetsList);
+
+    const waitingTimes = availablePetsList.map(calculateWaitingTime);
+    console.log('Tempos de espera calculados:', waitingTimes);
+
     const avgWaiting = waitingTimes.length
         ? Math.round(waitingTimes.reduce((a, b) => a + b, 0) / waitingTimes.length)
         : 0;
 
-    // Últimas adoções realizadas
-    const lastAdoptions = [...adoptions]
-        .filter(a => a.status === "inProgress" || a.status === "completed")
-        .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
-        .slice(0, 3);
+    console.log('Tempo médio de espera:', avgWaiting);
 
     if (isLoading) return <div>Carregando...</div>;
 
@@ -172,7 +215,7 @@ const HomeOng = () => {
                 <div className="ong-stats-card">
                     <i className="fas fa-hourglass-half"></i>
                     <span className="stat-number">
-                        {avgWaiting > 0 ? `${avgWaiting} dias` : "N/A"}
+                        {avgWaiting > 0 ? `${avgWaiting} ${avgWaiting === 1 ? 'mês' : 'meses'}` : "N/A"}
                     </span>
                     <span className="stat-label">Tempo médio de espera</span>
                 </div>
@@ -217,27 +260,11 @@ const HomeOng = () => {
             </section>
 
             <section className="ong-latest">
-                <Title>Últimas adoções realizadas</Title>
-                <div className="ong-latest-list">
-                    {lastAdoptions.length === 0 && <p>Nenhuma adoção realizada ainda.</p>}
-                    {lastAdoptions.map(adoption => (
-                        <div key={adoption._id} className="ong-latest-card">
-                            <div>
-                                <strong>Pet:</strong> {adoption.petName || "Pet"}
-                                <br />
-                                <strong>Adotante:</strong> {adoption.adopterName || "Adotante"}
-                                <br />
-                                <span style={{ fontSize: 12, color: "#888" }}>
-                                    {adoption.updatedAt
-                                        ? `Atualizado em ${new Date(adoption.updatedAt).toLocaleDateString()}`
-                                        : adoption.createdAt
-                                            ? `Criado em ${new Date(adoption.createdAt).toLocaleDateString()}`
-                                            : ""}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                {isMobile ? (
+                    <AdoptionsList ongId={ongId} statusFilter={['completed', 'approved']} />
+                ) : (
+                    <AdoptionsTable ongId={ongId} statusFilter={['completed', 'approved']} />
+                )}
             </section>
         </main>
     );

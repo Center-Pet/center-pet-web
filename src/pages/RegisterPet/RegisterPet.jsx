@@ -867,7 +867,7 @@ export default function RegisterPet() {
                       }`}
                       style={{ marginRight: "8px" }}
                     />
-                    <span>meses</span>
+                    <span>{parseInt(petInfo.waitingTime) === 1 ? "mês" : "meses"}</span>
                   </div>
                   {formErrors.waitingTime && (
                     <ErrorMessage message={formErrors.waitingTime} />

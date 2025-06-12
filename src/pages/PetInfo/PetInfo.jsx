@@ -23,13 +23,11 @@ import {
 } from "phosphor-react";
 import { API_URL } from "../../config/api";
 
-function getWaitingTime(registerDate) {
-  if (!registerDate) return "Não informado";
-  const created = new Date(registerDate);
-  const now = new Date();
-  const diffMs = now - created;
-  const diffMonths = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 30.44)); // Aproximação de mês
-  return diffMonths <= 0 ? "Menos de 1 mês" : `${diffMonths} meses`;
+function getWaitingTime(waitingTime) {
+  if (!waitingTime) return "Não informado";
+  const months = parseInt(waitingTime);
+  if (isNaN(months)) return "Não informado";
+  return months === 1 ? "1 mês" : `${months} meses`;
 }
 
 const PetInfo = () => {
@@ -533,7 +531,7 @@ const PetInfo = () => {
     },
     {
       label: "Esperando um amigo há",
-      value: getWaitingTime(pet.registerDate),
+      value: getWaitingTime(pet.waitingTime),
       icon: <Clock size={20} style={{ marginRight: 6 }} />,
     },
     {

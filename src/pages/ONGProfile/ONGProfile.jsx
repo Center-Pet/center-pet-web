@@ -14,6 +14,7 @@ import TitleType from "../../components/Atoms/TitleType/TitleType";
 import AdoptionsTable from "../../components/Organisms/AdoptionsTable/AdoptionsTable";
 import AdoptionsList from "../../components/Organisms/AdoptionsList/AdoptionsList";
 import useAuth from "../../hooks/useAuth";
+import useIsMobile from "../../hooks/useIsMobile";
 import "./ONGProfile.css";
 import { API_URL } from "../../config/api.js";
 import Swal from "sweetalert2";
@@ -25,6 +26,7 @@ const ONGProfile = () => {
   const { user, userType, isAuthenticated } = useAuth();
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const [ongData, setOngData] = useState(null);
   const [ongPets, setOngPets] = useState([]);
@@ -472,8 +474,35 @@ const ONGProfile = () => {
         </div>
         {user && user._id === ongData._id && (
           <>
-            <AdoptionsTable ongId={ongData._id} />
-            <AdoptionsList ongId={ongData._id} />
+            {isMobile ? (
+              <AdoptionsList 
+                ongId={ongData._id} 
+                statusFilter={[
+                  'requestReceived',
+                  'inProgress',
+                  'approved',
+                  'rejected',
+                  'canceled',
+                  'inAdjustment',
+                  'completed',
+                  'return'
+                ]} 
+              />
+            ) : (
+              <AdoptionsTable 
+                ongId={ongData._id} 
+                statusFilter={[
+                  'requestReceived',
+                  'inProgress',
+                  'approved',
+                  'rejected',
+                  'canceled',
+                  'inAdjustment',
+                  'completed',
+                  'return'
+                ]} 
+              />
+            )}
           </>
         )}
       </div>

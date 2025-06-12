@@ -170,3 +170,26 @@
         align-items: flex-start;
     }
 }
+
+.adoptions-container {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.adoptions-desktop {
+    display: block;
+}
+
+.adoptions-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .adoptions-desktop {
+        display: none;
+    }
+
+    .adoptions-mobile {
+        display: block;
+    }
+}

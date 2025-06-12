@@ -5,8 +5,8 @@ import { API_URL } from "../../../config/api";
 import Title from "../../Atoms/TitleType/TitleType";
 import { CaretLeft, CaretRight } from "phosphor-react";
 
-export default function AdoptionsTable({ ongId }) {
-  const [adoptions, setAdoptions] = useState([]);
+export default function AdoptionsTable({ ongId, statusFilter = [] }) {
+  const [filteredAdoptions, setFilteredAdoptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -36,39 +36,44 @@ export default function AdoptionsTable({ ongId }) {
       return;
     }
     const fetchAdoptions = async () => {
-      try {        
-        const token = localStorage.getItem("token");
-        const url = `${API_URL}/adoptions/by-ong/${ongId}`;
-        const res = await fetch(url, {
-            headers: {
-              Authorization: token ? `Bearer ${token}` : "",
-            },
-          });
+      try {
+        setLoading(true);
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}/adoptions/by-ong/${ongId}`, {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+            "Content-Type": "application/json"
+          }
+        });
         const data = await res.json();
+        let fetchedAdoptions = [];
         if (data && data.adoptions) {
-          setAdoptions(data.adoptions);
+          fetchedAdoptions = data.adoptions;
         } else if (Array.isArray(data)) {
-          setAdoptions(data);
-        } else {
-          setAdoptions([]);
+          fetchedAdoptions = data;
         }
+        // Aplicar o filtro de status
+        const filtered = statusFilter.length > 0
+          ? fetchedAdoptions.filter(adoption => statusFilter.includes(adoption.status))
+          : fetchedAdoptions;
+        setFilteredAdoptions(filtered);
       } catch {
-        setAdoptions([]);
+        setFilteredAdoptions([]);
       } finally {
         setLoading(false);
       }
     };
     fetchAdoptions();
-  }, [ongId]);
+  }, [ongId, statusFilter]);
 
   // Calcular o total de páginas
-  const totalPages = Math.ceil(adoptions.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredAdoptions.length / itemsPerPage);
 
   // Obter as adoções da página atual
   const getCurrentAdoptions = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return adoptions.slice(startIndex, endIndex);
+    return filteredAdoptions.slice(startIndex, endIndex);
   };
 
   // Função para mudar de página
@@ -77,51 +82,54 @@ export default function AdoptionsTable({ ongId }) {
   };
 
   if (loading) return <div className="adoptions-table-loading">Carregando adoções...</div>;
-  if (!adoptions.length) return <div className="adoptions-table-empty">Nenhuma adoção encontrada.</div>;
+  if (!filteredAdoptions.length) return <div className="adoptions-table-empty">Nenhuma adoção encontrada.</div>;
 
   return (
     <div className="adoptions-table-container">
       <Title marginBottom={20}>Solicitações de adoção</Title>
-      <table className="adoptions-table">
-        <thead>
-          <tr>
-            <th>Nome do Pet</th>
-            <th>Nome do Adotante</th>
-            <th>Cidade</th>
-            <th>Contato</th>
-            <th>Data de Solicitação</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>          
-          {getCurrentAdoptions().map((adoption) => (
-            <tr key={adoption._id}>
-              <td>{adoption.petId?.name || "Não informado"}</td>
-              <td>{adoption.userId?.fullName || "Não informado"}</td>
-              <td>{adoption.userId?.city || "Não informado"}</td>
-              <td>{adoption.userId?.phone || adoption.userId?.email || "Não informado"}</td>
-              <td>
-                {adoption.requestDate
-                  ? new Date(adoption.requestDate).toLocaleDateString("pt-BR")
-                  : "Não informado"}
-              </td>
-              <td>
-                <span className={`adoption-status adoption-status-${adoption.status}`}>
-                  {translateStatus(adoption.status)}
-                </span>
-              </td>              <td>
-                <Link
-                  className="adoptions-table-link"
-                  to={`/adoption/${adoption._id}`}
-                >
-                  Ver Mais
-                </Link>
-              </td>
+      <div className="adoptions-table-wrapper">
+        <table className="adoptions-table">
+          <thead>
+            <tr>
+              <th>Nome do Pet</th>
+              <th>Nome do Adotante</th>
+              <th>Cidade</th>
+              <th>Contato</th>
+              <th>Data de Solicitação</th>
+              <th>Status</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {getCurrentAdoptions().map((adoption) => (
+              <tr key={adoption._id}>
+                <td>{adoption.petId?.name || "Não informado"}</td>
+                <td>{adoption.userId?.fullName || "Não informado"}</td>
+                <td>{adoption.userId?.city || "Não informado"}</td>
+                <td>{adoption.userId?.phone || adoption.userId?.email || "Não informado"}</td>
+                <td>
+                  {adoption.requestDate
+                    ? new Date(adoption.requestDate).toLocaleDateString("pt-BR")
+                    : "Não informado"}
+                </td>
+                <td>
+                  <span className={`adoption-status adoption-status-${adoption.status}`}>
+                    {translateStatus(adoption.status)}
+                  </span>
+                </td>
+                <td>
+                  <Link
+                    className="adoptions-table-link"
+                    to={`/adoption/${adoption._id}`}
+                  >
+                    Ver Mais
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {/* Paginação */}
       {totalPages > 1 && (
         <div className="pagination-controls" style={{ 

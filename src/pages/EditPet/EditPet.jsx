@@ -994,7 +994,7 @@ export default function EditPet() {
                     }`}
                     style={{ marginRight: "8px" }}
                   />
-                  <span>meses</span>
+                  <span>{parseInt(petInfo.waitingTime) === 1 ? "mês" : "meses"}</span>
                 </div>
                 
                 {formErrors.waitingTime && (
