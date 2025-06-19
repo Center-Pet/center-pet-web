@@ -123,7 +123,7 @@
 
 @media (max-width: 914px){
   .adoptions-list-container{
-    display: block;
+    display: contents;
   }
   .adoptions-list-mobile{
     display: block;

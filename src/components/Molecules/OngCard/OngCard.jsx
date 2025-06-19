@@ -1,7 +1,7 @@
 import React from "react";
 import "./OngCard.css";
 
-export default function OngCard({ imageUrl, ongName }) {
+export default function OngCard({ imageUrl, ongName, ongId }) {
   return (
     <div className="register-ong-section">
       <div>
@@ -9,7 +9,11 @@ export default function OngCard({ imageUrl, ongName }) {
       </div>
       <div className="register-ong-card">
         <img src={imageUrl} alt={ongName} className="register-ong-image" />
-        <h3 className="register-ong-title">{ongName}</h3>
+        {ongId && ongName ? (
+          <a href={`/ong-profile/${ongId}`} className="register-ong-title">{ongName}</a>
+        ) : (
+          <span className="register-ong-title">{ongName || 'ONG'}</span>
+        )}
       </div>
     </div>
   );

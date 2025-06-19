@@ -8,6 +8,7 @@ import PawAnimation from "../../Molecules/PawAnimation/PawAnimation";
 import ReactDOMServer from "react-dom/server";
 import { Gear } from "phosphor-react";
 import { API_URL } from "../../../config/api";
+import slugify from '../../../utils/slugify';
 
 const defaultAvatar = "https://i.imgur.com/WanR0b3.png";
 
@@ -102,8 +103,8 @@ export default function CustomAvatar() {
     if (user) {
       if (userType === "Adopter" && user._id) {
         navigate(`/adopter-profile/${user._id}`);
-      } else if (userType === "Ong" && user._id) {
-        navigate(`/ong-profile/${user._id}`);
+      } else if (userType === "Ong" && user._id && user.name) {
+        navigate(`/ong-profile/${slugify(user.name)}`);
       } else {
         navigate('/login');
       }

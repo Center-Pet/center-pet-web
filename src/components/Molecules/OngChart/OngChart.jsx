@@ -2,24 +2,25 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./OngChart.css";
 
-const OngChart = ({ ongData, onClick }) => {
+const OngChart = ({ ongData, onClick, slug }) => {
   const navigate = useNavigate();
 
   // Extrair as propriedades do objeto ongData
-  const { 
-    _id, 
+  const {
+    _id,
     profileImage,
-    profileImg,  // Adicionando o campo alternativo
+    profileImg,
     name,
     socialMedia = {}
-  } = ongData;
+  } = ongData || {};
 
   // Função para lidar com o clique no card
   const handleClick = () => {
     if (onClick) {
-      onClick(_id);
-    } else {
-      // Navegação padrão para o perfil da ONG
+      onClick();
+    } else if (slug) {
+      navigate(`/ong-profile/${slug}`);
+    } else if (_id) {
       navigate(`/ong-profile/${_id}`);
     }
   };

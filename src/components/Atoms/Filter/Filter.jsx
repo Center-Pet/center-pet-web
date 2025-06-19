@@ -13,6 +13,7 @@ const Filter = ({ onFilterChange }) => {
     age: [],
     health: [],
     coat: [], // Nova categoria para pelagem
+    status: [], // Adicionando status
   });
 
   const categories = {
@@ -29,6 +30,7 @@ const Filter = ({ onFilterChange }) => {
       "Não Castrado",
       "Condição Especial",
     ],
+    Status: ["Disponível", "Indisponível", "Aguardando", "Adotado"], // Adicionando status
   };
 
   // Mapeamento das categorias para as chaves usadas no estado
@@ -36,8 +38,9 @@ const Filter = ({ onFilterChange }) => {
     Gênero: "gender",
     Porte: "size",
     Idade: "age",
-    Pelagem: "coat", // Mapeamento para pelagem
+    Pelagem: "coat",
     Saúde: "health",
+    Status: "status", // Adicionando status
   };
 
   const handleCheckboxChange = (event) => {
@@ -93,7 +96,8 @@ const Filter = ({ onFilterChange }) => {
       size: [],
       age: [],
       health: [],
-      coat: [], // Incluir pelagem na limpeza
+      coat: [],
+      status: [], // Limpar status também
     });
 
     // Desmarcar todos os checkboxes

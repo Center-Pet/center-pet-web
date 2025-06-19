@@ -20,9 +20,11 @@ import { API_URL } from "../../config/api.js";
 import Swal from "sweetalert2";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
 import CardPet from "../../components/Molecules/CardPet/CardPet";
+import slugify from '../../utils/slugify';
+import SocialShare from '../../components/Atoms/SocialShare/SocialShare';
 
 const ONGProfile = () => {
-  const { ongId } = useParams(); // Note que o param deve ser consistente com o nome na rota
+  const { ongSlug } = useParams(); // Agora o param é o slug
   const { user, userType, isAuthenticated } = useAuth();
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -38,15 +40,28 @@ const ONGProfile = () => {
   useEffect(() => {
     const fetchOngData = async () => {
       try {
-        // Definir o ID da ONG a ser usado (da URL ou do usuário logado)
-        const id = ongId || user?._id;
-
+        let id = null;
+        if (ongSlug) {
+          // Buscar todas as ONGs e encontrar a que tem o slug igual ao da URL
+          const allOngsResponse = await fetch(`${API_URL}/ongs`);
+          const allOngsData = await allOngsResponse.json();
+          const allOngs = allOngsData.data || allOngsData;
+          const foundOng = allOngs.find(ong => slugify(ong.name) === ongSlug);
+          if (foundOng) {
+            id = foundOng._id;
+          } else {
+            setError('ONG não encontrada');
+            setLoading(false);
+            return;
+          }
+        } else if (user?._id) {
+          id = user._id;
+        }
         if (!id) {
           setLoading(false);
-          setError("ID da ONG não encontrado");
+          setError('ONG não encontrada');
           return;
         }
-
 
         // Obter token de autenticação
         const token = localStorage.getItem("token");
@@ -141,7 +156,7 @@ const ONGProfile = () => {
     };
 
     // Redirecionar se necessário (sem ID na URL e usuário logado como ONG)
-    if (!ongId && isAuthenticated && userType === "Ong" && user?._id) {
+    if (!ongSlug && isAuthenticated && userType === "Ong" && user?._id) {
       navigate(`/ong-profile/${user._id}`);
       return;
     }
@@ -150,7 +165,7 @@ const ONGProfile = () => {
     fetchOngData();
 
     // Dependências do useEffect - cuidado para não incluir valores que mudam frequentemente
-  }, [ongId, user?._id, isAuthenticated, userType, navigate]);
+  }, [ongSlug, user?._id, isAuthenticated, userType, navigate]);
 
   // Função auxiliar para recuperar a URL da rede social com segurança
   const getSocialMediaUrl = (type) => {
@@ -284,23 +299,22 @@ const ONGProfile = () => {
                           <FacebookLogo size={24} weight="fill" />
                         </a>
                       )}
+                      {getSocialMediaUrl('website') && (
+                        <a 
+                          href={getSocialMediaUrl('website')} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          aria-label="Website"
+                          title="Website"
+                        >
+                          <Globe size={24} weight="fill" />
+                        </a>
+                      )}
                       
-                      {/* Website - com verificação mais robusta */}
-{(() => {
-  const websiteUrl = getSocialMediaUrl('website');
-  return websiteUrl ? (
-    <a 
-      href={websiteUrl} 
-      target="_blank" 
-      rel="noopener noreferrer"
-      aria-label="Website"
-      title="Website"
-      className="social-icon-link"
-    >
-      <Globe size={24} weight="fill" />
-    </a>
-  ) : null;
-})()}
+                      <SocialShare
+                        url={window.location.href}
+                        title={`Conheça o trabalho da ONG ${ongData.name} na Center Pet!`}
+                      />
                     </div>
                   </div>
 
@@ -442,8 +456,42 @@ const ONGProfile = () => {
         {/* Seção de Pets */}
         <div className="ong-profile-pets-section">
           <PetShowcase
-            title={`Pets Cadastrados - ${ongData.name}`}
-            pets={petsToShow}
+            title={`Pets disponíveis e outros`}
+            pets={
+              isOngOwner
+                ? ongPets.filter(pet => pet.status !== "Adotado")
+                : ongPets.filter(pet => pet.status === "Disponível")
+            }
+            category="all"
+            limit={0}
+            showAllPets={true}
+            ongId={ongData._id}
+            customComponent={(pet) => (
+              <div className="pet-card-with-status">
+                <CardPet
+                  image={pet.image}
+                  name={pet.name}
+                  gender={pet.gender}
+                  age={pet.age}
+                  type={pet.type}
+                  hasSpecialCondition={pet.hasSpecialCondition}
+                  specialCondition={pet.specialCondition}
+                  vaccinated={pet.vaccinated}
+                  castrated={pet.castrated}
+                  dewormed={pet.dewormed}
+                  onClick={() => navigate(`/pet-info/${pet.id}`)}
+                />
+                {isOngOwner && (
+                  <span className={`pet-status pet-status-${pet.status?.toLowerCase()}`}>
+                    {pet.status || "Disponível"}
+                  </span>
+                )}
+              </div>
+            )}
+          />
+          <PetShowcase
+            title={`Pets adotados`}
+            pets={ongPets.filter(pet => pet.status === "Adotado")}
             category="all"
             limit={0}
             showAllPets={true}

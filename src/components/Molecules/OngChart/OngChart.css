@@ -9,16 +9,22 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition: transform 0.25s, box-shadow 0.25s, z-index 0.25s;
   cursor: pointer;
   box-sizing: border-box;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+  transform-origin: center;
+  margin: 16px;
 }
 
 .ong-card:hover {
-  transform: translateY(-1px) scale(1.02);
   box-shadow: 0 12px 32px rgba(209, 77, 114, 0.13);
   border-color: #d14d72;
   background: #fff;
+  transform: scale(1.04);
+  z-index: 10;
 }
 
 .ong-logo {
@@ -50,16 +56,19 @@
   font-weight: 500;
   text-decoration: none;
   margin-top: auto;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .ong-details-btn:hover {
   background: #d14d72;
   color: #fff;
   border-color: #d14d72;
+  transform: scale(1.03);
 }
 
 /* Ajustes para visualização em grid (CatalogFilter) */
@@ -69,6 +78,7 @@
   gap: 2rem;
   justify-content: center;
   width: 100%;
+  overflow: visible;
 }
 
 .ongs-grid .ong-card {
@@ -92,6 +102,15 @@
   .ong-card {
     width: 100%;
     max-width: 320px;
+  }
+}
+
+@media (max-width: 700px) {
+  .ong-card {
+    margin: 8px;
+  }
+  .ong-card:hover {
+    transform: scale(1.025);
   }
 }
 

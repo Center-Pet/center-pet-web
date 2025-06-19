@@ -514,6 +514,7 @@ export default function RegisterPet() {
             <OngCard
               imageUrl={ongDetails.profileImage}
               ongName={ongDetails.name}
+              ongId={user?._id}
             />
           </div>
 

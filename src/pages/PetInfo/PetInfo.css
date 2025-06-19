@@ -98,6 +98,7 @@
   font-size: 24px;
   color: #333;
   text-align: center;
+  margin-bottom: 0;
 }
 
 .pet-details span {
@@ -356,18 +357,16 @@
 }
 
 /* Estilo atualizado para o subtítulo da ONG */
-.ong-subtitle {
-  margin-top: -22px;
+.petinfo-ong-subtitle {
+  color: #d14d72;
+  font-size: 1.2rem;
+  margin-top: 0;
   margin-bottom: -10px;
-  color: #555;
-  font-weight: 400;
-  font-size: 1rem;
+  font-weight: 500;
   text-align: center;
   padding: 4px 15px;
   border-radius: 20px;
-
   display: inline-block;
-
   letter-spacing: 0.5px;
 }
 
@@ -377,14 +376,16 @@
 }
 
 /* Estilo para o link da ONG no subtítulo */
-.ong-subtitle a {
-  color: #d25b82;
+.petinfo-ong-subtitle a,
+.petinfo-ong-subtitle a:visited {
+  color: #d14d72;
   text-decoration: none;
-  transition: color 0.2s ease-in-out;
+  font-weight: 700;
+  transition: color 0.2s;
 }
 
-.ong-subtitle a:hover {
-  color: #ae3861;
+.petinfo-ong-subtitle a:hover {
+  color: #b03a5b;
   text-decoration: underline;
 }
 
@@ -633,4 +634,17 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.petinfo-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.petinfo-title-row h2 {
+  margin-bottom: 0;
+  margin-right: 0;
 }

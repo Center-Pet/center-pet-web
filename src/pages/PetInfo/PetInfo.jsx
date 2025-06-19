@@ -22,6 +22,7 @@ import {
   ChartPie
 } from "phosphor-react";
 import { API_URL } from "../../config/api";
+import slugify from '../../utils/slugify';
 
 function getWaitingTime(waitingTime) {
   if (!waitingTime) return "Não informado";
@@ -588,13 +589,17 @@ const PetInfo = () => {
             </div>
 
             <div className="pet-details">
-              <h2>
-                Conheça {pet.name}
-                <SocialShare />
-              </h2>              <h4 className="ong-subtitle">
+              <div className="petinfo-title-row">
+                <h2>Conheça {pet.name}</h2>
+                <SocialShare 
+                  url={window.location.href}
+                  title={`Conheça ${pet.name} - Center Pet`}
+                />
+              </div>
+              <h4 className="petinfo-ong-subtitle">
                 De{" "}
                 <strong>
-                  <a href={`/ong-profile/${pet.ongId}`}>
+                  <a href={`/ong-profile/${ongData ? slugify(ongData.name) : ''}`}>
                     {ongData ? ongData.name : "Carregando..."}
                   </a>
                 </strong>

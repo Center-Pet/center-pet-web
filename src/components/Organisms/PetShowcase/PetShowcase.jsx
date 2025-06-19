@@ -6,6 +6,7 @@ import CardPet from "../../Molecules/CardPet/CardPet";
 import { CaretLeft, CaretRight } from "phosphor-react";
 import "./PetShowcase.css";
 import Title from "../../Atoms/TitleType/TitleType";
+import slugify from '../../../utils/slugify';
 
 // Função para obter a mensagem apropriada de acordo com a categoria
 const getNoItemsMessage = (category) => {
@@ -112,9 +113,11 @@ const PetShowcase = ({
     
     // Se estiver na página de uma ONG, redireciona para ver todos os pets dessa ONG
     if (ongId) {
+      // Se o título for 'Últimos pets cadastrados', use um título mais amigável
+      const isUltimosPets = title === "Últimos pets cadastrados";
       navigate(
         `/catalog-filter?ongId=${ongId}&title=${encodeURIComponent(
-          `Pets de ${title}`
+          isUltimosPets ? "Pets cadastrados" : `Pets de ${title}`
         )}`
       );
     }
@@ -197,7 +200,13 @@ const PetShowcase = ({
         >
           {displayItems.map((item, index) => (
             <div key={index} className="pet-showcase-item">
-              {customComponent ? (
+              {customComponent && category === "ongs" ? (
+                customComponent({
+                  ...item,
+                  slug: slugify(item.name),
+                  onClick: () => navigate(`/ong-profile/${slugify(item.name)}`)
+                })
+              ) : customComponent ? (
                 customComponent(item)
               ) : (
                 <CardPet

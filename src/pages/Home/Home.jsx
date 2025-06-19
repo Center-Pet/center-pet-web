@@ -8,6 +8,8 @@ import "./Home.css";
 import { API_URL } from "../../config/api";
 import { getPets } from "../../services/petService";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import slugify from "../../utils/slugify";
 
 const Home = () => {
   const [pets, setPets] = useState([]);
@@ -16,6 +18,7 @@ const Home = () => {
   const [loadingOngs, setLoadingOngs] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPets = async () => {
@@ -255,8 +258,12 @@ const Home = () => {
           <PetShowcase 
             title="Temos orgulho em apoiar essas ONGs incríveis" 
             category="ongs"
-            customComponent={(ongData) => (
-              <OngChart ongData={ongData} />
+            customComponent={(ong) => (
+              <OngChart 
+                ongData={ong} 
+                slug={slugify(ong.name)}
+                onClick={() => navigate(`/ong-profile/${slugify(ong.name)}`)}
+              />
             )}
             pets={ongs}
             limit={9}

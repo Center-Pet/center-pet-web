@@ -33,7 +33,7 @@ const AppRoutes = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/adopter-profile/:adopterId" element={<AdopterProfile />} />
-      <Route path="/ong-profile/:ongId" element={<ONGProfile />} />
+      <Route path="/ong-profile/:ongSlug" element={<ONGProfile />} />
       <Route path="/register-pet" element={<RegisterPet />} />
       <Route path="/edit-pet/:petId" element={<EditPet />} />
       <Route path="*" element={<PageNotFound />} />

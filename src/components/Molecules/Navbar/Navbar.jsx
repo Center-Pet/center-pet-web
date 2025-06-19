@@ -91,15 +91,23 @@ const Navbar = () => {
                     <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => navigate(isOng ? '/home-ong' : '/home')}><House size={25} />Home</ButtonType>
                     </li>
-                    <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')}><PawPrint size={25} />Catálogo</ButtonType>
-                    </li>
+                    {isOng ? (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate(`/catalog-filter?ongId=${user?._id}`)}><PawPrint size={25} />Gerenciar Pets</ButtonType>
+                        </li>
+                    ) : (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/catalog')}><PawPrint size={25} />Catálogo</ButtonType>
+                        </li>
+                    )}
 
                     {/* Botão de ONG apenas para usuários do tipo ONG */}
                     {isOng && (
-                        <li>
-                            <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/dashboard')}><ChartLine size={25} />Estatísticas</ButtonType>
-                        </li>
+                        <>
+                            <li>
+                                <ButtonType bgColor={"#D14D72"} onClick={() => navigate('/dashboard')}><ChartLine size={25} />Estatísticas</ButtonType>
+                            </li>
+                        </>
                     )}
 
                     {/* Botão formulário apenas para adotantes que NÃO preencheram o formulário */}
@@ -126,14 +134,25 @@ const Navbar = () => {
                     <li>
                         <ButtonType bgColor={"#D14D72"} onClick={() => { navigate(isOng ? '/home-ong' : '/home'); closeMenu(); }}><House size={25} />Home</ButtonType>
                     </li>
-                    <li>
-                        <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/catalog'); closeMenu(); }}><PawPrint size={25} /> Catálogo</ButtonType>
-                    </li>
+                    {isOng ? (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => { navigate(`/catalog-filter?ongId=${user?._id}`); closeMenu(); }}><PawPrint size={25} />Gerenciar Pets</ButtonType>
+                        </li>
+                    ) : (
+                        <li>
+                            <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/catalog'); closeMenu(); }}><PawPrint size={25} /> Catálogo</ButtonType>
+                        </li>
+                    )}
 
                     {isOng && (
-                        <li>
-                            <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/dashboard'); closeMenu(); }}><ChartLine size={25} />Estatísticas</ButtonType>
-                        </li>
+                        <>
+                            <li>
+                                <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/dashboard'); closeMenu(); }}><ChartLine size={25} />Estatísticas</ButtonType>
+                            </li>
+                            <li>
+                                <ButtonType bgColor={"#D14D72"} onClick={() => { navigate(`/catalog-filter?ongId=${user?._id}`); closeMenu(); }}><PawPrint size={25} />Gerenciar Pets</ButtonType>
+                            </li>
+                        </>
                     )}
 
                     {/* Botão formulário apenas para adotantes que NÃO preencheram o formulário */}

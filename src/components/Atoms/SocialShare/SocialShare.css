@@ -90,21 +90,37 @@
 .inline-share-button {
     background: none;
     border: none;
-    padding: 0;
     margin-left: 8px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     vertical-align: middle;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-radius: 50%;
+    min-width: 40px;
+    min-height: 40px;
+    z-index: 10;
+    position: relative;
 }
 
 .inline-share-button:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
+    opacity: 0.8;
+    background-color: rgba(210, 91, 130, 0.1);
+}
+
+.inline-share-button:active {
+    transform: scale(0.95);
 }
 
 .inline-share-button:focus {
+    outline: 2px solid #d25b82;
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+.inline-share-button:focus:not(:focus-visible) {
     outline: none;
 }
 

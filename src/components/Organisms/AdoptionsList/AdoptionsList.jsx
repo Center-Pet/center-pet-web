@@ -149,7 +149,11 @@ export default function AdoptionsList({ ongId, statusFilter = [] }) {
         }
   };
 
-  if (loading) return <div className="adoptions-table-loading">Carregando adoções...</div>;
+  if (loading) return (
+    <div className="loading-spinner-container">
+      <div className="loading-spinner"></div>
+    </div>
+  );
     if (!filteredAdoptions.length) return <div className="adoptions-table-empty">Nenhuma adoção encontrada.</div>;
 
   return (

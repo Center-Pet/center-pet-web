@@ -212,3 +212,43 @@ body {
   font-size: 1.2rem;
   font-weight: 500;
 }
+
+.pet-card-with-status {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pet-status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background-color: #D14D72;
+  z-index: 1;
+}
+
+.pet-status-disponível {
+  background-color: #D14D72;
+}
+
+.pet-status-adotado {
+  background-color: #4CAF50;
+}
+
+.pet-status-em_processo {
+  background-color: #FFA726;
+}
+
+.pet-status-aguardando {
+  background-color: #FFA726;
+}
+
+.pet-status-indisponível {
+  background-color: #9E9E9E;
+}

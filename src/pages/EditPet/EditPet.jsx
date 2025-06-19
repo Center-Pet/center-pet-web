@@ -630,6 +630,7 @@ export default function EditPet() {
                 ongData?.profileImg || "https://i.imgur.com/WanR0b3.png"
               }
               ongName={ongData?.name || "ONG"}
+              ongId={ongData?._id}
             />
           </div>
 

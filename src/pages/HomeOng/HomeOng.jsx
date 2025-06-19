@@ -251,9 +251,9 @@ const HomeOng = () => {
             <section className="ong-latest">
                 <PetShowcase
                     title="Últimos pets cadastrados"
-                    pets={pets.slice(-3).reverse()}
+                    pets={pets.slice().reverse()}
                     category="all"
-                    limit={3}
+                    limit={5}
                     showAllPets={false}
                     ongId={ongId}
                 />

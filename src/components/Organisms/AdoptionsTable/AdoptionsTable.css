@@ -193,6 +193,6 @@
 /* Em telas maiores que 1000px, mostra a tabela */
 @media (min-width: 1001px) {
   .adoptions-table-container {
-    display: block !important;
+    display: contents;
   }
 }

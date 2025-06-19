@@ -8,6 +8,7 @@ import { API_URL } from '../../config/api';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import slugify from '../../utils/slugify';
 
 const EditOrg = () => {
   const navigate = useNavigate();
@@ -267,7 +268,7 @@ const EditOrg = () => {
         }).then(() => {
           setProfileImage(finalImageUrl);
           setProfileImageFile(null);
-          navigate(`/ong-profile/${user._id}`);
+          navigate(`/ong-profile/${slugify(fullName)}`);
         });
       } catch (error) {
         Swal.fire({

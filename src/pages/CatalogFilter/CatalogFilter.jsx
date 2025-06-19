@@ -7,6 +7,8 @@ import Filter from "../../components/Atoms/Filter/Filter";
 import Title from "../../components/Atoms/TitleType/TitleType";
 import "./CatalogFilter.css";
 import { API_URL } from "../../config/api";
+import slugify from '../../utils/slugify';
+import useAuth from "../../hooks/useAuth";
 
 // Função para obter a mensagem apropriada de acordo com a categoria
 const getNoItemsMessage = (category) => {
@@ -39,6 +41,7 @@ const CatalogFilter = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const itemsPerPage = 15;
   const navigate = useNavigate();
+  const { user, userType } = useAuth();
 
   // Pega parâmetros da URL
   const pageTitle = searchParams.get("title") || "Catálogo";
@@ -55,6 +58,7 @@ const CatalogFilter = () => {
     age: [],
     health: [],
     coat: [], // Adicionando o novo filtro de pelagem
+    status: [],
   });
 
   useEffect(() => {
@@ -178,6 +182,12 @@ const CatalogFilter = () => {
 
     // Função para verificar se um pet passa pelos filtros ativos
     const matchesFilters = (pet) => {
+      // Verificar filtro de status
+      if (activeFilters.status && activeFilters.status.length > 0) {
+        if (!activeFilters.status.includes(pet.status)) {
+          return false;
+        }
+      }
       // Verificar filtro de gênero
       if (
         activeFilters.gender.length > 0 &&
@@ -302,7 +312,7 @@ const CatalogFilter = () => {
                   <OngChart 
                     key={index}
                     ongData={ong}
-                    onClick={() => navigate(`/ong-profile/${ong._id}`)}
+                    onClick={() => navigate(`/ong-profile/${slugify(ong.name)}`)}
                   />
                 ))
               ) : (
@@ -316,20 +326,41 @@ const CatalogFilter = () => {
             <div className="page-pet-grid">
               {currentItems.length > 0 ? (
                 currentItems.map((pet, index) => (
-                  <CardPet
-                    key={index}
-                    image={pet.image}
-                    name={pet.name}
-                    gender={pet.gender}
-                    age={pet.age}
-                    type={pet.type}
-                    hasSpecialCondition={pet.hasSpecialCondition}
-                    specialCondition={pet.specialCondition}
-                    vaccinated={pet.vaccinated}
-                    castrated={pet.castrated}
-                    dewormed={pet.dewormed}
-                    onClick={() => navigate(`/pet-info/${pet.id}`)}
-                  />
+                  (ongId && user && user._id === ongId && userType === 'Ong') ? (
+                    <div className="pet-card-with-status" key={index}>
+                      <CardPet
+                        image={pet.image}
+                        name={pet.name}
+                        gender={pet.gender}
+                        age={pet.age}
+                        type={pet.type}
+                        hasSpecialCondition={pet.hasSpecialCondition}
+                        specialCondition={pet.specialCondition}
+                        vaccinated={pet.vaccinated}
+                        castrated={pet.castrated}
+                        dewormed={pet.dewormed}
+                        onClick={() => navigate(`/pet-info/${pet.id}`)}
+                      />
+                      <span className={`pet-status pet-status-${pet.status?.toLowerCase()}`}>
+                        {pet.status || 'Disponível'}
+                      </span>
+                    </div>
+                  ) : (
+                    <CardPet
+                      key={index}
+                      image={pet.image}
+                      name={pet.name}
+                      gender={pet.gender}
+                      age={pet.age}
+                      type={pet.type}
+                      hasSpecialCondition={pet.hasSpecialCondition}
+                      specialCondition={pet.specialCondition}
+                      vaccinated={pet.vaccinated}
+                      castrated={pet.castrated}
+                      dewormed={pet.dewormed}
+                      onClick={() => navigate(`/pet-info/${pet.id}`)}
+                    />
+                  )
                 ))
               ) : (
                 <p className="no-pets-message">
