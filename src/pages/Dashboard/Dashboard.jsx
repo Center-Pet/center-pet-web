@@ -99,8 +99,20 @@ const Dashboard = () => {
                     totalAdopters: 0, // Será atualizado quando implementarmos a API de adotantes
                     castratedPets: pets.filter(pet => pet.health?.castrated).length,
                     dewormedPets: pets.filter(pet => pet.health?.dewormed).length,
-                    extremeSituation: pets.filter(pet => pet.health?.specialCondition?.toLowerCase().includes('extrema')).length,
-                    specialPets: pets.filter(pet => pet.health?.specialCondition && pet.health.specialCondition.toLowerCase() !== 'nenhuma').length,
+                    extremeSituation: pets.filter(pet => {
+                        const conditions = pet.health?.specialCondition;
+                        if (Array.isArray(conditions)) {
+                            return conditions.some(condition => condition.toLowerCase().includes('extrema'));
+                        }
+                        return conditions?.toLowerCase().includes('extrema');
+                    }).length,
+                    specialPets: pets.filter(pet => {
+                        const conditions = pet.health?.specialCondition;
+                        if (Array.isArray(conditions)) {
+                            return conditions.some(condition => condition.toLowerCase() !== 'nenhuma');
+                        }
+                        return conditions && conditions.toLowerCase() !== 'nenhuma';
+                    }).length,
                     vaccinatedPets: pets.filter(pet => pet.health?.vaccinated).length,
                     adoptedPets: pets.filter(pet => pet.status === 'Adotado').length,
                     petsByType: {},

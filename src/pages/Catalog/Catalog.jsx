@@ -20,6 +20,8 @@ const Catalog = () => {
     age: [],
     health: [],
     coat: [],
+    state: "",
+    city: "",
   });
 
   useEffect(() => {
@@ -45,8 +47,12 @@ const Catalog = () => {
           // Processando as informações de saúde
           hasSpecialCondition:
             pet.health?.specialCondition &&
-            pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
-          specialCondition: pet.health?.specialCondition || "Nenhuma",
+            (Array.isArray(pet.health.specialCondition) ? 
+             pet.health.specialCondition.some(condition => condition.toLowerCase() !== "nenhuma") :
+             pet.health.specialCondition.trim().toLowerCase() !== "nenhuma"),
+          specialCondition: Array.isArray(pet.health?.specialCondition) ? 
+                           pet.health.specialCondition.join(", ") : 
+                           pet.health?.specialCondition || "Nenhuma",
           vaccinated: pet.health?.vaccinated || false,
           castrated: pet.health?.castrated || false,
           dewormed: pet.health?.dewormed || false,
@@ -113,8 +119,13 @@ const Catalog = () => {
 
   // Efeito para aplicar filtros quando activeFilters mudar
   useEffect(() => {
+    const hasActiveFilters = 
+      Object.values(activeFilters).some(value => 
+        Array.isArray(value) ? value.length > 0 : !!value
+      );
+
     // Se não há filtros ativos, mostramos todos os pets originais
-    if (Object.values(activeFilters).every((arr) => arr.length === 0)) {
+    if (!hasActiveFilters) {
       setFilteredPets({
         special: petsEspeciais,
         patient: petsMaisPacientes,
@@ -125,6 +136,16 @@ const Catalog = () => {
 
     // Função para verificar se um pet passa pelos filtros ativos
     const matchesFilters = (pet) => {
+      // Verificar filtro de localização (Estado)
+      if (activeFilters.state && pet.state !== activeFilters.state) {
+        return false;
+      }
+
+      // Verificar filtro de localização (Cidade)
+      if (activeFilters.city && pet.city !== activeFilters.city) {
+        return false;
+      }
+
       // Verificar filtro de gênero
       if (
         activeFilters.gender.length > 0 &&

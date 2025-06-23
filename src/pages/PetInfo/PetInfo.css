@@ -43,6 +43,7 @@
   position: relative;
   min-width: 300px;
   height: 100%;
+  isolation: isolate; /* Cria um novo contexto de empilhamento */
 }
 
 /* Imagem principal do pet */
@@ -175,6 +176,48 @@
   background-color: #b3c0ad;
 }
 
+/* Mensagem para pet adotado */
+.adopted-message {
+  background-color: #e8f5e8;
+  border: 2px solid #4caf50;
+  border-radius: 12px;
+  padding: 15px 20px;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.adopted-message p {
+  margin: 0;
+  color: #2e7d32;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Estilo para o botão de marcar como adotado */
+.mark-adopted-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mark-adopted-button:hover {
+  background-color: #45a049;
+}
+
+.mark-adopted-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
 .pet-thumbnails {
   display: flex;
   gap: 10px;
@@ -254,7 +297,7 @@
 .nav-button {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  margin-top: -25px; /* Metade da altura para centralizar */
   background-color: rgba(255, 255, 255, 0.7);
   transition: background-color 0.3s ease;
   color: #d25b82;
@@ -272,7 +315,6 @@
 
 .nav-button:hover {
   background-color: rgba(255, 255, 255, 0.9);
-  /* Removido o transform: translateY(-50%) scale(1.1); */
 }
 
 .prev-button {

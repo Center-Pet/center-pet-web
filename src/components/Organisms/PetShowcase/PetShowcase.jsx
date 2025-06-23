@@ -113,13 +113,30 @@ const PetShowcase = ({
     
     // Se estiver na página de uma ONG, redireciona para ver todos os pets dessa ONG
     if (ongId) {
+      // Detectar se todos os pets são adotados
+      const allPetsAdopted = pets.length > 0 && pets.every(pet => pet.status === "Adotado");
+      
+      // Detectar se é o showcase de pets não adotados (baseado no título)
+      const isNonAdoptedPets = title === "Pets disponíveis e outros";
+      
       // Se o título for 'Últimos pets cadastrados', use um título mais amigável
       const isUltimosPets = title === "Últimos pets cadastrados";
-      navigate(
-        `/catalog-filter?ongId=${ongId}&title=${encodeURIComponent(
-          isUltimosPets ? "Pets cadastrados" : `Pets de ${title}`
-        )}`
-      );
+      
+      // Construir a URL com parâmetros
+      let url = `/catalog-filter?ongId=${ongId}&title=${encodeURIComponent(
+        isUltimosPets ? "Pets cadastrados" : `Pets de ${title}`
+      )}`;
+      
+      // Se todos os pets são adotados, adicionar filtro de status
+      if (allPetsAdopted) {
+        url += `&statusFilter=Adotado`;
+      }
+      // Se é o showcase de pets não adotados, adicionar filtro para excluir adotados
+      else if (isNonAdoptedPets) {
+        url += `&statusFilter=not-adopted`;
+      }
+      
+      navigate(url);
     }
     // Se estiver no catálogo e tiver uma categoria definida
     else if (location.pathname === "/catalog" && category) {

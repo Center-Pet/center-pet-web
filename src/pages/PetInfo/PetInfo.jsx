@@ -4,7 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import SocialShare from "../../components/Atoms/SocialShare/SocialShare";
 import ButtonType from "../../components/Atoms/ButtonType/ButtonType";
-import { PencilSimple, Trash } from "phosphor-react";
+import { PencilSimple, Trash, Heart } from "phosphor-react";
 import Swal from "sweetalert2";
 import "./PetInfo.css";
 import {
@@ -122,8 +122,12 @@ const PetInfo = () => {
                   age: pet.age,
                   type: pet.type,
                   hasSpecialCondition: pet.health?.specialCondition &&
-                    pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
-                  specialCondition: pet.health?.specialCondition || "Nenhuma",
+                    (Array.isArray(pet.health.specialCondition) ? 
+                     pet.health.specialCondition.some(condition => condition.toLowerCase() !== "nenhuma") :
+                     pet.health.specialCondition.trim().toLowerCase() !== "nenhuma"),
+                  specialCondition: Array.isArray(pet.health?.specialCondition) ? 
+                                   pet.health.specialCondition.join(", ") : 
+                                   pet.health?.specialCondition || "Nenhuma",
                   vaccinated: pet.health?.vaccinated || false,
                   castrated: pet.health?.castrated || false,
                   dewormed: pet.health?.dewormed || false,
@@ -357,6 +361,75 @@ const PetInfo = () => {
     });
   };
 
+  // Função para marcar o pet como adotado
+  const handleMarkAsAdopted = () => {
+    Swal.fire({
+      title: "Marcar como Adotado",
+      text: `Tem certeza que deseja marcar ${pet.name} como adotado? Esta ação pode ser revertida editando o pet.`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#4CAF50",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Sim, marcar como adotado",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Mostrar loading
+          Swal.fire({
+            title: "Atualizando status...",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+
+          // Fazer requisição para atualizar o status do pet
+          const response = await fetch(
+            `${API_URL}/pets/update/${petId}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({
+                status: "Adotado"
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Erro ao atualizar status do pet");
+          }
+
+          const updatedPet = await response.json();
+
+          // Atualizar o estado local do pet
+          setPet(prevPet => ({
+            ...prevPet,
+            status: "Adotado"
+          }));
+
+          Swal.fire({
+            title: "Sucesso!",
+            text: `${pet.name} foi marcado como adotado com sucesso!`,
+            icon: "success",
+            confirmButtonColor: "#4CAF50",
+          });
+        } catch (error) {
+          console.error("Erro ao marcar pet como adotado:", error);
+          Swal.fire({
+            title: "Erro",
+            text: "Não foi possível marcar o pet como adotado.",
+            icon: "error",
+            confirmButtonColor: "#FF8BA7",
+          });
+        }
+      }
+    });
+  };
+
   // Funções para controle do modal de imagem
   const openImageModal = () => {
     setIsImageModalOpen(true);
@@ -473,11 +546,12 @@ const PetInfo = () => {
 
   // Verificar permissões com base no tipo de usuário
   const isOngOwner =
-    isAuthenticated && user && userType === "Ong" && pet.ongId === user._id;
+    isAuthenticated && user && userType === "Ong" && pet?.ongId === user._id;
   const isOngButNotOwner =
-    isAuthenticated && user && userType === "Ong" && pet.ongId !== user._id;
+    isAuthenticated && user && userType === "Ong" && pet?.ongId !== user._id;
   const canAdopt =
-    !isAuthenticated || (isAuthenticated && userType === "Adopter"); // Usuários não logados ou adotantes podem adotar
+    (!isAuthenticated || (isAuthenticated && userType === "Adopter")) && 
+    pet?.status !== "Adotado"; // Não pode adotar se o pet já foi adotado
 
   const petFields = [
     {
@@ -526,14 +600,16 @@ const PetInfo = () => {
       icon: <ShieldCheck size={20} style={{ marginRight: 6 }} />,
     },
     {
-      label: "Condição Especial",
-      value: pet.health?.specialCondition || "Nenhuma",
-      icon: <Heartbeat size={20} style={{ marginRight: 6 }} />,
-    },
-    {
       label: "Esperando um amigo há",
       value: getWaitingTime(pet.waitingTime),
       icon: <Clock size={20} style={{ marginRight: 6 }} />,
+    },
+    {
+      label: "Condição Especial",
+      value: Array.isArray(pet.health?.specialCondition) ? 
+             pet.health.specialCondition.join(", ") : 
+             pet.health?.specialCondition || "Nenhuma",
+      icon: <Heartbeat size={20} style={{ marginRight: 6 }} />,
     },
     {
       label: "Status",
@@ -606,22 +682,30 @@ const PetInfo = () => {
               </h4>
               <h4 className="location-subtitle">
                 <MapPin size={16} style={{ marginRight: 4 }} />
-                {pet.city && pet.state ? `${pet.city}, ${pet.state}` :
-                  pet.location ? pet.location : "Localização não informada"}
+                {pet.city && pet.state ? `${pet.city}, ${pet.state}` : "Localização não informada"}
               </h4>
               <p className="pet-bio">
-                {pet.description || "Sem descrição disponível."}
+                {pet.bio || "Sem descrição disponível."}
               </p>
-              <div className="pet-info-grid two-columns">
-                {petFields.map(({ label, value, icon }) => (
-                  <div className="info-row" key={label}>
-                    <span className="info-label">
-                      {icon}
-                      {label}:
-                    </span>
-                    <span className="info-value">{value}</span>
-                  </div>
-                ))}
+              <div className="pet-info-grid">
+                {petFields.map(({ label, value, icon }) => {
+                  const isSpecialCondition = label === "Condição Especial";
+                  // Verifica se o valor é uma string e tem um comprimento que justifique a quebra
+                  const needsFullWidth = isSpecialCondition && typeof value === 'string' && value.length > 25;
+
+                  return (
+                    <div 
+                      className={`info-row ${needsFullWidth ? 'full-width' : ''}`} 
+                      key={label}
+                    >
+                      <span className="info-label">
+                        {icon}
+                        {label}:
+                      </span>
+                      <span className="info-value">{value}</span>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Lógica para mostrar botões baseados no tipo de usuário */}
@@ -650,6 +734,21 @@ const PetInfo = () => {
                   </div>
                 )}
 
+                {/* Botão para marcar como adotado (apenas para ONG proprietária e se o pet não estiver adotado) */}
+                {isOngOwner && pet?.status !== "Adotado" && (
+                  <div className="button-row" style={{ marginTop: "10px" }}>
+                    <ButtonType
+                      onClick={handleMarkAsAdopted}
+                      bgColor="#4CAF50"
+                      color="#FFFFFF"
+                      width="200px"
+                      margin="0"
+                    >
+                      <Heart size={25} /> Marcar como Adotado
+                    </ButtonType>
+                  </div>
+                )}
+
                 {/* Se não for ONG ou for adotante, mostrar botão de adotar */}
                 {canAdopt && (
                   <button
@@ -660,6 +759,13 @@ const PetInfo = () => {
                   >
                     {adoptionRequested ? "Solicitado" : "Adotar!"}
                   </button>
+                )}
+
+                {/* Mostrar mensagem quando o pet já foi adotado */}
+                {pet?.status === "Adotado" && canAdopt && (
+                  <div className="adopted-message">
+                    <p>🐾 Este pet já foi adotado e não está mais disponível!</p>
+                  </div>
                 )}
 
                 {/* Se for ONG mas não for a proprietária, não mostrar botões */}

@@ -351,7 +351,136 @@ input[disabled] {
 @media (max-width: 600px) {}
 
 svg {
-
+  width: 20px;
+  height: 20px;
   margin-bottom: -4px;
+}
+
+/* Estilos para dropdown customizado com checkboxes */
+.custom-multiselect {
+  position: relative;
+  width: 100%;
+}
+
+.multiselect-trigger {
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.multiselect-trigger::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #666;
+  transition: transform 0.3s ease;
+}
+
+.multiselect-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ff8ba7;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.multiselect-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.multiselect-option:hover {
+  background-color: #fff0f5;
+}
+
+.multiselect-option input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  height: 16px;
+  width: 16px;
+  background-color: white;
+  border: 2px solid #ff8ba7;
+  border-radius: 3px;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.multiselect-option:hover .checkmark {
+  border-color: var(--main-pink);
+  background-color: #fff0f5;
+}
+
+.multiselect-option input[type="checkbox"]:checked ~ .checkmark {
+  background-color: var(--main-pink);
+  border-color: var(--main-pink);
+}
+
+.multiselect-option input[type="checkbox"]:checked ~ .checkmark:after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 7px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.option-text {
+  font-size: 14px;
+  color: #333;
+  font-family: 'Alexandria', Arial, sans-serif;
+}
+
+/* Estilo especial para "Nenhuma" */
+.multiselect-option:has(input[value="Nenhuma"]) .option-text {
+  font-weight: bold;
+  color: var(--main-pink);
+}
+
+/* Responsividade para dropdown customizado */
+@media (max-width: 768px) {
+  .multiselect-dropdown {
+    max-height: 150px;
+  }
+  
+  .multiselect-option {
+    padding: 6px 10px;
+  }
+  
+  .checkmark {
+    height: 14px;
+    width: 14px;
+  }
+  
+  .option-text {
+    font-size: 13px;
+  }
 }
 

@@ -135,9 +135,13 @@ const ONGProfile = () => {
           image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
                  (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
                  "https://i.imgur.com/WanR0b3.png",
-          hasSpecialCondition: pet.health?.specialCondition && 
-                              pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
-          specialCondition: pet.health?.specialCondition || "Nenhuma",
+          hasSpecialCondition: pet.health?.specialCondition &&
+            (Array.isArray(pet.health.specialCondition) ? 
+             pet.health.specialCondition.some(condition => condition.toLowerCase() !== "nenhuma") :
+             pet.health.specialCondition.trim().toLowerCase() !== "nenhuma"),
+          specialCondition: Array.isArray(pet.health?.specialCondition) ? 
+                           pet.health.specialCondition.join(", ") : 
+                           pet.health?.specialCondition || "Nenhuma",
           vaccinated: pet.health?.vaccinated || false,
           castrated: pet.health?.castrated || false,
           dewormed: pet.health?.dewormed || false,
@@ -456,14 +460,14 @@ const ONGProfile = () => {
         {/* Seção de Pets */}
         <div className="ong-profile-pets-section">
           <PetShowcase
-            title={`Pets disponíveis e outros`}
+            title={isOngOwner ? "Pets disponíveis e outros" : "Pets disponíveis"}
             pets={
               isOngOwner
                 ? ongPets.filter(pet => pet.status !== "Adotado")
                 : ongPets.filter(pet => pet.status === "Disponível")
             }
             category="all"
-            limit={0}
+            limit={8}
             showAllPets={true}
             ongId={ongData._id}
             customComponent={(pet) => (
@@ -493,7 +497,7 @@ const ONGProfile = () => {
             title={`Pets adotados`}
             pets={ongPets.filter(pet => pet.status === "Adotado")}
             category="all"
-            limit={0}
+            limit={8}
             showAllPets={true}
             ongId={ongData._id}
             customComponent={(pet) => (

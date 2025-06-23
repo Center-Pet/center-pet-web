@@ -85,6 +85,12 @@
     margin: 0;
     color: #000000;
     line-height: 1.2;
+    white-space: nowrap;
+    /* Impede a quebra de linha */
+    overflow: hidden;
+    /* Esconde o texto que transborda */
+    text-overflow: ellipsis;
+    /* Adiciona "..." ao final */
 }
 
 /* Legacy class for compatibility */

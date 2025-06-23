@@ -44,9 +44,10 @@ const CatalogFilter = () => {
   const { user, userType } = useAuth();
 
   // Pega parâmetros da URL
-  const pageTitle = searchParams.get("title") || "Catálogo";
   const ongId = searchParams.get("ongId");
+  const pageTitle = searchParams.get("title") || (ongId ? "Gerenciar Pets" : "Catálogo");
   const category = searchParams.get("category");
+  const statusFilter = searchParams.get("statusFilter"); // Novo parâmetro para filtrar por status
   
   // Verificar se estamos exibindo ONGs ou pets
   const isOngsView = category === "ongs";
@@ -59,6 +60,9 @@ const CatalogFilter = () => {
     health: [],
     coat: [], // Adicionando o novo filtro de pelagem
     status: [],
+    type: [],
+    state: "",
+    city: "",
   });
 
   useEffect(() => {
@@ -109,8 +113,12 @@ const CatalogFilter = () => {
             // Processar atributos de saúde para filtragem
             hasSpecialCondition:
               pet.health?.specialCondition &&
-              pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
-            specialCondition: pet.health?.specialCondition || "Nenhuma",
+              (Array.isArray(pet.health.specialCondition) ? 
+               pet.health.specialCondition.some(condition => condition.toLowerCase() !== "nenhuma") :
+               pet.health.specialCondition.trim().toLowerCase() !== "nenhuma"),
+            specialCondition: Array.isArray(pet.health?.specialCondition) ? 
+                             pet.health.specialCondition.join(", ") : 
+                             pet.health?.specialCondition || "Nenhuma",
             vaccinated: pet.health?.vaccinated || false,
             castrated: pet.health?.castrated || false,
             dewormed: pet.health?.dewormed || false,
@@ -151,6 +159,21 @@ const CatalogFilter = () => {
             }
           }
 
+          // Filtrar por status: se não tem ongId (vem do Catalog), mostrar apenas disponíveis
+          // Se tem ongId (vem do ONGProfile), mostrar todos os status
+          if (!ongId) {
+            filteredByCategory = filteredByCategory.filter(pet => pet.status === "Disponível");
+          } else if (statusFilter) {
+            // Se tem statusFilter específico, aplicar esse filtro
+            if (statusFilter === "not-adopted") {
+              // Excluir pets adotados
+              filteredByCategory = filteredByCategory.filter(pet => pet.status !== "Adotado");
+            } else {
+              // Filtrar por status específico
+              filteredByCategory = filteredByCategory.filter(pet => pet.status === statusFilter);
+            }
+          }
+
           setItems(filteredByCategory);
           setFilteredItems(filteredByCategory);
         }
@@ -164,7 +187,7 @@ const CatalogFilter = () => {
     };
 
     fetchItems();
-  }, [ongId, category, isOngsView]);
+  }, [ongId, category, isOngsView, statusFilter]);
 
   // Efeito para aplicar filtros do componente Filter (apenas para pets)
   useEffect(() => {
@@ -173,15 +196,52 @@ const CatalogFilter = () => {
       return;
     }
     
+    const hasActiveFilters = 
+      Object.values(activeFilters).some(value => 
+        Array.isArray(value) ? value.length > 0 : !!value
+      );
+
     // Se não há filtros ativos, mostra todos os pets da categoria
-    if (Object.values(activeFilters).every((arr) => arr.length === 0)) {
-      setFilteredItems(items);
+    if (!hasActiveFilters) {
+      // Mesmo sem filtros ativos, se não tem ongId (vem do Catalog), filtrar apenas disponíveis
+      if (!ongId) {
+        setFilteredItems(items.filter(pet => pet.status === "Disponível"));
+      } else if (statusFilter) {
+        // Se tem statusFilter específico, aplicar esse filtro
+        if (statusFilter === "not-adopted") {
+          // Excluir pets adotados
+          setFilteredItems(items.filter(pet => pet.status !== "Adotado"));
+        } else {
+          // Filtrar por status específico
+          setFilteredItems(items.filter(pet => pet.status === statusFilter));
+        }
+      } else {
+        setFilteredItems(items);
+      }
       setCurrentPage(1);
       return;
     }
 
     // Função para verificar se um pet passa pelos filtros ativos
     const matchesFilters = (pet) => {
+      // Verificar filtro de localização (Estado)
+      if (activeFilters.state && pet.state !== activeFilters.state) {
+        return false;
+      }
+
+      // Verificar filtro de localização (Cidade)
+      if (activeFilters.city && pet.city !== activeFilters.city) {
+        return false;
+      }
+      
+      // Verificar filtro de espécie
+      if (
+        activeFilters.type.length > 0 &&
+        !activeFilters.type.includes(pet.type)
+      ) {
+        return false;
+      }
+      
       // Verificar filtro de status
       if (activeFilters.status && activeFilters.status.length > 0) {
         if (!activeFilters.status.includes(pet.status)) {
@@ -223,7 +283,8 @@ const CatalogFilter = () => {
           if (filter === "Jovem") return petAge.toLowerCase().includes("jovem");
           if (filter === "Adulto")
             return petAge.toLowerCase().includes("adulto");
-          if (filter === "Idoso") return petAge.toLowerCase().includes("idoso");
+          if (filter === "Idoso")
+            return petAge.toLowerCase().includes("idoso");
           return false;
         });
         if (!matches) return false;
@@ -259,7 +320,7 @@ const CatalogFilter = () => {
     // Aplicar filtros
     setFilteredItems(items.filter(matchesFilters));
     setCurrentPage(1); // Resetar para primeira página ao aplicar filtros
-  }, [activeFilters, items, isOngsView]);
+  }, [activeFilters, items, isOngsView, ongId, statusFilter]);
 
   // Paginação
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -293,7 +354,7 @@ const CatalogFilter = () => {
         </div>
         {!isOngsView && (
           <div className="filter-container">
-            <Filter onFilterChange={handleFilterChange} />
+            <Filter onFilterChange={handleFilterChange} userType={userType} />
           </div>
         )}
       </div>

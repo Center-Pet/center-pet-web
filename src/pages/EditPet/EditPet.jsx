@@ -146,7 +146,7 @@ export default function EditPet() {
     coat: "",
     state: "",
     city: "",
-    description: "",
+    bio: "",
     gender: "",
     age: "",
     breed: "",
@@ -154,10 +154,12 @@ export default function EditPet() {
     vaccinated: "",
     castrated: "",
     dewormed: "",
-    specialCondition: "",
+    specialConditions: ["Nenhuma"],
     waitingTime: "",
     status: "", 
   });
+
+  const [showConditionsDropdown, setShowConditionsDropdown] = useState(false);
 
   // Carregar estados do Brasil ao montar o componente
   useEffect(() => {
@@ -168,6 +170,30 @@ export default function EditPet() {
       .then((data) => setStates(data))
       .catch((err) => console.error("Erro ao carregar estados:", err));
   }, []);
+
+  // Fechar dropdown quando clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showConditionsDropdown && !event.target.closest('.custom-multiselect')) {
+        setShowConditionsDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showConditionsDropdown]);
+
+  // Garantir que sempre haja pelo menos uma condição selecionada
+  useEffect(() => {
+    if (!petInfo.specialConditions || petInfo.specialConditions.length === 0) {
+      setPetInfo(prev => ({
+        ...prev,
+        specialConditions: ["Nenhuma"]
+      }));
+    }
+  }, [petInfo.specialConditions]);
 
   // Buscar dados do pet da API
   useEffect(() => {
@@ -197,20 +223,8 @@ export default function EditPet() {
         }
 
         // Verificar se os campos city e state existem diretamente no objeto
-        // Se não existirem, extrair da localização como fallback
         let state = data.state || "";
         let city = data.city || "";
-        
-        // Se os campos city e state não existirem diretamente, tenta extrair da localização
-        if ((!city || !state) && data.location) {
-          const locationParts = data.location.split(", ");
-          if (locationParts.length >= 2) {
-            if (!city) city = locationParts[0];
-            if (!state) state = locationParts[1];
-          } else if (!city) {
-            city = data.location;
-          }
-        }
 
         console.log("Cidade e estado do pet:", { city, state });
 
@@ -221,7 +235,7 @@ export default function EditPet() {
           coat: data.coat || "",
           state: state,
           city: city,
-          description: data.description || "",
+          bio: data.bio || "",
           gender: data.gender || "",
           age: data.age || "",
           breed: data.breed || "",
@@ -229,7 +243,11 @@ export default function EditPet() {
           vaccinated: data.health?.vaccinated ? "Sim" : "Não",
           castrated: data.health?.castrated ? "Sim" : "Não",
           dewormed: data.health?.dewormed ? "Sim" : "Não",
-          specialCondition: data.health?.specialCondition || "",
+          specialConditions: data.health?.specialCondition ? 
+            (Array.isArray(data.health.specialCondition) ? 
+             data.health.specialCondition : 
+             data.health.specialCondition.split(", ").filter(condition => condition.trim() !== "")) : 
+            ["Nenhuma"],
           waitingTime: waitingTimeValue,
           status: data.status || "Disponível", // Carregando o status do pet
         });
@@ -313,7 +331,7 @@ export default function EditPet() {
     const { name, value } = e.target;
     
     // Limitar descrição a 500 caracteres
-    if (name === "description" && value.length > 500) {
+    if (name === "bio" && value.length > 500) {
       return;
     }
 
@@ -381,7 +399,7 @@ export default function EditPet() {
       "gender",
       "size",
       "coat",
-      "description",
+      "bio",
       "status", // Adicionado o status como campo obrigatório
     ];
     requiredFields.forEach((field) => {
@@ -390,8 +408,15 @@ export default function EditPet() {
       }
     });
 
+    // Validação de condições especiais
+    const conditions = petInfo.specialConditions || [];
+    const realConditions = conditions.filter(condition => condition !== "Nenhuma");
+    if (realConditions.length === 0 && !conditions.includes("Nenhuma")) {
+      errors.specialConditions = "Selecione pelo menos uma condição";
+    }
+
     // Validação de localização
-    if ((!petInfo.state || !petInfo.city) && !petInfo.location) {
+    if (!petInfo.state || !petInfo.city) {
       errors.state = "Localização é obrigatória";
       errors.city = "Localização é obrigatória";
     }
@@ -476,21 +501,18 @@ export default function EditPet() {
             }
           }
 
-          // Formatar localização completa
-          let location = petInfo.location;
-          if (petInfo.city && petInfo.state) {
-            location = `${petInfo.city}, ${petInfo.state}`;
-          }
-
           // Preparar dados para atualização
+          const conditionsToSend = petInfo.specialConditions.filter(condition => 
+            condition !== "Nenhuma" || petInfo.specialConditions.length === 1
+          );
+          
           const updatedPetInfo = {
             name: petInfo.name,
             type: petInfo.type,
             coat: petInfo.coat,
-            location: location,
-            city: petInfo.city,  // Adicionando cidade
-            state: petInfo.state, // Adicionando estado
-            description: petInfo.description,
+            city: petInfo.city,
+            state: petInfo.state,
+            bio: petInfo.bio,
             gender: petInfo.gender,
             age: petInfo.age,
             breed: petInfo.breed,
@@ -499,10 +521,10 @@ export default function EditPet() {
               vaccinated: petInfo.vaccinated === "Sim",
               castrated: petInfo.castrated === "Sim",
               dewormed: petInfo.dewormed === "Sim",
-              specialCondition: petInfo.specialCondition,
+              specialCondition: conditionsToSend, // Envia o array diretamente
             },
             waitingTime: petInfo.waitingTime,
-            status: petInfo.status, // Adicionando status aqui
+            status: petInfo.status,
             image: allImageUrls,
           };
 
@@ -656,20 +678,20 @@ export default function EditPet() {
                 Biografia:
               </label>
               <textarea
-                name="description"
-                value={petInfo.description}
+                name="bio"
+                value={petInfo.bio}
                 onChange={handleInputChange}
                 placeholder="Conte um pouco sobre o pet..."
                 maxLength={500}
                 className={`input-field bio-field ${
-                  formErrors.description ? "error" : ""
+                  formErrors.bio ? "error" : ""
                 }`}
               />
               <div className="character-counter">
-                {petInfo.description ? petInfo.description.length : 0}/500 caracteres
+                {petInfo.bio ? petInfo.bio.length : 0}/500 caracteres
               </div>
-              {formErrors.description && (
-                <ErrorMessage message={formErrors.description} />
+              {formErrors.bio && (
+                <ErrorMessage message={formErrors.bio} />
               )}
             </div>
 
@@ -939,41 +961,87 @@ export default function EditPet() {
               <div className="info-row">
                 <label className="info-label">
                   <Heartbeat size={20} style={{ marginRight: 6 }} />
-                  Condição Especial:
+                  Condições Especiais:
                 </label>
-                <select
-                  name="specialCondition"
-                  value={petInfo.specialCondition}
-                  onChange={handleInputChange}
-                  className={`input-field ${
-                    formErrors.specialCondition ? "error" : ""
-                  }`}
-                >
-                  {!petInfo.specialCondition && (
-                    <option value="">Selecione</option>
+                <div className="custom-multiselect">
+                  <div 
+                    className={`input-field multiselect-trigger ${formErrors.specialConditions ? "error" : ""}`}
+                    onClick={() => setShowConditionsDropdown(!showConditionsDropdown)}
+                  >
+                    {petInfo.specialConditions.length === 0 ? "Selecione as condições" : 
+                     petInfo.specialConditions.length === 1 ? petInfo.specialConditions[0] :
+                     `${petInfo.specialConditions.length} condições selecionadas`}
+                  </div>
+                  {showConditionsDropdown && (
+                    <div className="multiselect-dropdown">
+                      {specialConditions.map((condition, idx) => (
+                        <label key={idx} className="multiselect-option">
+                          <input
+                            type="checkbox"
+                            value={condition}
+                            checked={petInfo.specialConditions.includes(condition)}
+                            onChange={(e) => {
+                              const isChecked = e.target.checked;
+                              const conditionValue = e.target.value;
+                              
+                              if (conditionValue === "Nenhuma") {
+                                // Se "Nenhuma" foi selecionada, limpa todas as outras condições
+                                if (isChecked) {
+                                  setPetInfo(prev => ({
+                                    ...prev,
+                                    specialConditions: ["Nenhuma"]
+                                  }));
+                                } else {
+                                  // Se "Nenhuma" foi desselecionada, não permite (sempre deve ter pelo menos uma)
+                                  setPetInfo(prev => ({
+                                    ...prev,
+                                    specialConditions: ["Nenhuma"]
+                                  }));
+                                }
+                              } else {
+                                // Para outras condições
+                                if (isChecked) {
+                                  // Adiciona a condição e remove "Nenhuma"
+                                  setPetInfo(prev => ({
+                                    ...prev,
+                                    specialConditions: prev.specialConditions
+                                      .filter(c => c !== "Nenhuma")
+                                      .concat(conditionValue)
+                                  }));
+                                } else {
+                                  // Remove a condição
+                                  const newConditions = petInfo.specialConditions.filter(c => c !== conditionValue);
+                                  
+                                  // Se não sobrou nenhuma condição, adiciona "Nenhuma"
+                                  if (newConditions.length === 0) {
+                                    setPetInfo(prev => ({
+                                      ...prev,
+                                      specialConditions: ["Nenhuma"]
+                                    }));
+                                  } else {
+                                    setPetInfo(prev => ({
+                                      ...prev,
+                                      specialConditions: newConditions
+                                    }));
+                                  }
+                                }
+                              }
+                              
+                              setFormErrors(prev => ({
+                                ...prev,
+                                specialConditions: undefined,
+                              }));
+                            }}
+                          />
+                          <span className="checkmark"></span>
+                          <span className="option-text">{condition}</span>
+                        </label>
+                      ))}
+                    </div>
                   )}
-                  {specialConditions.map((cond, idx) =>
-                    cond === "Nenhuma" ? (
-                      <option
-                        key={idx}
-                        value={cond}
-                        style={{
-                          fontWeight: "bold",
-                          color: "#D14D72",
-                          backgroundColor: "#FFF0F5"
-                        }}
-                      >
-                        {cond}
-                      </option>
-                    ) : (
-                      <option key={idx} value={cond}>
-                        {cond}
-                      </option>
-                    )
-                  )}
-                </select>
-                {formErrors.specialCondition && (
-                  <ErrorMessage message={formErrors.specialCondition} />
+                </div>
+                {formErrors.specialConditions && (
+                  <ErrorMessage message={formErrors.specialConditions} />
                 )}
               </div>
 

@@ -80,8 +80,12 @@ export const getPets = async (category, page = 1, limit = 10) => {
             age: pet.age,
             type: pet.type,
             hasSpecialCondition: pet.health?.specialCondition && 
-                               pet.health.specialCondition.trim().toLowerCase() !== "nenhuma",
-            specialCondition: pet.health?.specialCondition || "Nenhuma",
+                               (Array.isArray(pet.health.specialCondition) ? 
+                                pet.health.specialCondition.some(condition => condition.toLowerCase() !== "nenhuma") :
+                                pet.health.specialCondition.trim().toLowerCase() !== "nenhuma"),
+            specialCondition: Array.isArray(pet.health?.specialCondition) ? 
+                             pet.health.specialCondition.join(", ") : 
+                             pet.health?.specialCondition || "Nenhuma",
             vaccinated: pet.health?.vaccinated || false,
             castrated: pet.health?.castrated || false,
             dewormed: pet.health?.dewormed || false,

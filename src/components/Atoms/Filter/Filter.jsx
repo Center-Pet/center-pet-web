@@ -1,173 +1,268 @@
-import { Sliders } from "phosphor-react";
+import { Funnel, X } from "phosphor-react";
 import "./Filter.css";
 import { useState, useEffect, useRef } from "react";
 
-// Adicionamos uma prop onFilterChange para comunicar os filtros selecionados
-const Filter = ({ onFilterChange }) => {
-  const [hasSelection, setHasSelection] = useState(false); // Estado para monitorar seleção
-  const [isOpen, setIsOpen] = useState(false); // Estado para controlar abertura do filtro
-  const filterRef = useRef(null); // Referência para o elemento do filtro
+// Subcomponente para cada dropdown de filtro
+const FilterDropdown = ({ 
+  category, 
+  options, 
+  selected, // Para multi-seleção (array)
+  onChange, // Para multi-seleção
+  isLocation = false, // Identifica se é um filtro de localização
+  value, // Para seleção única (string)
+  onValueChange, // Para seleção única
+  disabled = false,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleItemClick = (optionValue) => {
+    onValueChange(category, optionValue);
+    setIsOpen(false);
+  };
+  
+  // Fecha o dropdown se clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleCheckboxChange = (option) => {
+    onChange(category, option);
+  };
+
+  const filteredOptions = isLocation && category === "Cidade"
+    ? options.filter(opt => opt.nome.toLowerCase().includes(searchTerm.toLowerCase()))
+    : options;
+
+  let displayValue = category;
+  if (isLocation && value) {
+    const selectedOption = options.find(o => (o.sigla || o.nome) === value);
+    if (selectedOption) {
+      displayValue = selectedOption.nome;
+    }
+  }
+  
+  const selectionCount = Array.isArray(selected) ? selected.length : 0;
+  const isActive = isLocation ? !!value : selectionCount > 0;
+
+  return (
+    <div className="filter-dropdown-container" ref={dropdownRef}>
+      <button 
+        className={`filter-button ${isActive ? 'active' : ''}`} 
+        onClick={() => setIsOpen(!isOpen)}
+        disabled={disabled}
+      >
+        {displayValue} {selectionCount > 0 && `(${selectionCount})`}
+      </button>
+      {isOpen && (
+        <div className="dropdown-menu">
+          {isLocation ? (
+            <>
+              {category === "Cidade" && (
+                <input
+                  type="text"
+                  className="dropdown-search"
+                  placeholder="Buscar cidade..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  autoFocus
+                />
+              )}
+              <div className="dropdown-options-list">
+                {filteredOptions.map((option, idx) => (
+                  <div 
+                    key={idx} 
+                    className="dropdown-item" 
+                    onClick={() => handleItemClick(option.sigla || option.nome)}
+                  >
+                    {option.nome}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            options.map((option, idx) => (
+              <label key={idx} className="dropdown-item">
+                <input
+                  type="checkbox"
+                  checked={selected.includes(option)}
+                  onChange={() => handleCheckboxChange(option)}
+                />
+                <span className="checkmark"></span>
+                {option}
+              </label>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Componente principal do Filtro
+const Filter = ({ onFilterChange, userType }) => {
   const [selectedFilters, setSelectedFilters] = useState({
+    type: [],
     gender: [],
     size: [],
     age: [],
     health: [],
-    coat: [], // Nova categoria para pelagem
-    status: [], // Adicionando status
+    coat: [],
+    status: [],
+    state: "",
+    city: "",
   });
+  
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  // Busca estados
+  useEffect(() => {
+    fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
+      .then((res) => res.json())
+      .then(setStates);
+  }, []);
+
+  // Busca cidades quando o estado muda
+  useEffect(() => {
+    if (selectedFilters.state) {
+      fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedFilters.state}/municipios`)
+        .then((res) => res.json())
+        .then(setCities);
+    } else {
+      setCities([]);
+    }
+  }, [selectedFilters.state]);
 
   const categories = {
+    Espécie: ["Cachorro", "Gato"],
     Gênero: ["Fêmea", "Macho"],
     Porte: ["Grande Porte", "Médio Porte", "Pequeno Porte"],
     Idade: ["Filhote", "Jovem", "Adulto", "Idoso"],
-    Pelagem: ["Curta", "Média", "Longa", "Sem pelo"], // Alterado para corresponder ao cadastro
+    Pelagem: ["Curta", "Média", "Longa", "Sem pelo"],
     Saúde: [
       "Vacinado",
-      "Não Vacinado",
-      "Vermifugado",
-      "Não Vermifugado",
       "Castrado",
-      "Não Castrado",
+      "Vermifugado",
       "Condição Especial",
     ],
-    Status: ["Disponível", "Indisponível", "Aguardando", "Adotado"], // Adicionando status
+    Status: ["Disponível", "Indisponível", "Aguardando", "Adotado"],
   };
 
-  // Mapeamento das categorias para as chaves usadas no estado
   const categoryKeys = {
+    Espécie: "type",
     Gênero: "gender",
     Porte: "size",
     Idade: "age",
     Pelagem: "coat",
     Saúde: "health",
-    Status: "status", // Adicionando status
+    Status: "status",
   };
-
-  const handleCheckboxChange = (event) => {
-    const { checked, value } = event.target;
-    const category = event.target.getAttribute("data-category");
+  
+  const handleFilterChange = (category, option) => {
     const categoryKey = categoryKeys[category];
-
-    setSelectedFilters((prev) => {
-      let updatedFilters = { ...prev };
-
-      if (checked) {
-        // Adiciona o filtro
-        updatedFilters[categoryKey] = [...updatedFilters[categoryKey], value];
-      } else {
-        // Remove o filtro
-        updatedFilters[categoryKey] = updatedFilters[categoryKey].filter(
-          (item) => item !== value
-        );
-      }
-
-      return updatedFilters;
+    
+    setSelectedFilters(prev => {
+      const currentSelection = prev[categoryKey];
+      const newSelection = currentSelection.includes(option)
+        ? currentSelection.filter(item => item !== option)
+        : [...currentSelection, option];
+      return { ...prev, [categoryKey]: newSelection };
     });
   };
 
-  // Efeito para atualizar os filtros para o componente pai quando houver mudanças
-  useEffect(() => {
-    const anyChecked = Object.values(selectedFilters).some(
-      (arr) => arr.length > 0
-    );
-    setHasSelection(anyChecked);
-
-    // Notifica o componente pai (Catalog) sobre a mudança nos filtros
-    if (onFilterChange) {
-      onFilterChange(selectedFilters);
-    }
-  }, [selectedFilters, onFilterChange]);
-
-  const toggleFilter = () => {
-    setIsOpen(!isOpen); // Alterna o estado de abertura
+  const handleLocationChange = (category, value) => {
+    const type = category === 'Estado' ? 'state' : 'city';
+    setSelectedFilters(prev => {
+      const newFilters = { ...prev, [type]: value };
+      if (type === 'state') {
+        newFilters.city = ''; // Reseta a cidade quando o estado muda
+      }
+      return newFilters;
+    });
   };
 
-  const handleClickOutside = (event) => {
-    // Verifica se o clique foi fora do filtro
-    if (filterRef.current && !filterRef.current.contains(event.target)) {
-      setIsOpen(false); // Fecha o filtro
-    }
-  };
-
-  // Função para limpar todos os filtros
+  // Limpa todos os filtros
   const clearFilters = () => {
     setSelectedFilters({
+      type: [],
       gender: [],
       size: [],
       age: [],
       health: [],
       coat: [],
-      status: [], // Limpar status também
-    });
-
-    // Desmarcar todos os checkboxes
-    document.querySelectorAll(".switch-input").forEach((checkbox) => {
-      checkbox.checked = false;
+      status: [],
+      state: "",
+      city: "",
     });
   };
 
   useEffect(() => {
-    // Adiciona o evento de clique ao documento
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // Remove o evento ao desmontar o componente
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    onFilterChange(selectedFilters);
+  }, [selectedFilters, onFilterChange]);
+
+  const totalActiveFilters = 
+    Object.values(selectedFilters)
+      .filter(v => Array.isArray(v) ? v.length > 0 : !!v)
+      .reduce((acc, curr) => acc + (Array.isArray(curr) ? curr.length : 1), 0);
 
   return (
-    <div id="filter" className={hasSelection ? "selected" : ""} ref={filterRef}>
-      <button id="filter_button" onClick={toggleFilter}>
-        <Sliders size={25} /> Filtros
-        {hasSelection && (
-          <span className="filter-count">
-            {Object.values(selectedFilters).flat().length}
-          </span>
-        )}
-      </button>
-      <div id="filtros_filter" className={isOpen ? "show" : ""}>
-        {Object.entries(categories).map(([category, options], index) => (
-          <div className="filtro-categoria" key={index}>
-            <h3 className="filtro-categoria-titulo">{category}</h3>
-            <div className="filtro-opcoes">
-              {options.map((option, idx) => (
-                <div className="filtro" key={idx}>
-                  <label className="switch">
-                    <input
-                      className="switch-input"
-                      type="checkbox"
-                      value={option}
-                      data-category={category}
-                      id={`switch-${category}-${idx}`}
-                      onChange={handleCheckboxChange}
-                      checked={
-                        selectedFilters[categoryKeys[category]]?.includes(
-                          option
-                        ) || false
-                      }
-                    />
-                    <span className="slider"></span>
-                  </label>
-                  <label
-                    htmlFor={`switch-${category}-${idx}`}
-                    className="switch-label"
-                  >
-                    {option}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {hasSelection && (
-          <div className="filtro-acoes">
-            <button className="limpar-filtros" onClick={clearFilters}>
-              Limpar filtros
-            </button>
-          </div>
-        )}
+    <div className="horizontal-filter-bar">
+      <div className="filter-group">
+        <div className="filter-title-container">
+          <Funnel size={20} className="filter-icon" />
+          <span className="filter-title">Filtros:</span>
+        </div>
+        {Object.entries(categories).map(([category, options]) => {
+          if (category === "Status" && userType !== "Ong") {
+            return null;
+          }
+          const categoryKey = categoryKeys[category];
+          return (
+            <FilterDropdown
+              key={category}
+              category={category}
+              options={options}
+              selected={selectedFilters[categoryKey]}
+              onChange={handleFilterChange}
+            />
+          );
+        })}
+        {/* Filtros de Localização */}
+        <FilterDropdown
+          isLocation
+          category="Estado"
+          options={states}
+          value={selectedFilters.state}
+          onValueChange={handleLocationChange}
+        />
+        <FilterDropdown
+          isLocation
+          category="Cidade"
+          options={cities}
+          value={selectedFilters.city}
+          onValueChange={handleLocationChange}
+          disabled={!selectedFilters.state}
+        />
       </div>
+      {totalActiveFilters > 0 && (
+        <button className="clear-filters-button" onClick={clearFilters}>
+          <X size={16} weight="bold" />
+          Limpar Filtros ({totalActiveFilters})
+        </button>
+      )}
+      {totalActiveFilters > 0 && (
+        <button className="clear-filters-button-mobile" onClick={clearFilters}>
+          Limpar ({totalActiveFilters})
+        </button>
+      )}
     </div>
   );
 };

@@ -145,7 +145,7 @@ export default function RegisterPet() {
     vaccinated: "",
     castrated: "",
     dewormed: "",
-    specialCondition: "",
+    specialConditions: ["Nenhuma"],
     waitingTime: "",
     status: ""
   });
@@ -296,7 +296,14 @@ export default function RegisterPet() {
     }
 
     Object.keys(petInfo).forEach((key) => {
-      if (!petInfo[key] || petInfo[key] === "") {
+      if (key === "specialConditions") {
+        // Validação específica para condições especiais
+        const conditions = petInfo[key] || [];
+        const realConditions = conditions.filter(condition => condition !== "Nenhuma");
+        if (realConditions.length === 0 && !conditions.includes("Nenhuma")) {
+          errors[key] = "Selecione pelo menos uma condição";
+        }
+      } else if (!petInfo[key] || petInfo[key] === "") {
         errors[key] = "Este campo é obrigatório";
       }
     });
@@ -389,11 +396,16 @@ export default function RegisterPet() {
             }
 
             // Preparar dados para envio
+            const conditionsToSend = petInfo.specialConditions.filter(condition => 
+              condition !== "Nenhuma" || petInfo.specialConditions.length === 1
+            );
+            
             const petData = {
               ...petInfo,
               ongId: user._id, // ID da ONG logada
               imagens: cloudinaryUrls, // Array de URLs do Cloudinary
-              status: petInfo.status || "Disponível"  // Garante que o status seja enviado explicitamente
+              status: petInfo.status || "Disponível",  // Garante que o status seja enviado explicitamente
+              specialCondition: conditionsToSend // Envia o array diretamente
             };
 
             Swal.fire({
@@ -487,6 +499,7 @@ export default function RegisterPet() {
   // Estados para cidades e estados
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
+  const [showConditionsDropdown, setShowConditionsDropdown] = useState(false);
 
   useEffect(() => {
     // Carregar estados do Brasil ao montar o componente
@@ -496,6 +509,30 @@ export default function RegisterPet() {
       .then((res) => res.json())
       .then((data) => setStates(data));
   }, []);
+
+  // Fechar dropdown quando clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showConditionsDropdown && !event.target.closest('.custom-multiselect')) {
+        setShowConditionsDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showConditionsDropdown]);
+
+  // Garantir que sempre haja pelo menos uma condição selecionada
+  useEffect(() => {
+    if (!petInfo.specialConditions || petInfo.specialConditions.length === 0) {
+      setPetInfo(prev => ({
+        ...prev,
+        specialConditions: ["Nenhuma"]
+      }));
+    }
+  }, [petInfo.specialConditions]);
 
   return (
     <form onSubmit={handleSubmit} className="pet-info-container">
@@ -752,41 +789,87 @@ export default function RegisterPet() {
               <div className="info-row">
                 <label className="info-label">
                   <Heartbeat size={20} style={{ marginRight: 6 }} />
-                  Condição Especial:
+                  Condições Especiais:
                 </label>
-                <select
-                  name="specialCondition"
-                  value={petInfo.specialCondition}
-                  onChange={handleInputChange}
-                  className={`input-field ${
-                    formErrors.specialCondition ? "error" : ""
-                  }`}
-                >
-                  {!petInfo.specialCondition && (
-                    <option value="">Selecione</option>
+                <div className="custom-multiselect">
+                  <div 
+                    className={`input-field multiselect-trigger ${formErrors.specialConditions ? "error" : ""}`}
+                    onClick={() => setShowConditionsDropdown(!showConditionsDropdown)}
+                  >
+                    {petInfo.specialConditions.length === 0 ? "Selecione as condições" : 
+                     petInfo.specialConditions.length === 1 ? petInfo.specialConditions[0] :
+                     `${petInfo.specialConditions.length} condições selecionadas`}
+                  </div>
+                  {showConditionsDropdown && (
+                    <div className="multiselect-dropdown">
+                      {specialConditions.map((condition, idx) => (
+                        <label key={idx} className="multiselect-option">
+                          <input
+                            type="checkbox"
+                            value={condition}
+                            checked={petInfo.specialConditions.includes(condition)}
+                            onChange={(e) => {
+                              const isChecked = e.target.checked;
+                              const conditionValue = e.target.value;
+                              
+                              if (conditionValue === "Nenhuma") {
+                                // Se "Nenhuma" foi selecionada, limpa todas as outras condições
+                                if (isChecked) {
+                                  setPetInfo(prev => ({
+                                    ...prev,
+                                    specialConditions: ["Nenhuma"]
+                                  }));
+                                } else {
+                                  // Se "Nenhuma" foi desselecionada, não permite (sempre deve ter pelo menos uma)
+                                  setPetInfo(prev => ({
+                                    ...prev,
+                                    specialConditions: ["Nenhuma"]
+                                  }));
+                                }
+                              } else {
+                                // Para outras condições
+                                if (isChecked) {
+                                  // Adiciona a condição e remove "Nenhuma"
+                                  setPetInfo(prev => ({
+                                    ...prev,
+                                    specialConditions: prev.specialConditions
+                                      .filter(c => c !== "Nenhuma")
+                                      .concat(conditionValue)
+                                  }));
+                                } else {
+                                  // Remove a condição
+                                  const newConditions = petInfo.specialConditions.filter(c => c !== conditionValue);
+                                  
+                                  // Se não sobrou nenhuma condição, adiciona "Nenhuma"
+                                  if (newConditions.length === 0) {
+                                    setPetInfo(prev => ({
+                                      ...prev,
+                                      specialConditions: ["Nenhuma"]
+                                    }));
+                                  } else {
+                                    setPetInfo(prev => ({
+                                      ...prev,
+                                      specialConditions: newConditions
+                                    }));
+                                  }
+                                }
+                              }
+                              
+                              setFormErrors(prev => ({
+                                ...prev,
+                                specialConditions: undefined,
+                              }));
+                            }}
+                          />
+                          <span className="checkmark"></span>
+                          <span className="option-text">{condition}</span>
+                        </label>
+                      ))}
+                    </div>
                   )}
-                  {specialConditions.map((cond, idx) =>
-                    cond === "Nenhuma" ? (
-                      <option
-                        key={idx}
-                        value={cond}
-                        style={{
-                          fontWeight: "bold",
-                          color: "#D14D72",
-                          backgroundColor: "#FFF0F5"
-                        }}
-                      >
-                        {cond}
-                      </option>
-                    ) : (
-                      <option key={idx} value={cond}>
-                        {cond}
-                      </option>
-                    )
-                  )}
-                </select>
-                {formErrors.specialCondition && (
-                  <ErrorMessage message={formErrors.specialCondition} />
+                </div>
+                {formErrors.specialConditions && (
+                  <ErrorMessage message={formErrors.specialConditions} />
                 )}
               </div>
               <div className="info-row">

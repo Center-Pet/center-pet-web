@@ -2,17 +2,26 @@ body {
     background-color: #FEF2F4;
 }
 
-.catalog-header {
+.catalog-filter-header {
     display: flex;
-    justify-content: left;
-    margin-left: 100px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-.filter-container {
-    margin: 0 110px;
+.title-and-back {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 1; /* Permite que o título ocupe o espaço */
+}
+
+.filter-wrapper {
+    flex-grow: 2; /* Dá mais espaço para os filtros */
+    min-width: 300px; /* Garante que os filtros tenham um espaço mínimo */
 }
 
 .conjunt-catalog {
@@ -126,34 +135,41 @@ body {
 }
 
 @media (max-width: 780px) {
-    .catalog-header {
-        margin-left: 80px;
-        padding: 0px;
+    .catalog-filter-header {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 540px) {
+    .catalog-filter-header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+    }
+
+    .title-and-back {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .filter-wrapper {
+        width: 100%;
+    }
+
+    .catalog-title-container>.custom-title-wrapper>.custom-title {
+        font-size: 26px;
+        text-align: start;
+    }
+
+    .filter-container {
+        margin: 0px;
     }
 }
 
 @media (max-width: 480px) {
-    .catalog-header {
-        margin-left: 0px;
-    }
-    .page-pet-grid{
+    .page-pet-grid {
         gap: 0rem;
         margin-top: 1rem;
-    }
-}
-
-
-
-/* Responsividade - título do catalog filter */
-
-@media (max-width: 540px){
-    .catalog-title-container>.custom-title-wrapper>.custom-title{
-        font-size: 26px;
-        text-align: start;
-    }
-    
-    .catalog-header>.filter-container{
-        margin: 0px;
     }
 }
 
