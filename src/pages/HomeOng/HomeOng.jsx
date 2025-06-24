@@ -10,6 +10,7 @@ import PetShowcase from "../../components/Organisms/PetShowcase/PetShowcase";
 import AdoptionsTable from "../../components/Organisms/AdoptionsTable/AdoptionsTable";
 import AdoptionsList from "../../components/Organisms/AdoptionsList/AdoptionsList";
 import useIsMobile from "../../hooks/useIsMobile";
+import slugify from '../../utils/slugify';
 
 const HomeOng = () => {
     const { user, userType, isAuthenticated, isLoading } = useAuth();
@@ -234,8 +235,8 @@ const HomeOng = () => {
                     <a href={`/catalog-filter?ongId=${ongId}`} className="ong-action-btn">
                         <i className="fas fa-list"></i> Gerenciar pets
                     </a>
-                    <a href={`/ong-profile/${ongId}`} className="ong-action-btn">
-                        <i className="fas fa-file-alt"></i> Ver solicitações de adoção
+                    <a href={ongData?.name ? `/ong-profile/${slugify(ongData.name)}` : '#'} className="ong-action-btn">
+                        <i className="fas fa-user"></i> Ver meu perfil
                     </a>
                 </div>
             </section>
@@ -265,9 +266,9 @@ const HomeOng = () => {
 
             <section className="ong-latest">
                 {isMobile ? (
-                    <AdoptionsList ongId={ongId} statusFilter={['completed', 'approved']} />
+                    <AdoptionsList ongId={ongId} />
                 ) : (
-                    <AdoptionsTable ongId={ongId} statusFilter={['completed', 'approved']} />
+                    <AdoptionsTable ongId={ongId} />
                 )}
             </section>
         </main>

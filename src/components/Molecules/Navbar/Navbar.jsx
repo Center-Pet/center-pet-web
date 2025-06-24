@@ -149,9 +149,6 @@ const Navbar = () => {
                             <li>
                                 <ButtonType bgColor={"#D14D72"} onClick={() => { navigate('/dashboard'); closeMenu(); }}><ChartLine size={25} />Estatísticas</ButtonType>
                             </li>
-                            <li>
-                                <ButtonType bgColor={"#D14D72"} onClick={() => { navigate(`/catalog-filter?ongId=${user?._id}`); closeMenu(); }}><PawPrint size={25} />Gerenciar Pets</ButtonType>
-                            </li>
                         </>
                     )}
 

@@ -170,7 +170,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* EVENTOS E CAMPANHAS */}
+      {/* EVENTOS E CAMPANHAS
       <section className="events-section">
         <h2 className="section-title">Eventos & Campanhas</h2>
         <div className="events-banners">
@@ -195,7 +195,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* SOBRE NÓS */}
       <section className="about-section">
@@ -271,7 +271,7 @@ const Home = () => {
         )}
       </section>
 
-      {/* DEPOIMENTOS DE ADOTANTES */}
+      {/* DEPOIMENTOS DE ADOTANTES
       <section className="testimonials-section">
         <h2 className="section-title">Quem já adotou recomenda!</h2>
         <p className="section-subtitle">
@@ -342,7 +342,7 @@ const Home = () => {
             </span>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* PARCERIAS */}
       <section className="partners-section">
