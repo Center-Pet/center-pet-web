@@ -1,9 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import './AdoptionsList.css';
 import Title from "../../Atoms/TitleType/TitleType";
 import { API_URL } from '../../../config/api';
 import { CaretDown, CaretLeft, CaretRight } from "phosphor-react";
+import Filter from '../../Atoms/Filter/Filter';
+
+function StatusFilterDropdown({ options, selected, onChange }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="filter-dropdown-container" ref={dropdownRef} style={{ display: 'inline-block' }}>
+      <button
+        className={`filter-button${selected.length > 0 ? ' active' : ''}`}
+        onClick={() => setIsOpen((prev) => !prev)}
+        type="button"
+      >
+        Status {selected.length > 0 && `(${selected.length})`}
+      </button>
+      {isOpen && (
+        <div className="dropdown-menu">
+          {options.map((option, idx) => (
+            <label key={idx} className="dropdown-item">
+              <input
+                type="checkbox"
+                checked={selected.includes(option)}
+                onChange={() => onChange(option)}
+              />
+              <span className="checkmark"></span>
+              {option}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function AdoptionsList({ ongId, statusFilter = [] }) {
   const [adoptions, setAdoptions] = useState([]);
@@ -11,6 +54,25 @@ export default function AdoptionsList({ ongId, statusFilter = [] }) {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const statusOptions = [
+    'Solicitação Recebida',
+    'Em Andamento',
+    'Aprovada',
+    'Recusada',
+    'Cancelada',
+    'Concluída',
+    'Retorno',
+  ];
+  const [selectedStatus, setSelectedStatus] = useState([]);
+
+  const handleStatusChange = (option) => {
+    setSelectedStatus((prev) =>
+      prev.includes(option)
+        ? prev.filter((item) => item !== option)
+        : [...prev, option]
+    );
+  };
 
     // Buscar adoções da ONG
   useEffect(() => {
@@ -92,6 +154,12 @@ export default function AdoptionsList({ ongId, statusFilter = [] }) {
     const filteredAdoptions = statusFilter.length > 0
         ? displayAdoptions.filter(adoption => statusFilter.includes(adoption.status))
         : displayAdoptions;
+    const statusFilteredAdoptions = selectedStatus.length > 0
+      ? filteredAdoptions.filter(adoption => selectedStatus.includes(traduzirStatus(adoption.status)))
+      : filteredAdoptions;
+
+    // Ordenar por data decrescente (mais recente primeiro)
+    const sortedAdoptions = [...statusFilteredAdoptions].sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
 
     function traduzirStatus(status) {
         switch ((status || '').toLowerCase()) {
@@ -117,9 +185,9 @@ export default function AdoptionsList({ ongId, statusFilter = [] }) {
     }
 
     // Paginação
-    const totalPages = Math.ceil(filteredAdoptions.length / itemsPerPage);
+    const totalPages = Math.ceil(sortedAdoptions.length / itemsPerPage);
     const initialI = (currentPage - 1) * itemsPerPage;
-    const visibleItems = filteredAdoptions.slice(initialI, initialI + itemsPerPage);
+    const visibleItems = sortedAdoptions.slice(initialI, initialI + itemsPerPage);
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
@@ -158,45 +226,60 @@ export default function AdoptionsList({ ongId, statusFilter = [] }) {
 
   return (
         <div className="adoptions-list-container">
-      <Title marginBottom={20}>Solicitações de adoção</Title>
-            <div className="adoptions-list">
-                <div className="adoptions-list-mobile">
-                    {visibleItems.map((adoption) => (
-                        <div key={adoption._id} className="adoptions-list-item-mobile">
-                            <div className="adoption-list-item-summary" onClick={(e) => showDescription(e.currentTarget)}>
-                                <div className="adoption-basic-details">
-                                    <p><b>Pet:</b> {adoption.petId?.name || "Não informado"}</p>
-                                    <p><b>Status:</b> <span className={`adoption-status adoption-status-${adoption.status}`}>{traduzirStatus(adoption.status)}</span></p>
-                                </div>
-                                <CaretDown size={45} color="rgb(0, 0, 0)" className="inactive" />
-                            </div>
-                            <div className="adoption-list-item-description inactive">
-                                <p><b>Nome do pet:</b> {adoption.petId?.name || "Não informado"}</p>
-                                <p><b>Nome do adotante:</b> {adoption.adopterDetails?.fullName || adoption.userId?.fullName || "Não informado"}</p>
-                                <p><b>Cidade:</b> {adoption.adopterDetails?.city || (adoption.adopterDetails?.address?.city) || adoption.userId?.city || "Não informado"}</p>
-                                <p><b>Contato:</b> {adoption.adopterDetails?.phone || adoption.adopterDetails?.email || adoption.userId?.email || "Não informado"}</p>
-                                <p><b>Data de Solicitação:</b> {adoption.requestDate ? new Date(adoption.requestDate).toLocaleDateString("pt-BR") : "Não informado"}</p>
-                                <p><b>Status:</b> <span className={`adoption-status adoption-status-${adoption.status}`}>{traduzirStatus(adoption.status)}</span></p>
-                <Link
-                  className="adoptions-table-link"
-                  to={`/adoption/${adoption._id}`}
-                >
-                  Ver Mais
-                </Link>
-                            </div>
-                        </div>
-                    ))}
+      <div className="adoptions-list-header" style={{ display: 'flex', alignItems: 'baseline', gap: 24, marginBottom: 16, flexWrap: 'wrap' }}>
+        <Title marginBottom={0}>Solicitações de adoção</Title>
+        <StatusFilterDropdown
+          options={statusOptions}
+          selected={selectedStatus}
+          onChange={handleStatusChange}
+        />
+      </div>
+            {loading ? (
+                <div className="loading-spinner-container">
+                    <div className="loading-spinner"></div>
                 </div>
-                <div className="pagination-list">
-                    <button className="pagination-list-button" onClick={handlePreviousPage} disabled={currentPage === 1}>
-                        <CaretLeft size={25} color="#FFC8D1" />
-          </button>
-                    <span>{currentPage} de {totalPages} páginas</span>
-                    <button className="pagination-list-button" onClick={handleNextPage} disabled={currentPage === totalPages}>
-                        <CaretRight size={25} color="#FFC8D1" />
-          </button>
-        </div>
-            </div>
+            ) : sortedAdoptions.length === 0 ? (
+                <div className="adoptions-table-empty">Nenhuma adoção encontrada.</div>
+            ) : (
+                <div className="adoptions-list">
+                    <div className="adoptions-list-mobile">
+                        {visibleItems.map((adoption) => (
+                            <div key={adoption._id} className="adoptions-list-item-mobile">
+                                <div className="adoption-list-item-summary" onClick={(e) => showDescription(e.currentTarget)}>
+                                    <div className="adoption-basic-details">
+                                        <p><b>Pet:</b> {adoption.petId?.name || "Não informado"}</p>
+                                        <p><b>Status:</b> <span className={`adoption-status adoption-status-${adoption.status}`}>{traduzirStatus(adoption.status)}</span></p>
+                                    </div>
+                                    <CaretDown size={45} color="rgb(0, 0, 0)" className="inactive" />
+                                </div>
+                                <div className="adoption-list-item-description inactive">
+                                    <p><b>Nome do pet:</b> {adoption.petId?.name || "Não informado"}</p>
+                                    <p><b>Nome do adotante:</b> {adoption.adopterDetails?.fullName || adoption.userId?.fullName || "Não informado"}</p>
+                                    <p><b>Cidade:</b> {adoption.adopterDetails?.city || (adoption.adopterDetails?.address?.city) || adoption.userId?.city || "Não informado"}</p>
+                                    <p><b>Contato:</b> {adoption.adopterDetails?.phone || adoption.adopterDetails?.email || adoption.userId?.email || "Não informado"}</p>
+                                    <p><b>Data de Solicitação:</b> {adoption.requestDate ? new Date(adoption.requestDate).toLocaleDateString("pt-BR") : "Não informado"}</p>
+                                    <p><b>Status:</b> <span className={`adoption-status adoption-status-${adoption.status}`}>{traduzirStatus(adoption.status)}</span></p>
+                    <Link
+                      className="adoptions-table-link"
+                      to={`/adoption/${adoption._id}`}
+                    >
+                      Ver Mais
+                    </Link>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="pagination-list">
+                        <button className="pagination-list-button" onClick={handlePreviousPage} disabled={currentPage === 1}>
+                            <CaretLeft size={25} color="#FFC8D1" />
+              </button>
+                        <span>{currentPage} de {totalPages} páginas</span>
+                        <button className="pagination-list-button" onClick={handleNextPage} disabled={currentPage === totalPages}>
+                            <CaretRight size={25} color="#FFC8D1" />
+              </button>
+                  </div>
+                </div>
+            )}
     </div>
   );
 }

@@ -49,7 +49,7 @@ export default function CustomAvatar() {
   const handleLogout = async () => {
     try {
       const pawAnimationHtml = ReactDOMServer.renderToString(
-        <PawAnimation text="Saindo..." vertical={true} />
+        <PawAnimation text="Saindo..." vertical={true} width={160} height={160} />
       );
 
       Swal.fire({

@@ -160,14 +160,209 @@ const FormSafeAdopter = () => {
     setCurrentStep((prevStep) => prevStep - 1);
   };
 
+  const validateAllFields = () => {
+    // Campos obrigatórios básicos
+    const requiredFields = {
+      birth: 'Data de Nascimento',
+      phone: 'Telefone',
+      profession: 'Profissão',
+      cep: 'CEP',
+      street: 'Rua',
+      number: 'Número',
+      neighborhood: 'Bairro',
+      city: 'Cidade',
+      state: 'Estado',
+      housingType: 'Tipo de Moradia',
+      homeOwnership: 'Tipo de Propriedade',
+      homeSafety: 'Segurança da Casa',
+      numberOfHouseholdMembers: 'Número de Moradores',
+      hasOrHadPets: 'Experiência com Pets',
+      reasonToAdopt: 'Motivo da Adoção',
+      expectedPetBehavior: 'Comportamento Esperado',
+      howHandleUndesiredBehavior: 'Como Lidar com Comportamentos Indesejados',
+      willingToTrain: 'Disposição para Adestramento',
+      petAloneHoursPerDay: 'Tempo Sozinho por Dia',
+      sleepingPlace: 'Local de Dormir',
+      keepVaccinesUpToDate: 'Manter Vacinas em Dia',
+      regularVetVisits: 'Visitas ao Veterinário',
+      financialConditions: 'Condições Financeiras',
+      awareOfLaw: 'Conhecimento da Lei',
+      commitToNeverAbandon: 'Compromisso de Não Abandonar',
+      returnToOng: 'Devolver à ONG',
+      awareOfResponsibilities: 'Consciência das Responsabilidades',
+      finalDeclarationAgreement: 'Declaração Final'
+    };
+
+    // Verificar campos obrigatórios básicos
+    for (const [field, label] of Object.entries(requiredFields)) {
+      if (field === 'finalDeclarationAgreement') {
+        // Validação específica para checkbox
+        if (!formData[field]) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Campo obrigatório',
+            text: `Por favor, marque a declaração final para confirmar que concorda com os termos.`,
+            confirmButtonColor: '#D14D72'
+          });
+          return false;
+        }
+      } else if (field === 'number') {
+        // Validação específica para número - permite "S/N" ou número válido
+        if (!formData[field] || (formData[field] !== 'S/N' && formData[field].trim() === '')) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Campo obrigatório',
+            text: `Por favor, preencha o campo: ${label}`,
+            confirmButtonColor: '#D14D72'
+          });
+          return false;
+        }
+      } else if (!formData[field] || formData[field] === '') {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: `Por favor, preencha o campo: ${label}`,
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+    }
+
+    // Validações condicionais baseadas nas respostas
+    if (formData.homeOwnership === "Rented" && !formData.petsAllowed) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campo obrigatório',
+        text: 'Por favor, informe se há permissão para animais no local alugado.',
+        confirmButtonColor: '#D14D72'
+      });
+      return false;
+    }
+
+    if (formData.numberOfHouseholdMembers > "0") {
+      if (!formData.allergy) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, informe se alguém na casa tem alergia a animais.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+
+      if (formData.allergy === "true" && !formData.allergyDetails) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, explique como pretende lidar com a alergia.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+
+      if (!formData.familyAgreement) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, informe se todos na casa estão de acordo com a adoção.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+
+      if (formData.familyAgreement === "false" && !formData.familyAgreementDetails) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, explique como pretende lidar com a discordância familiar.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+    }
+
+    if (formData.hasOrHadPets === "Já tive e tenho") {
+      if (!formData.petOutcome) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, informe o que aconteceu com seus pets anteriores.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+
+      if (formData.petOutcome === "Outro" && !formData.otherOutcome) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, explique o que aconteceu com seus pets anteriores.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+
+      if (!formData.currentPetsDetails) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, informe sobre seus pets atuais.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+    }
+
+    if (formData.hasOrHadPets === "Já tive, mas não tenho nenhum no momento") {
+      if (!formData.petOutcome1) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, informe o que aconteceu com seus pets anteriores.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+
+      if (formData.petOutcome1 === "Outro" && !formData.otherOutcome1) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Campo obrigatório',
+          text: 'Por favor, explique o que aconteceu com seus pets anteriores.',
+          confirmButtonColor: '#D14D72'
+        });
+        return false;
+      }
+    }
+
+    // Verificar se as imagens do ambiente foram adicionadas
+    if (!formData.environmentImages || formData.environmentImages.length < 2) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Fotos necessárias',
+        text: 'Por favor, adicione pelo menos 2 fotos do ambiente.',
+        confirmButtonColor: '#D14D72'
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validação completa antes do envio
+    if (!validateAllFields()) {
+      return;
+    }
+    
     setIsSubmitting(true);
 
     try {
       // Mostrar loading com PawAnimation
       const pawAnimationHtml = ReactDOMServer.renderToString(
-        <PawAnimation text="Enviando formulário..." vertical={true} />
+        <PawAnimation text="Enviando formulário..." vertical={true} width={160} height={160} />
       );
 
       Swal.fire({

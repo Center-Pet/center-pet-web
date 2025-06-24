@@ -7,6 +7,9 @@ import { API_URL } from "../../config/api";
 import Swal from "sweetalert2";
 import "./AdoptionPage.css";
 import { CaretLeft, WhatsappLogo, EnvelopeSimple } from "phosphor-react";
+import slugify from '../../utils/slugify';
+import PawAnimation from '../../components/Molecules/PawAnimation/PawAnimation';
+import ReactDOMServer from 'react-dom/server';
 
 export default function AdoptionPage() {
   const { adoptionId } = useParams();
@@ -15,6 +18,7 @@ export default function AdoptionPage() {
 
   const [pet, setPet] = useState(null);
   const [adopter, setAdopter] = useState(null);
+  const [ong, setOng] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [showImages, setShowImages] = useState(false);
@@ -39,32 +43,94 @@ export default function AdoptionPage() {
 
     const fetchData = async () => {
       try {
-        // Primeiro, buscar os detalhes da adoção
-        const adoptionRes = await fetch(`${API_URL}/adoptions/${adoptionId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json"
-          }
-        });
-        if (!adoptionRes.ok) throw new Error("Erro ao buscar informações da adoção.");
-        const adoptionData = await adoptionRes.json();
+        // Tentar buscar a adoção diretamente primeiro
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        
+        if (!user._id) {
+          throw new Error("Usuário não autenticado");
+        }
 
-        // Com os IDs obtidos da adoção, buscar informações do pet e do adotante
-        const [petRes, adopterRes] = await Promise.all([
-          fetch(`${API_URL}/pets/${adoptionData.petId._id}`),
-          fetch(`${API_URL}/adopters/${adoptionData.userId._id}`),
+        let adoptionData = null;
+
+        // Primeiro, tentar buscar a adoção diretamente (se a rota existir)
+        try {
+          const directRes = await fetch(`${API_URL}/adoptions/${adoptionId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          });
+          
+          if (directRes.ok) {
+            adoptionData = await directRes.json();
+            console.log("Adoção encontrada via rota direta:", adoptionData);
+          }
+        } catch (directError) {
+          console.log("Rota direta não disponível, tentando via lista:", directError);
+        }
+
+        // Se não conseguiu via rota direta, buscar via lista da ONG
+        if (!adoptionData) {
+          console.log("Buscando via lista de adoções da ONG...");
+          
+          // Buscar adoções da ONG do usuário logado
+          const adoptionsRes = await fetch(`${API_URL}/adoptions/by-ong/${user._id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          });
+          
+          if (!adoptionsRes.ok) throw new Error("Erro ao buscar adoções.");
+          const adoptionsData = await adoptionsRes.json();
+          
+          // Encontrar a adoção específica pelo ID
+          adoptionData = adoptionsData.adoptions?.find(adoption => adoption._id === adoptionId) || 
+                        adoptionsData.find(adoption => adoption._id === adoptionId);
+          
+          if (!adoptionData) {
+            throw new Error("Adoção não encontrada");
+          }
+          
+          console.log("Adoção encontrada via lista:", adoptionData);
+        }
+        
+        console.log("Dados da adoção:", adoptionData);
+
+        // Verificar se temos os IDs necessários
+        const petId = adoptionData.petId?._id || adoptionData.petId;
+        const userId = adoptionData.userId?._id || adoptionData.userId;
+        const ongId = adoptionData.ongId?._id || adoptionData.ongId;
+        
+        console.log("IDs extraídos:", { petId, userId, ongId });
+
+        if (!petId || !userId || !ongId) {
+          throw new Error("Dados da adoção incompletos");
+        }
+
+        // Com os IDs obtidos da adoção, buscar informações do pet, adotante e ONG
+        const [petRes, adopterRes, ongRes] = await Promise.all([
+          fetch(`${API_URL}/pets/${petId}`),
+          fetch(`${API_URL}/adopters/${userId}`),
+          fetch(`${API_URL}/ongs/${ongId}`),
         ]);
 
         if (!petRes.ok) throw new Error("Erro ao buscar informações do pet.");
         if (!adopterRes.ok) throw new Error("Erro ao buscar informações do adotante.");
+        if (!ongRes.ok) throw new Error("Erro ao buscar informações da ONG.");
 
-        const [petData, adopterData] = await Promise.all([
+        const [petData, adopterData, ongData] = await Promise.all([
           petRes.json(),
           adopterRes.json(),
+          ongRes.json(),
         ]);
+
+        console.log("Dados carregados:", { petData, adopterData, ongData });
 
         setPet(petData.data || petData);
         setAdopter(adopterData.data || adopterData);
+        setOng(ongData.data || ongData);
         setAdoptionStatus(adoptionData.status);
       } catch (err) {
         console.error("Erro ao carregar dados:", err);
@@ -149,7 +215,7 @@ export default function AdoptionPage() {
           background: "#fff",
           color: "#333",
         });
-        navigate(`/ong-profile/${pet.ongId}`);
+        navigate(`/ong-profile/${slugify(ong?.name)}`);
       } catch (err) {
         Swal.fire({
           title: "Erro",
@@ -197,7 +263,7 @@ export default function AdoptionPage() {
           background: "#fff",
           color: "#333",
         });
-        navigate(`/ong-profile/${pet.ongId}`);
+        navigate(`/ong-profile/${slugify(ong?.name)}`);
       } catch (err) {
         Swal.fire({
           title: "Erro",
@@ -287,14 +353,10 @@ export default function AdoptionPage() {
     return onlyNumbers;
   }
 
-  if (loading) {
-    return <div className="adoption-page-container">Carregando...</div>;
-  }
-
   return (
     <div className="adoption-page-container">
       <button
-        onClick={() => navigate(`/ong-profile/${pet?.ongId}`)}
+        onClick={() => navigate(`/ong-profile/${slugify(ong?.name)}`)}
         style={{
           background: "none",
           border: "none",
@@ -393,48 +455,49 @@ export default function AdoptionPage() {
           </div>
         </div>
       </div>
-      {/* Modal de galeria de imagens do adotante */}
-      {showImages && adopter?.environmentImages && (
-        <div className="image-modal-overlay" onClick={() => setShowImages(false)}>
-          <div className="image-modal-content" onClick={e => e.stopPropagation()}>
-            <button className="close-modal-btn" onClick={() => setShowImages(false)}>×</button>
-            <div className="image-modal-main">
-              <button className="nav-btn prev-btn" onClick={e => {e.stopPropagation(); setCurrentImageIndex(i => i === 0 ? adopter.environmentImages.length - 1 : i - 1); setZoomLevel(1); setZoomPosition({x:0,y:0});}}>❮</button>
-              <div
-                className="image-container"
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseLeave}
-              >
-                <img
-                  src={getImageUrl(adopter.environmentImages[currentImageIndex])}
-                  alt={`Ambiente ${currentImageIndex + 1}`}
-                  className="modal-image"
-                  onClick={handleImageClick}
-                  style={{
-                    transform: `scale(${zoomLevel}) translate(${zoomPosition.x / zoomLevel}px, ${zoomPosition.y / zoomLevel}px)`,
-                    cursor: zoomLevel > 1 ? (isDragging ? "grabbing" : "grab") : "zoom-in",
-                    transition: isDragging ? "none" : "transform 0.3s ease-out",
-                  }}
-                />
-              </div>
-              <button className="nav-btn next-btn" onClick={e => {e.stopPropagation(); setCurrentImageIndex(i => i === adopter.environmentImages.length - 1 ? 0 : i + 1); setZoomLevel(1); setZoomPosition({x:0,y:0});}}>❯</button>
-            </div>
-            <div className="image-modal-thumbnails">
-              {adopter.environmentImages.map((image, idx) => (
-                <img
-                  key={idx}
-                  src={getImageUrl(image)}
-                  alt={`Thumbnail ${idx + 1}`}
-                  className={`thumbnail ${idx === currentImageIndex ? 'active' : ''}`}
-                  onClick={e => {e.stopPropagation(); setCurrentImageIndex(idx); setZoomLevel(1); setZoomPosition({x:0,y:0});}}
-                />
-              ))}
-            </div>
+      {/* Bloco de contato com o adotante aprovado */}
+      {adoptionStatus === "approved" && adopter && (
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "16px",
+          margin: "32px 0"
+        }}>
+          <span style={{
+            fontWeight: "bold",
+            color: "#4CAF50",
+            fontSize: "1.2rem",
+            marginBottom: "8px"
+          }}>
+            Entre em contato com o adotante aprovado:
+          </span>
+          <div style={{ display: "flex", gap: "24px" }}>
+            <ButtonType
+              as="a"
+              href={`https://wa.me/${formatPhoneToWhatsapp(adopter.phone)}`}
+              target="_blank"
+              bgColor="#25D366"
+              color="#fff"
+              style={{ minWidth: 140 }}
+              icon={<WhatsappLogo size={22} weight="fill" />}
+            >
+              WhatsApp
+            </ButtonType>
+            <ButtonType
+              as="a"
+              href={`mailto:${adopter.email}`}
+              bgColor="#D14D72"
+              color="#fff"
+              style={{ minWidth: 140 }}
+              icon={<EnvelopeSimple size={22} weight="fill" />}
+            >
+              E-mail
+            </ButtonType>
           </div>
         </div>
       )}
+      {/* Bloco de alteração de status */}
       {userType === "Ong" && adoptionStatus && (
         <div className="adoption-actions" style={{ margin: "32px 0", display: "flex", gap: 16 }}>
           {adoptionStatus === "requestReceived" && (
@@ -559,45 +622,45 @@ export default function AdoptionPage() {
           )}
         </div>
       )}
-      {/* Bloco de contato com o adotante aprovado */}
-      {adoptionStatus === "approved" && adopter && (
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "16px",
-          margin: "32px 0"
-        }}>
-          <span style={{
-            fontWeight: "bold",
-            color: "#4CAF50",
-            fontSize: "1.2rem",
-            marginBottom: "8px"
-          }}>
-            Entre em contato com o adotante aprovado:
-          </span>
-          <div style={{ display: "flex", gap: "24px" }}>
-            <ButtonType
-              as="a"
-              href={`https://wa.me/${formatPhoneToWhatsapp(adopter.phone)}`}
-              target="_blank"
-              bgColor="#25D366"
-              color="#fff"
-              style={{ minWidth: 140 }}
-              icon={<WhatsappLogo size={22} weight="fill" />}
-            >
-              WhatsApp
-            </ButtonType>
-            <ButtonType
-              as="a"
-              href={`mailto:${adopter.email}`}
-              bgColor="#D14D72"
-              color="#fff"
-              style={{ minWidth: 140 }}
-              icon={<EnvelopeSimple size={22} weight="fill" />}
-            >
-              E-mail
-            </ButtonType>
+      {/* Modal de galeria de imagens do adotante */}
+      {showImages && adopter?.environmentImages && (
+        <div className="image-modal-overlay" onClick={() => setShowImages(false)}>
+          <div className="image-modal-content" onClick={e => e.stopPropagation()}>
+            <button className="close-modal-btn" onClick={() => setShowImages(false)}>×</button>
+            <div className="image-modal-main">
+              <button className="nav-btn prev-btn" onClick={e => {e.stopPropagation(); setCurrentImageIndex(i => i === 0 ? adopter.environmentImages.length - 1 : i - 1); setZoomLevel(1); setZoomPosition({x:0,y:0});}}>❮</button>
+              <div
+                className="image-container"
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+              >
+                <img
+                  src={getImageUrl(adopter.environmentImages[currentImageIndex])}
+                  alt={`Ambiente ${currentImageIndex + 1}`}
+                  className="modal-image"
+                  onClick={handleImageClick}
+                  style={{
+                    transform: `scale(${zoomLevel}) translate(${zoomPosition.x / zoomLevel}px, ${zoomPosition.y / zoomLevel}px)`,
+                    cursor: zoomLevel > 1 ? (isDragging ? "grabbing" : "grab") : "zoom-in",
+                    transition: isDragging ? "none" : "transform 0.3s ease-out",
+                  }}
+                />
+              </div>
+              <button className="nav-btn next-btn" onClick={e => {e.stopPropagation(); setCurrentImageIndex(i => i === adopter.environmentImages.length - 1 ? 0 : i + 1); setZoomLevel(1); setZoomPosition({x:0,y:0});}}>❯</button>
+            </div>
+            <div className="image-modal-thumbnails">
+              {adopter.environmentImages.map((image, idx) => (
+                <img
+                  key={idx}
+                  src={getImageUrl(image)}
+                  alt={`Thumbnail ${idx + 1}`}
+                  className={`thumbnail ${idx === currentImageIndex ? 'active' : ''}`}
+                  onClick={e => {e.stopPropagation(); setCurrentImageIndex(idx); setZoomLevel(1); setZoomPosition({x:0,y:0});}}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}

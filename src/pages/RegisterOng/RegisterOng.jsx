@@ -174,7 +174,7 @@ const RegisterOng = () => {
 
     // Usando o componente PawAnimation para o loading
     const pawAnimationHtml = ReactDOMServer.renderToString(
-      <PawAnimation width={60} height={60} text="Aguarde um instante" />
+      <PawAnimation width={160} height={160} text="Aguarde um instante" />
     );
 
     Swal.fire({
@@ -426,8 +426,8 @@ const RegisterOng = () => {
     // Mostra o loading antes de iniciar o upload usando o componente PawAnimation
     const pawAnimationHtml = ReactDOMServer.renderToString(
       <PawAnimation
-        width={48}
-        height={48}
+        width={160}
+        height={160}
         text="Estamos processando seu cadastro..."
         vertical={true}
       />

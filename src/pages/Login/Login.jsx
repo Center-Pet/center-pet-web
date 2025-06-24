@@ -209,8 +209,8 @@ const Login = () => {
       // Mostrar loading com PawAnimation
       const pawAnimationHtml = ReactDOMServer.renderToString(
         <PawAnimation
-          width={60}
-          height={60}
+          width={160}
+          height={160}
           text="Cadastrando..."
           vertical={true}
         />
@@ -327,8 +327,8 @@ const Login = () => {
       // Mostrar loading com PawAnimation
       const pawAnimationHtml = ReactDOMServer.renderToString(
         <PawAnimation
-          width={60}
-          height={60}
+          width={160}
+          height={160}
           text="Entrando..."
           vertical={true}
         />
@@ -421,8 +421,8 @@ const Login = () => {
     // Mostrar loading com PawAnimation
     const pawAnimationHtml = ReactDOMServer.renderToString(
       <PawAnimation
-        width={60}
-        height={60}
+        width={160}
+        height={160}
         text="Enviando..."
         vertical={true}
       />

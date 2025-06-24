@@ -138,6 +138,18 @@ body {
     .catalog-filter-header {
         justify-content: center;
     }
+    .page-pet-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+        justify-items: center;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .page-pet-grid > .card_pet {
+        width: 90%;
+        max-width: 150px;
+    }
 }
 
 @media (max-width: 540px) {

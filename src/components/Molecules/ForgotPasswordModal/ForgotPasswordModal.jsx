@@ -109,7 +109,7 @@ const ForgotPasswordModal = ({ onClose, email = "", onSubmit }) => {
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <PawAnimation width={24} height={24} text="Enviando..." vertical={false} />
+                <PawAnimation width={160} height={160} text="Enviando..." vertical={false} />
               ) : (
                 "Recuperar senha"
               )}
