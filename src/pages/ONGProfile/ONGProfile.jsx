@@ -134,7 +134,7 @@ const ONGProfile = () => {
           id: pet._id,
           image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
                  (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
-                 "https://i.imgur.com/WanR0b3.png",
+                 "https://i.imgur.com/B2BFUeU.png",
           hasSpecialCondition: pet.health?.specialCondition &&
             (Array.isArray(pet.health.specialCondition) ? 
              pet.health.specialCondition.some(condition => condition.toLowerCase() !== "nenhuma") :
@@ -263,7 +263,7 @@ const ONGProfile = () => {
         <div className="ong-profile-card">
           <div className="ong-profile-header">
             <img
-              src={ongData.profileImg || "https://i.imgur.com/WanR0b3.png"}
+              src={ongData.profileImg || "https://i.imgur.com/B2BFUeU.png"}
               alt={`Foto da ONG ${ongData.name}`}
               className="ong-profile-image"
             />

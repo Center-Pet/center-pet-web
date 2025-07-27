@@ -174,9 +174,43 @@ const Dashboard = () => {
         try {
             const doc = new jsPDF();
 
-            // Logo
-            const logoBase64 = await getBase64FromUrl('https://i.imgur.com/NmK3MMp.jpeg');
-            doc.addImage(logoBase64, 'JPEG', 80, 10, 50, 50);
+            // Logo - Buscar dados completos da ONG para obter a imagem
+            let logoBase64;
+            let imageFormat = 'JPEG';
+            
+            try {
+                // Buscar dados completos da ONG
+                const token = localStorage.getItem("token");
+                const ongResponse = await fetch(`${API_URL}/ongs/${user._id}`, {
+                    headers: {
+                        Authorization: token ? `Bearer ${token}` : "",
+                    },
+                });
+                
+                if (ongResponse.ok) {
+                    const ongData = await ongResponse.json();
+                    const ongImage = ongData.data?.profileImg || ongData.profileImg;
+                    
+                    if (ongImage && ongImage.trim() !== '') {
+                        logoBase64 = await getBase64FromUrl(ongImage);
+                        imageFormat = ongImage.includes('.png') ? 'PNG' : 'JPEG';
+                    } else {
+                        logoBase64 = await getBase64FromUrl('https://i.imgur.com/B2BFUeU.png');
+                        imageFormat = 'PNG';
+                    }
+                } else {
+                    // Fallback para imagem padrão se não conseguir buscar dados da ONG
+                    logoBase64 = await getBase64FromUrl('https://i.imgur.com/B2BFUeU.png');
+                    imageFormat = 'PNG';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar logo:', error);
+                // Fallback para imagem padrão em caso de erro
+                logoBase64 = await getBase64FromUrl('https://i.imgur.com/B2BFUeU.png');
+                imageFormat = 'PNG';
+            }
+            
+            doc.addImage(logoBase64, imageFormat, 80, 10, 50, 50);
 
             // Título principal
             doc.setTextColor(209, 77, 114);
@@ -290,67 +324,172 @@ const Dashboard = () => {
 
     // Função para gerar relatório em XLSX
     const generateXLSX = async () => {
-      // Estatísticas Gerais
-      const generalStats = [
-        [user?.name || 'ONG'],
-        ["Métrica", "Quantidade"],
-        ["Total de Pets", stats.totalPets],
-        ["Pets Castrados", stats.castratedPets],
-        ["Pets Vermifugados", stats.dewormedPets],
-        ["Pets Especiais", stats.specialPets],
-        ["Pets Vacinados", stats.vaccinatedPets],
-      ];
+      try {
+        // Buscar todos os pets da ONG
+        const token = localStorage.getItem("token");
+        const petsResponse = await fetch(`${API_URL}/pets/by-ong/${user._id}`, {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        });
+        const pets = await petsResponse.json();
 
-      // Distribuição por Tipo
-      const typeStats = [
-        [user?.name || 'ONG'],
-        ["Tipo", "Quantidade"],
-        ...Object.entries(stats.petsByType).map(([type, count]) => [type, count])
-      ];
+        // Estatísticas Gerais
+        const generalStats = [
+          [user?.name || 'ONG'],
+          ["Métrica", "Quantidade"],
+          ["Total de Pets", stats.totalPets],
+          ["Pets Castrados", stats.castratedPets],
+          ["Pets Vermifugados", stats.dewormedPets],
+          ["Pets Especiais", stats.specialPets],
+          ["Pets Vacinados", stats.vaccinatedPets],
+        ];
 
-      // Distribuição por Status
-      const statusStats = [
-        [user?.name || 'ONG'],
-        ["Status", "Quantidade"],
-        ...Object.entries(stats.petsByStatus).map(([status, count]) => [status, count])
-      ];
+        // Distribuição por Tipo
+        const typeStats = [
+          [user?.name || 'ONG'],
+          ["Tipo", "Quantidade"],
+          ...Object.entries(stats.petsByType).map(([type, count]) => [type, count])
+        ];
 
-      // Adoções por mês
-      const months = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-      ];
-      const adoptionStats = [
-        [user?.name || 'ONG'],
-        ["Mês", "Aprovadas", "Rejeitadas", "Concluídas"],
-        ...months.map((month, i) => [
-          month,
-          stats.monthlyAdoptions.approved[i],
-          stats.monthlyAdoptions.rejected[i],
-          stats.monthlyAdoptions.completed[i]
-        ])
-      ];
+        // Distribuição por Status
+        const statusStats = [
+          [user?.name || 'ONG'],
+          ["Status", "Quantidade"],
+          ...Object.entries(stats.petsByStatus).map(([status, count]) => [status, count])
+        ];
 
-      // Cria um workbook com várias abas
-      const wb = XLSX.utils.book_new();
-      wb.Props = {
-        Title: `Relatório de Estatísticas - ${user?.name || 'ONG'}`,
-        CreatedDate: new Date()
-      };
+        // Adoções por mês
+        const months = [
+          "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+          "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
+        const adoptionStats = [
+          [user?.name || 'ONG'],
+          ["Mês", "Aprovadas", "Rejeitadas", "Concluídas"],
+          ...months.map((month, i) => [
+            month,
+            stats.monthlyAdoptions.approved[i],
+            stats.monthlyAdoptions.rejected[i],
+            stats.monthlyAdoptions.completed[i]
+          ])
+        ];
 
-      wb.SheetNames.push("Estatísticas Gerais");
-      wb.Sheets["Estatísticas Gerais"] = XLSX.utils.aoa_to_sheet(generalStats);
+        // Lista completa de pets
+        const petsList = [
+          [user?.name || 'ONG'],
+          ["Lista Completa de Pets Cadastrados"],
+          [""], // Linha em branco
+          [
+            "Nome",
+            "Espécie", 
+            "Raça",
+            "Idade",
+            "Gênero",
+            "Porte",
+            "Status",
+            "Vacinado",
+            "Castrado", 
+            "Vermifugado",
+            "Condições Especiais",
+            "Pelagem",
+            "Localização",
+            "Data de Cadastro",
+            "Bio"
+          ],
+          ...pets.map(pet => [
+            pet.name || "Não informado",
+            pet.type || "Não informado",
+            pet.breed || "Não informado", 
+            pet.age || "Não informado",
+            pet.gender || "Não informado",
+            pet.size || "Não informado",
+            pet.status || "Não informado",
+            pet.health?.vaccinated ? "Sim" : "Não",
+            pet.health?.castrated ? "Sim" : "Não",
+            pet.health?.dewormed ? "Sim" : "Não",
+            Array.isArray(pet.health?.specialCondition) 
+              ? pet.health.specialCondition.join(", ") 
+              : pet.health?.specialCondition || "Nenhuma",
+            pet.coat || "Não informado",
+            pet.city && pet.state ? `${pet.city}, ${pet.state}` : "Não informado",
+            pet.registerDate ? new Date(pet.registerDate).toLocaleDateString('pt-BR') : "Não informado",
+            pet.bio || "Sem descrição"
+          ])
+        ];
 
-      wb.SheetNames.push("Por Tipo");
-      wb.Sheets["Por Tipo"] = XLSX.utils.aoa_to_sheet(typeStats);
+        // Cria um workbook com várias abas
+        const wb = XLSX.utils.book_new();
+        wb.Props = {
+          Title: `Relatório de Estatísticas - ${user?.name || 'ONG'}`,
+          CreatedDate: new Date()
+        };
 
-      wb.SheetNames.push("Por Status");
-      wb.Sheets["Por Status"] = XLSX.utils.aoa_to_sheet(statusStats);
+        wb.SheetNames.push("Estatísticas Gerais");
+        wb.Sheets["Estatísticas Gerais"] = XLSX.utils.aoa_to_sheet(generalStats);
 
-      wb.SheetNames.push("Adoções por Mês");
-      wb.Sheets["Adoções por Mês"] = XLSX.utils.aoa_to_sheet(adoptionStats);
+        wb.SheetNames.push("Por Tipo");
+        wb.Sheets["Por Tipo"] = XLSX.utils.aoa_to_sheet(typeStats);
 
-      XLSX.writeFile(wb, `relatorio-estatisticas-${user?.name || 'ONG'}.xlsx`);
+        wb.SheetNames.push("Por Status");
+        wb.Sheets["Por Status"] = XLSX.utils.aoa_to_sheet(statusStats);
+
+        wb.SheetNames.push("Adoções por Mês");
+        wb.Sheets["Adoções por Mês"] = XLSX.utils.aoa_to_sheet(adoptionStats);
+
+        wb.SheetNames.push("Lista de Pets");
+        wb.Sheets["Lista de Pets"] = XLSX.utils.aoa_to_sheet(petsList);
+
+        // Aplicar formatação à aba "Lista de Pets"
+        const petsSheet = wb.Sheets["Lista de Pets"];
+        
+        // Definir largura das colunas
+        const columnWidths = [
+          { wch: 20 }, // Nome
+          { wch: 12 }, // Espécie
+          { wch: 15 }, // Raça
+          { wch: 10 }, // Idade
+          { wch: 10 }, // Gênero
+          { wch: 12 }, // Porte
+          { wch: 12 }, // Status
+          { wch: 10 }, // Vacinado
+          { wch: 10 }, // Castrado
+          { wch: 12 }, // Vermifugado
+          { wch: 25 }, // Condições Especiais
+          { wch: 12 }, // Pelagem
+          { wch: 20 }, // Localização
+          { wch: 15 }, // Data de Cadastro
+          { wch: 50 }  // Bio
+        ];
+        petsSheet['!cols'] = columnWidths;
+
+        // Aplicar estilo ao cabeçalho (linha 4)
+        for (let col = 0; col < petsList[3].length; col++) {
+          const cellRef = XLSX.utils.encode_cell({ r: 3, c: col });
+          if (!petsSheet[cellRef]) {
+            petsSheet[cellRef] = { v: petsList[3][col] };
+          }
+          petsSheet[cellRef].s = {
+            font: { bold: true, color: { rgb: "FFFFFF" } },
+            fill: { fgColor: { rgb: "D14D72" } },
+            alignment: { horizontal: "center", vertical: "center" }
+          };
+        }
+
+        // Aplicar estilo ao título (linha 2)
+        const titleCell = XLSX.utils.encode_cell({ r: 1, c: 0 });
+        if (petsSheet[titleCell]) {
+          petsSheet[titleCell].s = {
+            font: { bold: true, size: 14 },
+            alignment: { horizontal: "center" }
+          };
+        }
+
+        XLSX.writeFile(wb, `relatorio-estatisticas-${user?.name || 'ONG'}.xlsx`);
+      } catch (error) {
+        console.error('Erro ao gerar XLSX:', error);
+        alert('Erro ao gerar o arquivo Excel. Por favor, tente novamente.');
+      }
     };
 
     if (loading) {

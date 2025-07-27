@@ -80,7 +80,7 @@ const HomeOng = () => {
                     id: pet._id,
                     image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
                            (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
-                           "https://i.imgur.com/WanR0b3.png",
+                           "https://i.imgur.com/B2BFUeU.png",
                     name: pet.name,
                     gender: pet.gender,
                     age: pet.age,

@@ -98,7 +98,7 @@ const AdopterProfile = () => {
         <div className="adopter-profile-header-container">
           <div className="adopter-profile-header">
             <img
-              src={adopter.profileImg || "https://i.imgur.com/WanR0b3.png"}
+              src={adopter.profileImg || "https://i.imgur.com/B2BFUeU.png"}
               alt={`Foto de ${adopter.fullName}`}
               className="adopter-profile-image"
             />

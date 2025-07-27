@@ -279,9 +279,9 @@ export default function AdoptionPage() {
   };
 
   function getImageUrl(img) {
-    if (!img) return "https://i.imgur.com/WanR0b3.png";
+    if (!img) return "https://i.imgur.com/B2BFUeU.png";
     if (Array.isArray(img)) img = img[0];
-    if (!img) return "https://i.imgur.com/WanR0b3.png";
+    if (!img) return "https://i.imgur.com/B2BFUeU.png";
     if (img.startsWith("http")) return img;
     return `${API_URL}/uploads/${img}`;
   }
@@ -399,7 +399,7 @@ export default function AdoptionPage() {
           <h3>Adotante</h3>
           <div>
             <img
-              src={adopter?.profileImg || "https://i.imgur.com/WanR0b3.png"}
+              src={adopter?.profileImg || "https://i.imgur.com/B2BFUeU.png"}
               alt="Foto do adotante"
               className="adoption-pet-img"
             />

@@ -109,7 +109,7 @@ const CatalogFilter = () => {
               (Array.isArray(pet.image) && pet.image.length > 0
                 ? pet.image[0]
                 : null) ||
-              "https://i.imgur.com/WanR0b3.png",
+              "https://i.imgur.com/B2BFUeU.png",
             // Processar atributos de saúde para filtragem
             hasSpecialCondition:
               pet.health?.specialCondition &&

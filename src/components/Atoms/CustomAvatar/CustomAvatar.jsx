@@ -9,7 +9,7 @@ import { Gear } from "phosphor-react";
 import { API_URL } from "../../../config/api";
 import slugify from '../../../utils/slugify';
 
-const defaultAvatar = "https://i.imgur.com/WanR0b3.png";
+const defaultAvatar = "https://i.imgur.com/B2BFUeU.png";
 
 export default function CustomAvatar() {
   const navigate = useNavigate();

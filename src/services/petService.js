@@ -101,7 +101,7 @@ export const getPets = async (category, page = 1, limit = 10) => {
             name: pet.name,
             image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] || 
                    (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
-                   "https://i.imgur.com/WanR0b3.png",
+                   "https://i.imgur.com/B2BFUeU.png",
             gender: pet.gender,
             age: pet.age,
             type: pet.type,
