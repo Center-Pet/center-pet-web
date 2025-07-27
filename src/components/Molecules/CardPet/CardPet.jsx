@@ -20,7 +20,7 @@ const CardPet = ({
               ? image[0]
               : typeof image === "string"
               ? image
-              : "https://i.imgur.com/WanR0b3.png"
+              : "https://i.imgur.com/B2BFUeU.png"
           }
           alt={`Imagem de ${name}`}
         />

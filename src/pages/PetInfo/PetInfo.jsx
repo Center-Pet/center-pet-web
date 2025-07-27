@@ -116,7 +116,7 @@ const PetInfo = () => {
                   id: pet._id,
                   image: pet.image?.[0] || pet.photos?.[0] || pet.imagens?.[0] ||
                     (Array.isArray(pet.image) && pet.image.length > 0 ? pet.image[0] : null) ||
-                    "https://i.imgur.com/WanR0b3.png",
+                    "https://i.imgur.com/B2BFUeU.png",
                   name: pet.name,
                   gender: pet.gender,
                   age: pet.age,
@@ -634,7 +634,7 @@ const PetInfo = () => {
               </button>
               <img
                 src={
-                  petImages[currentImage] || "https://i.imgur.com/WanR0b3.png"
+                  petImages[currentImage] || "https://i.imgur.com/B2BFUeU.png"
                 }
                 alt={pet.name}
                 className="pet-main-image"
@@ -653,7 +653,7 @@ const PetInfo = () => {
                   {petImages.map((image, index) => (
                     <img
                       key={index}
-                      src={image || "https://i.imgur.com/WanR0b3.png"}
+                      src={image || "https://i.imgur.com/B2BFUeU.png"}
                       alt={`${pet.name} thumbnail ${index + 1}`}
                       className={`pet-thumbnail ${currentImage === index ? "active" : ""
                         }`}
@@ -806,7 +806,7 @@ const PetInfo = () => {
             >
               <img
                 src={
-                  petImages[currentImage] || "https://i.imgur.com/WanR0b3.png"
+                  petImages[currentImage] || "https://i.imgur.com/B2BFUeU.png"
                 }
                 alt={pet.name}
                 onClick={handleImageClick}

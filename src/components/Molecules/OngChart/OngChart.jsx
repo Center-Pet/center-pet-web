@@ -35,7 +35,7 @@ const OngChart = ({ ongData, onClick, slug }) => {
   return (
     <div className="ong-card" onClick={handleClick}>
       <img 
-        src={profileImage || profileImg || "https://i.imgur.com/WanR0b3.png"} 
+        src={profileImage || profileImg || "https://i.imgur.com/B2BFUeU.png"} 
         alt={name} 
         className="ong-logo" 
       />

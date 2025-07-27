@@ -649,7 +649,7 @@ export default function EditPet() {
 
             <OngCard
               imageUrl={
-                ongData?.profileImg || "https://i.imgur.com/WanR0b3.png"
+                ongData?.profileImg || "https://i.imgur.com/B2BFUeU.png"
               }
               ongName={ongData?.name || "ONG"}
               ongId={ongData?._id}
