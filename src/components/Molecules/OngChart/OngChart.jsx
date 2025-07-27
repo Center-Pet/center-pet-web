@@ -14,6 +14,13 @@ const OngChart = ({ ongData, onClick, slug }) => {
     socialMedia = {}
   } = ongData || {};
 
+  // Função para truncar nomes muito longos
+  const truncateName = (name, maxLength = 25) => {
+    if (!name) return "";
+    if (name.length <= maxLength) return name;
+    return name.substring(0, maxLength).trim() + "...";
+  };
+
   // Função para lidar com o clique no card
   const handleClick = () => {
     if (onClick) {
@@ -32,7 +39,7 @@ const OngChart = ({ ongData, onClick, slug }) => {
         alt={name} 
         className="ong-logo" 
       />
-      <h3 className="ong-name">{name}</h3>
+      <h3 className="ong-name" title={name}>{truncateName(name)}</h3>
       <a className="ong-details-btn">
         Veja mais detalhes <span>&#8594;</span>
       </a>

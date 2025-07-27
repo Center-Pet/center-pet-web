@@ -44,6 +44,13 @@
   font-weight: 600;
   margin-bottom: 0.7rem;
   text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .ong-details-btn {
@@ -96,12 +103,21 @@
     width: 70px;
     height: 70px;
   }
+  
+  .ong-name {
+    font-size: 1rem;
+    max-width: 180px;
+  }
 }
 
 @media (max-width: 600px) {
   .ong-card {
     width: 100%;
     max-width: 320px;
+  }
+  
+  .ong-name {
+    max-width: 280px;
   }
 }
 
@@ -111,6 +127,10 @@
   }
   .ong-card:hover {
     transform: scale(1.025);
+  }
+  
+  .ong-name {
+    font-size: 0.95rem;
   }
 }
 

@@ -216,11 +216,6 @@ const ONGProfile = () => {
   // Determine se é a ONG dona
   const isOngOwner = user && ongData && user._id === ongData._id;
 
-  // Filtrar pets para exibir apenas os disponíveis para adotantes
-  const petsToShow = isOngOwner
-    ? ongPets
-    : ongPets.filter(pet => pet.status === "Disponível");
-
   if (loading) {
     return (
       <div className="ong-profile-container">
@@ -470,6 +465,7 @@ const ONGProfile = () => {
             limit={8}
             showAllPets={true}
             ongId={ongData._id}
+            ongName={ongData.name}
             customComponent={(pet) => (
               <div className="pet-card-with-status">
                 <CardPet
@@ -500,6 +496,7 @@ const ONGProfile = () => {
             limit={8}
             showAllPets={true}
             ongId={ongData._id}
+            ongName={ongData.name}
             customComponent={(pet) => (
               <div className="pet-card-with-status">
                 <CardPet

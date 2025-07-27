@@ -27,7 +27,8 @@ const PetShowcase = ({
   pets, 
   category,
   ongId, 
-  limit,
+  ongName,
+  limit = 0,
   customComponent,
   showAllPets = false
 }) => {
@@ -122,10 +123,22 @@ const PetShowcase = ({
       // Se o título for 'Últimos pets cadastrados', use um título mais amigável
       const isUltimosPets = title === "Últimos pets cadastrados";
       
+      // Construir o título adequado para a URL
+      let urlTitle;
+      if (isUltimosPets) {
+        urlTitle = "Pets cadastrados";
+      } else if (title === "Pets adotados") {
+        urlTitle = ongName ? `Pets adotados de ${ongName}` : "Pets adotados";
+      } else if (title === "Pets disponíveis e outros" || title === "Pets disponíveis") {
+        urlTitle = ongName ? `Pets disponíveis de ${ongName}` : "Pets disponíveis";
+      } else if (title.includes("Pets")) {
+        urlTitle = ongName ? `${title} de ${ongName}` : title;
+      } else {
+        urlTitle = ongName ? `Pets de ${title} de ${ongName}` : `Pets de ${title}`;
+      }
+      
       // Construir a URL com parâmetros
-      let url = `/catalog-filter?ongId=${ongId}&title=${encodeURIComponent(
-        isUltimosPets ? "Pets cadastrados" : `Pets de ${title}`
-      )}`;
+      let url = `/catalog-filter?ongId=${ongId}&title=${encodeURIComponent(urlTitle)}`;
       
       // Se todos os pets são adotados, adicionar filtro de status
       if (allPetsAdopted) {
@@ -252,10 +265,6 @@ const PetShowcase = ({
   );
 };
 
-// Valor padrão para limit = 0 (sem limite)
-PetShowcase.defaultProps = {
-  limit: 0,
-  showAllPets: false
-};
+
 
 export default PetShowcase;

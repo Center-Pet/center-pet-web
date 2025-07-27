@@ -153,11 +153,7 @@
 .filter-icon {
     width: 20px;
     height: auto; /* Mantém a proporção do ícone */
-    filter: brightness(0) invert(1); /* Inverte as cores do ícone para branco */
-}
-
-.filter-icon svg {
-    stroke: var(--main-pink) !important;
+    color: var(--main-pink);
 }
 
 /* Estilo do switch */
@@ -247,12 +243,26 @@
   padding-right: 16px;
   border-right: 1px solid #eee;
   margin-right: 4px;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.filter-title-container:hover {
+  background-color: var(--soft-pink);
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin: -4px 0px -4px 0;
 }
 
 .filter-title {
   font-size: 14px;
   font-weight: 600;
   color: #333;
+}
+
+.filter-toggle-icon {
+  color: var(--main-pink);
+  transition: transform 0.3s ease;
 }
 
 /* === Container para cada Botão de Filtro e seu Dropdown === */
@@ -429,6 +439,14 @@
     border-right: none;
     padding-right: 0;
     margin-bottom: 10px; /* Adiciona espaço abaixo do título */
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .filter-title-container:hover {
+    background-color: var(--soft-pink);
+    padding: 8px;
+    margin: 0 0 10px 0;
   }
 
   .filter-group {

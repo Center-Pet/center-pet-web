@@ -1,4 +1,4 @@
-import { Funnel, X } from "phosphor-react";
+import { Funnel, X, CaretDown, CaretUp } from "phosphor-react";
 import "./Filter.css";
 import { useState, useEffect, useRef } from "react";
 
@@ -122,6 +122,7 @@ const Filter = ({ onFilterChange, userType }) => {
   
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
+  const [isExpanded, setIsExpanded] = useState(false); // Novo estado para controlar expansão
 
   // Busca estados
   useEffect(() => {
@@ -216,41 +217,54 @@ const Filter = ({ onFilterChange, userType }) => {
   return (
     <div className="horizontal-filter-bar">
       <div className="filter-group">
-        <div className="filter-title-container">
+        <div 
+          className="filter-title-container"
+          onClick={() => setIsExpanded(!isExpanded)}
+          style={{ cursor: 'pointer' }}
+        >
           <Funnel size={20} className="filter-icon" />
           <span className="filter-title">Filtros:</span>
+          {isExpanded ? (
+            <CaretUp size={16} className="filter-toggle-icon" />
+          ) : (
+            <CaretDown size={16} className="filter-toggle-icon" />
+          )}
         </div>
-        {Object.entries(categories).map(([category, options]) => {
-          if (category === "Status" && userType !== "Ong") {
-            return null;
-          }
-          const categoryKey = categoryKeys[category];
-          return (
+        {isExpanded && (
+          <>
+            {Object.entries(categories).map(([category, options]) => {
+              if (category === "Status" && userType !== "Ong") {
+                return null;
+              }
+              const categoryKey = categoryKeys[category];
+              return (
+                <FilterDropdown
+                  key={category}
+                  category={category}
+                  options={options}
+                  selected={selectedFilters[categoryKey]}
+                  onChange={handleFilterChange}
+                />
+              );
+            })}
+            {/* Filtros de Localização */}
             <FilterDropdown
-              key={category}
-              category={category}
-              options={options}
-              selected={selectedFilters[categoryKey]}
-              onChange={handleFilterChange}
+              isLocation
+              category="Estado"
+              options={states}
+              value={selectedFilters.state}
+              onValueChange={handleLocationChange}
             />
-          );
-        })}
-        {/* Filtros de Localização */}
-        <FilterDropdown
-          isLocation
-          category="Estado"
-          options={states}
-          value={selectedFilters.state}
-          onValueChange={handleLocationChange}
-        />
-        <FilterDropdown
-          isLocation
-          category="Cidade"
-          options={cities}
-          value={selectedFilters.city}
-          onValueChange={handleLocationChange}
-          disabled={!selectedFilters.state}
-        />
+            <FilterDropdown
+              isLocation
+              category="Cidade"
+              options={cities}
+              value={selectedFilters.city}
+              onValueChange={handleLocationChange}
+              disabled={!selectedFilters.state}
+            />
+          </>
+        )}
       </div>
       {totalActiveFilters > 0 && (
         <button className="clear-filters-button" onClick={clearFilters}>

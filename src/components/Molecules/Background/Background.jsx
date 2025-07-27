@@ -6,13 +6,32 @@ import pawIcon from '/assets/icons/pawIcon.png';
 const AnimatedBackground = () => {
     const location = useLocation();
     const [paws, setPaws] = useState([]);
+    const [isMobile, setIsMobile] = useState(false);
   
+    useEffect(() => {
+      // Verificar se é mobile
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth <= 768);
+      };
+
+      // Verificar inicialmente
+      checkMobile();
+
+      // Adicionar listener para mudanças de tamanho
+      window.addEventListener('resize', checkMobile);
+
+      return () => {
+        window.removeEventListener('resize', checkMobile);
+      };
+    }, []);
+
     useEffect(() => {
       const generatePaws = () => {
         const newPaws = [];
-        const numPaws = 30;
+        // Reduzir número de patas no mobile
+        const numPaws = isMobile ? 12 : 30;
         const maxAttempts = 50;
-        const minDistance = 7; 
+        const minDistance = isMobile ? 15 : 7; // Maior distância no mobile
   
         for (let index = 0; index < numPaws; index++) {
           let attempts = 0;
@@ -45,7 +64,7 @@ const AnimatedBackground = () => {
       };
   
       generatePaws();
-    }, [location.pathname]); // Regenera as posições a cada troca de rota
+    }, [location.pathname, isMobile]); // Regenera as posições a cada troca de rota ou mudança de tamanho
   
     return (
       <div className="animated-background">
@@ -53,7 +72,7 @@ const AnimatedBackground = () => {
           <img
             key={paw.id}
             src={pawIcon}
-            className="paw-icon"
+            className={`paw-icon ${isMobile ? 'paw-icon-mobile' : ''}`}
             style={{
               top: `${paw.top}%`,
               left: `${paw.left}%`,

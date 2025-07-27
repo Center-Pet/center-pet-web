@@ -113,6 +113,7 @@
   font-size: 1rem;
   color: #555;
   text-align: center;
+  margin-top: 0;
   margin-bottom: 20px;
   line-height: 1.5;
   max-width: 90%;
@@ -331,7 +332,7 @@
     flex-direction: column;
     align-items: stretch;
     /* Faz os elementos se esticarem para ocupar toda a largura */
-    gap: 20px;
+    gap: 15px;
   }
 
   .pet-image-container,
@@ -343,18 +344,36 @@
   }
 
   .pet-details {
-    padding: 20px;
+    padding: 15px;
     align-self: stretch;
     /* Faz a div .pet-details se esticar dentro do layout */
+    gap: 10px;
   }
 
   .pet-details h2 {
     font-size: 20px;
+    margin-bottom: 5px;
+  }
+
+  .petinfo-ong-subtitle {
+    margin-bottom: 5px;
+    font-size: 1rem;
+  }
+
+  .location-subtitle {
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+  }
+
+  .pet-bio {
+    margin-bottom: 15px;
+    font-size: 0.95rem;
   }
 
   .pet-info-grid {
     grid-template-columns: 1fr;
     /* Volta para uma coluna no mobile */
+    gap: 15px 20px;
   }
 
   .adopt-button {
@@ -378,8 +397,29 @@
 }
 
 @media (max-width: 480px) {
+  .pet-details {
+    padding: 12px;
+    gap: 8px;
+  }
+
   .pet-details h2 {
     font-size: 18px;
+    margin-bottom: 3px;
+  }
+
+  .petinfo-ong-subtitle {
+    margin-bottom: 3px;
+    font-size: 0.9rem;
+  }
+
+  .location-subtitle {
+    margin-bottom: 8px;
+    font-size: 0.8rem;
+  }
+
+  .pet-bio {
+    margin-bottom: 12px;
+    font-size: 0.9rem;
   }
 
   .adopt-button {
@@ -403,7 +443,7 @@
   color: #d14d72;
   font-size: 1.2rem;
   margin-top: 0;
-  margin-bottom: -10px;
+  margin-bottom: 8px;
   font-weight: 500;
   text-align: center;
   padding: 4px 15px;
@@ -432,8 +472,8 @@
 }
 
 .location-subtitle {
-  margin-top: -5px;
-  margin-bottom: 10px;
+  margin-top: 0;
+  margin-bottom: 15px;
   color: #555;
   font-weight: 400;
   font-size: 0.9rem;
@@ -682,7 +722,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
   margin-bottom: 0;
 }
 

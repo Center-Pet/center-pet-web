@@ -630,3 +630,99 @@ label {
     font-size: 0.93rem;
   }
 }
+
+/* Melhorias de responsividade para a seção do CEP */
+@media (max-width: 700px) {
+  .endereco-label-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .cep-info-btn {
+    max-width: 100%;
+    width: 100%;
+    justify-content: center;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+    height: auto;
+    min-height: 40px;
+  }
+
+  .endereco-privacidade {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+    height: auto;
+    min-height: 40px;
+  }
+
+  /* Container do CEP e botão */
+  .cep-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .cep-input-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .cep-helper-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.85rem;
+    padding: 0.5rem;
+    height: auto;
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .endereco-label-row {
+    gap: 0.3rem;
+  }
+
+  .cep-info-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
+
+  .endereco-privacidade {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
+
+  .cep-helper-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .endereco-label-row {
+    gap: 0.2rem;
+  }
+
+  .cep-info-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem;
+  }
+
+  .endereco-privacidade {
+    font-size: 0.75rem;
+    padding: 0.3rem;
+  }
+
+  .cep-helper-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem;
+  }
+}

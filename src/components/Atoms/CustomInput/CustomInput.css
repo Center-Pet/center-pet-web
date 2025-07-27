@@ -67,3 +67,44 @@
     padding: 0.6rem 0.7rem;
   }
 }
+
+@media (max-width: 400px) {
+  .custom-input {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.6rem;
+    margin-bottom: 12px;
+  }
+  
+  .custom-toggle-button {
+    right: 8px;
+    padding: 3px;
+  }
+}
+
+/* Melhorias específicas para campos de CEP */
+.custom-input[placeholder="CEP"] {
+  text-align: center;
+  font-weight: 500;
+}
+
+@media (max-width: 700px) {
+  .custom-input[placeholder="CEP"] {
+    text-align: left;
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-input[placeholder="CEP"] {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .custom-input[placeholder="CEP"] {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+}

@@ -4,7 +4,38 @@
 
 import { API_URL } from "../config/api";
 
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos em milissegundos
+const CACHE_DURATION = 10 * 60 * 1000; // 10 minutos em milissegundos
+
+/**
+ * Função para fazer requisição com retry
+ */
+const fetchWithRetry = async (url, options = {}, retries = 2) => {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 segundos
+
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
+      }
+
+      return response;
+    } catch (error) {
+      if (i === retries) {
+        throw error;
+      }
+      // Aguardar um pouco antes de tentar novamente
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+};
 
 /**
  * Busca pets por categoria com cache
@@ -50,13 +81,8 @@ export const getPets = async (category, page = 1, limit = 10) => {
         queryParams.append('page', page);
         queryParams.append('limit', limit);
 
-        // Fazer requisição à API
-        const response = await fetch(`${endpoint}?${queryParams.toString()}`);
-
-        if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
-        }
-
+        // Fazer requisição à API com retry
+        const response = await fetchWithRetry(`${endpoint}?${queryParams.toString()}`);
         const result = await response.json();
         console.log(`Resposta da API para categoria ${category}:`, result);
 
@@ -124,12 +150,8 @@ export const getPetById = async (id) => {
             }
         }
 
-        const response = await fetch(`${API_URL}/pets/${id}`);
-
-        if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
-        }
-
+        // Fazer requisição com retry
+        const response = await fetchWithRetry(`${API_URL}/pets/${id}`);
         const data = await response.json();
 
         // Salvar no cache
@@ -142,5 +164,76 @@ export const getPetById = async (id) => {
     } catch (error) {
         console.error(`Erro ao buscar pet com ID ${id}:`, error);
         return null;
+    }
+};
+
+/**
+ * Busca pets por ONG com cache otimizado
+ * @param {string} ongId - ID da ONG
+ * @returns {Promise<Array>} Lista de pets da ONG
+ */
+export const getPetsByOng = async (ongId) => {
+    try {
+        const result = await fetch(`${API_URL}/pets/by-ong/${ongId}`);
+        const petsData = result.data || result;
+        
+        if (!Array.isArray(petsData)) {
+            return [];
+        }
+
+        return petsData;
+    } catch (error) {
+        console.error(`Erro ao buscar pets da ONG ${ongId}:`, error);
+        return [];
+    }
+};
+
+/**
+ * Busca todas as ONGs com cache otimizado
+ * @returns {Promise<Array>} Lista de ONGs
+ */
+export const getAllOngs = async () => {
+    try {
+        const result = await fetch(`${API_URL}/ongs`);
+        const ongsData = result.data || result;
+        
+        if (!Array.isArray(ongsData)) {
+            return [];
+        }
+
+        return ongsData;
+    } catch (error) {
+        console.error('Erro ao buscar ONGs:', error);
+        return [];
+    }
+};
+
+/**
+ * Busca dados de uma ONG específica
+ * @param {string} ongId - ID da ONG
+ * @returns {Promise<Object|null>} Dados da ONG ou null em caso de erro
+ */
+export const getOngById = async (ongId) => {
+    try {
+        const data = await fetch(`${API_URL}/ongs/${ongId}`);
+        return data.data || data;
+    } catch (error) {
+        console.error(`Erro ao buscar ONG com ID ${ongId}:`, error);
+        return null;
+    }
+};
+
+/**
+ * Prefetch de dados comuns para melhorar performance
+ */
+export const prefetchCommonData = async () => {
+    try {
+        await fetch(`${API_URL}/pets?status=Disponível&limit=10`);
+        await fetch(`${API_URL}/ongs`);
+        await fetch(`${API_URL}/pets?category=especiais&limit=5`);
+        await fetch(`${API_URL}/pets?category=novos&limit=5`);
+        console.log('Prefetch de dados comuns concluído');
+    } catch (error) {
+        console.warn('Erro no prefetch:', error);
     }
 };
